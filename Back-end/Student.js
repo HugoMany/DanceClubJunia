@@ -1,9 +1,12 @@
 class Student extends User {
-    constructor(firstname, surname, email, password, connectionMethod, credit) {
-        super(firstname, surname, email, password, connectionMethod);
+    constructor(firstname, surname, email, password, connectionMethod,userId, credit) {
+        super(firstname, surname, email, password, connectionMethod, userId);
         
         this.credit = credit;
+
         //this.subscriptionEndDate = ; Récupérer la date de fin dans la base de données
+        //this.tickets = ; Récupérer le nombre de tickets dans la bdd
+        //this.card = ; Récupérer les cartes dans la bdd
       }
     
       //Setters
@@ -42,20 +45,54 @@ class Student extends User {
       }
 
       //Add subscription
-      addSubscription() {
-        if (days == null || days <= 0) throw new Error("Invalid number of days");
+      addSubscription(months) {
+        if (months == null || months <= 0) throw new Error("Invalid number of months");
     
         const currentDate = new Date();
         
-        // If the subscription has not ended, add days to the current end date
+        // If the subscription has not ended, add months to the current end date
         if (this.subscriptionEndDate && this.subscriptionEndDate > currentDate) {
-          this.subscriptionEndDate.setDate(this.subscriptionEndDate.getDate() + days);
+          this.subscriptionEndDate.setDate(this.subscriptionEndDate.getDate() + months*30);
         } else {
-          // Else, define a new end date by adding days to the current date
+          // Else, define a new end date by adding months to the current date
           this.subscriptionEndDate = new Date();
-          this.subscriptionEndDate.setDate(currentDate.getDate() + days);
+          this.subscriptionEndDate.setDate(currentDate.getDate() + months*30);
         }
     
         // Mettre à jour la bdd avec la nouvelle date
       }
+
+      //Get courses
+      getCourses() {
+        courses = null; // Requete bdd
+        return courses
+      }
+
+      //Add link
+      addLink(courseId, link) {
+        //Recup link de courseid dans bdd
+        //Ajout du nouveau link
+        //Modification bdd
+      }
+
+      //Add tickets, a card or subscription
+      addPlace(type, number){
+        if (number == null || number <= 0) throw new Error("Invalid number");
+        switch (type) {
+          case 'ticket':
+            this.tickets += number;
+            break;
+          case 'card':
+            this.cards += (0,number);
+            break;
+          case 'subscription':
+            this.addSubscription(number);
+        }
+      }
+
+      //Payments history
+      paymentsHistory() {
+        //Recup bdd
+      }
+
 }

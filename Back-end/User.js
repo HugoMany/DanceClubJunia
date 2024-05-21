@@ -77,4 +77,26 @@ class User {
 
         this.password = newPassword;
     }
+
+    /**
+     * Function to connect to the account
+     *
+     * @param {String} email Email to connect with
+     * @param {String} password Password to connect with
+     * @returns {Boolean} True if the connection is successful, False otherwise
+     */
+    connect(email, password) {
+      if (email == null || password == null) throw new Error("Empty field");
+  
+      // Check if the provided email and password match the stored email and password
+      if (this.email === email && this.password === password) {
+        console.log("Connection successful");
+        return true;
+      } else {
+        console.log("Invalid email or password");
+        return false;
+      }
+    }
+
+
 }
