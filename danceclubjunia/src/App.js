@@ -1,11 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
-import Rgpd from './PAGES/rgpd.jsx'
+import Rgpd from './PAGES/rgpd'
+import Inscription from './PAGES/inscription';
+import Connexion from './PAGES/connexion';
+import Profil from './PAGES/profil';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 
 function App() {
   return (
     <div className="App">
-      <Rgpd/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Inscription />} />
+          <Route path="/profil" element={<Profil />} />
+          <Route path="/rgpd" element={<Rgpd />} />
+          <Route path="/connexion" element={<Connexion />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
