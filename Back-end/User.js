@@ -1,16 +1,17 @@
 class User {
-    constructor(firstname, surname, email, password, connectionMethod, userid) {
+    constructor(firstname, surname, email, password, connectionMethod, userId) {
 
-        if(firstname == null || surname == null || email == null || password == null || connectionMethod == null) {
+        if(firstname == null || surname == null || email == null || password == null || connectionMethod == null || userId == null) {
             throw new Error("Empty field");
         }
 
         // User informations
         this.firstname = firstname;
-        this.sirname = sirname;
+        this.surname = surname;
         this.email = email;
         this.password = password;
         this.connectionMethod = connectionMethod;
+        this.userId = userId;
     }
     
     //Setters
@@ -34,6 +35,11 @@ class User {
         this.password = password;
     }
     
+    setConnectionMethod(connectionMethod){
+        if(connectionMethod == null) throw new Error("Empty field");
+        this.connectionMethod = connectionMethod;
+    }
+    
     //Getters
     get firstname(){
         return this.firstname;
@@ -49,6 +55,14 @@ class User {
     
     get password(){
         return this.password;
+    }
+    
+    get connectionMethod(){
+        return this.connectionMethod;
+    }
+    
+    get userId(){
+        return this.userId;
     }
  
     /**
