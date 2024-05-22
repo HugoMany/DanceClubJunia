@@ -14,7 +14,28 @@ function Connexion() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Ajoutez ici la logique de connexion avec l'e-mail et le mot de passe
+        const json = {
+            email,
+            password
+        };
+
+        console.log('Form Data:', json);
+
+        // Add logic to save course data
+        fetch('http://example.com/api/courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     };
 
     return (
