@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function CreerCours() {
+
+
+const ModifCours = ({ courseId }) => {
     const [image, setImage] = useState('');
     const [title, setTitle] = useState('');
     const [type, setType] = useState('');
@@ -19,10 +21,39 @@ function CreerCours() {
     const [students, setStudents] = useState('');
     const [tags, setTags] = useState('');
 
+    useEffect(() => {
+        if (courseId) {
+            // Fetch existing course data
+            fetch(`http://example.com/api/courses/${courseId}`)
+                .then(response => response.json())
+                .then(data => {
+                    setImage(data.image);
+                    setTitle(data.title);
+                    setType(data.type);
+                    setDuration(data.duration);
+                    setStartDate(data.startDate);
+                    setStartTime(data.startTime);
+                    setLocation(data.location);
+                    setMaxParticipants(data.maxParticipants);
+                    setPaymentType(data.paymentType);
+                    setPrice(data.price);
+                    setPaymentOptions(data.paymentOptions.join(','));
+                    setIsEvening(data.isEvening);
+                    setRecurrence(data.recurrence);
+                    setTeachers(JSON.stringify(data.teachers));
+                    setLinks(JSON.stringify(data.links));
+                    setStudents(JSON.stringify(data.students));
+                    setTags(data.tags.join(','));
+                })
+                .catch(error => console.error('Error fetching course data:', error));
+        }
+    }, [courseId]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const json = {
+            courseId,
             image,
             title,
             type,
@@ -33,20 +64,19 @@ function CreerCours() {
             maxParticipants,
             paymentType,
             price,
-            paymentOptions: paymentOptions.split(','), // Assume paymentOptions is a comma-separated string
+            paymentOptions: paymentOptions.split(','),
             isEvening,
             recurrence,
-            teachers, // Assume teachers is a JSON string
-            links, // Assume links is a JSON string
-            students : 0, // Assume students is a JSON string
-            tags: tags.split(',') // Assume tags is a comma-separated string
+            teachers: JSON.parse(teachers || '[]'),
+            links: JSON.parse(links || '[]'),
+            students: JSON.parse(students || '[]'),
+            tags: tags.split(',')
         };
 
         console.log('Form Data:', json);
 
-        // Add logic to save course data
-        fetch('http://example.com/api/courses', {
-            method: 'POST',
+        fetch(`http://example.com/api/courses${courseId ? `/${courseId}` : ''}`, {
+            method: courseId ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -63,9 +93,11 @@ function CreerCours() {
 
     return (
         <form onSubmit={handleSubmit}>
+            <label htmlFor="courseId">Course ID:</label>
+            <input type="text" id="courseId" value={courseId} readOnly />
 
             <label htmlFor="image">Image:</label>
-            <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
+            <input type="text" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
             <label htmlFor="title">Title:</label>
             <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -74,7 +106,7 @@ function CreerCours() {
             <input type="text" id="type" value={type} onChange={(e) => setType(e.target.value)} />
 
             <label htmlFor="duration">Duration:</label>
-            <input type="time" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
+            <input type="text" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
 
             <label htmlFor="startDate">Start Date:</label>
             <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -103,18 +135,24 @@ function CreerCours() {
             <label htmlFor="recurrence">Recurrence:</label>
             <input type="text" id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} />
 
-            <label htmlFor="teachers">Teachers :</label>
-            <input type="text" id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)} />
+            <label htmlFor="teachers">Teachers (JSON format):</label>
+            <textarea id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)}></textarea>
 
-            <label htmlFor="links">Links :</label>
-            <input type="text" id="links" value={links} onChange={(e) => setLinks(e.target.value)} />
+            <label htmlFor="links">Links (JSON format):</label>
+            <textarea id="links" value={links} onChange={(e) => setLinks(e.target.value)}></textarea>
+
+            <label htmlFor="students">Students (JSON format):</label>
+            <textarea id="students" value={students} onChange={(e) => setStudents(e.target.value)}></textarea>
 
             <label htmlFor="tags">Tags (comma separated):</label>
             <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} />
 
-            <button type="submit">Créer un cours</button>
+            <button type="submit">Submit</button>
         </form>
     );
-}
+};
 
-export default CreerCours;
+
+
+
+export default ModifCours;

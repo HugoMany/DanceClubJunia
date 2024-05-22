@@ -12,9 +12,10 @@ function Home (){
         <br/>
         
 
-
-        <a href='/rgpd/'>RGPD</a>
-
+        <a href='/rgpd/'>RGPD</a><br></br>
+        <a href='/connexion/'>Connexion</a><br></br>
+            <a href='/profil/'>Profil</a><br></br>
+            <a href='/inscription/'>Créer un compte</a>
         </div>
     );
 
