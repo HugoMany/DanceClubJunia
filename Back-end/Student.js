@@ -95,4 +95,18 @@ class Student extends User {
         //Recup bdd
       }
 
+      //Buy
+      buy(type, number){
+        if (number == null || number <= 0) throw new Error("Invalid number");
+        price = 0;//On récupère le prix à l'unité dans la bdd
+        price *= number;
+        if (price <= this.credit) {
+          this.credit -= price;
+          this.addPlace(type,number);
+        }
+        else{
+          throw new Error("Not enough credit");
+        }
+      }
+
 }
