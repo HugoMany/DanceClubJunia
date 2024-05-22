@@ -17,7 +17,7 @@ function App() {
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/rgpd" element={<Rgpd />} />
-          <Route path="/connexion" element={<Connexion />} />
+          <Route path="/connexion/" element={<Connexion />} />
         </Routes>
       </Router>
     </div>
