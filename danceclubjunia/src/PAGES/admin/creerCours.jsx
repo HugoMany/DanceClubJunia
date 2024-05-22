@@ -38,9 +38,9 @@ function CreerCours() {
             paymentOptions: paymentOptions.split(','), // Assume paymentOptions is a comma-separated string
             isEvening,
             recurrence,
-            teachers: JSON.parse(teachers || '[]'), // Assume teachers is a JSON string
-            links: JSON.parse(links || '[]'), // Assume links is a JSON string
-            students: JSON.parse(students || '[]'), // Assume students is a JSON string
+            teachers, // Assume teachers is a JSON string
+            links, // Assume links is a JSON string
+            students : 0, // Assume students is a JSON string
             tags: tags.split(',') // Assume tags is a comma-separated string
         };
 
@@ -69,7 +69,7 @@ function CreerCours() {
             <input type="text" id="courseId" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
 
             <label htmlFor="image">Image:</label>
-            <input type="text" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
+            <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
             <label htmlFor="title">Title:</label>
             <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -78,7 +78,7 @@ function CreerCours() {
             <input type="text" id="type" value={type} onChange={(e) => setType(e.target.value)} />
 
             <label htmlFor="duration">Duration:</label>
-            <input type="text" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
+            <input type="time" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
 
             <label htmlFor="startDate">Start Date:</label>
             <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -107,19 +107,16 @@ function CreerCours() {
             <label htmlFor="recurrence">Recurrence:</label>
             <input type="text" id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} />
 
-            <label htmlFor="teachers">Teachers (JSON format):</label>
-            <textarea id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)}></textarea>
+            <label htmlFor="teachers">Teachers :</label>
+            <input type="text" id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)} />
 
-            <label htmlFor="links">Links (JSON format):</label>
-            <textarea id="links" value={links} onChange={(e) => setLinks(e.target.value)}></textarea>
-
-            <label htmlFor="students">Students (JSON format):</label>
-            <textarea id="students" value={students} onChange={(e) => setStudents(e.target.value)}></textarea>
+            <label htmlFor="links">Links :</label>
+            <input type="text" id="links" value={links} onChange={(e) => setLinks(e.target.value)} />
 
             <label htmlFor="tags">Tags (comma separated):</label>
             <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} />
 
-            <button type="submit">Submit</button>
+            <button type="submit">Créer un cours</button>
         </form>
     );
 }
