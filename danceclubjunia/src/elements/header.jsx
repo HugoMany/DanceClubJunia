@@ -1,5 +1,7 @@
+import danceImage from '../img/dance.png';
 
 function Header() {
+    const isAdmin = true;
     const isConnect = false  ;
     const styleHeader = {
         display: 'flex',
@@ -14,14 +16,26 @@ function Header() {
         };
     return (
         <div style={styleHeader}>
-            <h1>Dance Club</h1>
+            <img style={{ width: '150px' }} src={danceImage} alt="Dance" />
 <br/>       
-            {isConnect ? (
-                <><h4>isConnect</h4>
-                <a href='/profil/'><button>Profil</button></a>
+        {isAdmin ? (
+                <>
+                {/* <h4>isAdmin</h4> */}
+                                <a href='/admin/'><button>Admin</button></a>
                 </>
 
-            ) : (<><h4>isNotConnect</h4>
+            ) : (<>
+            {/* <h4>isNotAdmin</h4> */}
+                </>
+            )}
+            {isConnect ? (
+                <>
+                {/* <h4>isConnect</h4> */}
+                <a href='/profil/'><button>Admin</button></a>
+                </>
+
+            ) : (<>
+            {/* <h4>isNotConnect</h4> */}
                 <a href='/connexion/'><button>Connexion</button></a>
                 <a href='/inscription/'><button>Inscription</button></a>
                 </>
