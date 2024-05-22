@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 function CreerCours() {
-    const [courseId, setCourseId] = useState('');
     const [image, setImage] = useState('');
     const [title, setTitle] = useState('');
     const [type, setType] = useState('');
@@ -24,7 +23,6 @@ function CreerCours() {
         e.preventDefault();
 
         const json = {
-            courseId,
             image,
             title,
             type,
@@ -65,8 +63,6 @@ function CreerCours() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="courseId">Course ID:</label>
-            <input type="text" id="courseId" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
 
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
