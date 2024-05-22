@@ -13,7 +13,7 @@ class Course {
       price,
       paymentOptions,
       isEvening,
-      recurrence = null,
+      recurrence = 0, // 0 = no recurrence / else n = number of day before recurrence
       teachers = [],
       links = [],
       students = [],

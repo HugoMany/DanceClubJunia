@@ -1,6 +1,6 @@
 class Teacher extends User {
-    constructor(firstname, surname, email, password, connectionMethod, userId, photo, description) {
-        super(firstname, surname, email, password, connectionMethod, userId);
+    constructor(firstname, surname, email, password, connectionMethod, teacherId, photo, description) {
+        super(firstname, surname, email, password, connectionMethod, teacherId);
 
         this.photo = photo; // name of file + Format / Ex : image.png
         this.description = description;

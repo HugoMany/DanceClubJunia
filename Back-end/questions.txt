@@ -2,4 +2,4 @@ Qu'est ce que c'est que les liens
 Pour la recherche cours prof : Est ce que c'est quand dans ses cours ou dans l'overall
 Prof : suppression d'élève, est ce d'un cours ou de la BDD ?
 Photos/Vidéos : spécifique à une séance ou à un user?
-Carte ?
+Carte : option : Créer des types de cartes acceptés / Créer les différents types de cartes (nb de places etc..)
