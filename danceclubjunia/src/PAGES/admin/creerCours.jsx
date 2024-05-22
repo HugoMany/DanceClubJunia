@@ -12,69 +12,59 @@ function CreerCours() {
     const [maxParticipants, setMaxParticipants] = useState('');
     const [paymentType, setPaymentType] = useState('');
     const [price, setPrice] = useState('');
-    const [paymentOptions, setPaymentOptions] = useState([]);
+    const [paymentOptions, setPaymentOptions] = useState('');
     const [isEvening, setIsEvening] = useState(false);
-    const [recurrence, setRecurrence] = useState(null);
-    const [teachers, setTeachers] = useState([]);
-    const [links, setLinks] = useState([]);
-    const [students, setStudents] = useState([]);
-    const [tags, setTags] = useState([]);
+    const [recurrence, setRecurrence] = useState('');
+    const [teachers, setTeachers] = useState('');
+    const [links, setLinks] = useState('');
+    const [students, setStudents] = useState('');
+    const [tags, setTags] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const json = {          
-                "courseId": "course123",
-                "image": "course_image.png",
-                "title": "Introduction to Programming",
-                "type": "Workshop",
-                "duration": "2 hours",
-                "startDate": "2024-06-01",
-                "startTime": "10:00 AM",
-                "location": "Room 101, Tech Building",
-                "maxParticipants": 30,
-                "paymentType": "Online",
-                "price": 100,
-                "paymentOptions": ["Credit Card", "PayPal"],
-                "isEvening": false,
-                "recurrence": null,
-                "teachers": [
-                    {
-                        "teacherId": "teacher123",
-                        "name": "John Smith",
-                        "email": "john.smith@example.com",
-                        "photo": "john_smith.png"
-                    }
-                ],
-                "links": [
-                    {
-                        "description": "Course Materials",
-                        "url": "http://example.com/materials"
-                    },
-                    {
-                        "description": "Lecture Slides",
-                        "url": "http://example.com/slides"
-                    }
-                ],
-                "students": [
-                    {
-                        "studentId": "student123",
-                        "name": "Jane Doe",
-                        "email": "jane.doe@example.com"
-                    },
-                    {
-                        "studentId": "student124",
-                        "name": "Alice Johnson",
-                        "email": "alice.johnson@example.com"
-                    }
-                ],
-                "tags": ["Programming", "Beginner", "Workshop"]            
-        }
-        
-        // Ajoutez ici la logique pour enregistrer les données du cours
+
+        const json = {
+            courseId,
+            image,
+            title,
+            type,
+            duration,
+            startDate,
+            startTime,
+            location,
+            maxParticipants,
+            paymentType,
+            price,
+            paymentOptions: paymentOptions.split(','), // Assume paymentOptions is a comma-separated string
+            isEvening,
+            recurrence,
+            teachers: JSON.parse(teachers || '[]'), // Assume teachers is a JSON string
+            links: JSON.parse(links || '[]'), // Assume links is a JSON string
+            students: JSON.parse(students || '[]'), // Assume students is a JSON string
+            tags: tags.split(',') // Assume tags is a comma-separated string
+        };
+
+        console.log('Form Data:', json);
+
+        // Add logic to save course data
+        fetch('http://example.com/api/courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     };
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <label htmlFor="courseId">Course ID:</label>
             <input type="text" id="courseId" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
 
@@ -91,30 +81,43 @@ function CreerCours() {
             <input type="text" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
 
             <label htmlFor="startDate">Start Date:</label>
-            <input type="text" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
 
             <label htmlFor="startTime">Start Time:</label>
-            <input type="text" id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+            <input type="time" id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
 
             <label htmlFor="location">Location:</label>
             <input type="text" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
 
             <label htmlFor="maxParticipants">Max Participants:</label>
-            <input type="text" id="maxParticipants" value={maxParticipants} onChange={(e) => setMaxParticipants(e.target.value)} />
+            <input type="number" id="maxParticipants" value={maxParticipants} onChange={(e) => setMaxParticipants(e.target.value)} />
 
             <label htmlFor="paymentType">Payment Type:</label>
             <input type="text" id="paymentType" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} />
 
             <label htmlFor="price">Price:</label>
-            <input type="text" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
 
-            <label htmlFor="paymentOptions">Payment Options:</label>
+            <label htmlFor="paymentOptions">Payment Options (comma separated):</label>
             <input type="text" id="paymentOptions" value={paymentOptions} onChange={(e) => setPaymentOptions(e.target.value)} />
 
             <label htmlFor="isEvening">Is Evening:</label>
             <input type="checkbox" id="isEvening" checked={isEvening} onChange={(e) => setIsEvening(e.target.checked)} />
 
-            {/* Add more input fields for the remaining variables */}
+            <label htmlFor="recurrence">Recurrence:</label>
+            <input type="text" id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} />
+
+            <label htmlFor="teachers">Teachers (JSON format):</label>
+            <textarea id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)}></textarea>
+
+            <label htmlFor="links">Links (JSON format):</label>
+            <textarea id="links" value={links} onChange={(e) => setLinks(e.target.value)}></textarea>
+
+            <label htmlFor="students">Students (JSON format):</label>
+            <textarea id="students" value={students} onChange={(e) => setStudents(e.target.value)}></textarea>
+
+            <label htmlFor="tags">Tags (comma separated):</label>
+            <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} />
 
             <button type="submit">Submit</button>
         </form>
