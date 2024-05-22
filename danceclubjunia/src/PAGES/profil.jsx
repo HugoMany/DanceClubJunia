@@ -25,6 +25,29 @@ const Profil = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Ajoutez ici la logique pour mettre à jour les informations de l'utilisateur
+        const json = {
+            nom,
+            prenom,
+            email,
+            motDePasse
+        };
+        console.log('Form Data:', json);
+
+        // Add logic to save course data
+        fetch('http://example.com/api/courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     };
 
     return (

@@ -9,10 +9,30 @@ function Inscription() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Ajoutez ici la logique pour traiter les données d'inscription
-        console.log('Nom:', nom);
-        console.log('Prénom:', prenom);
-        console.log('Mot de passe:', motDePasse);
-        console.log('Email:', email);
+        const json = {
+            nom,
+            prenom,
+            motDePasse,
+            email
+        };
+        console.log('Form Data:', json);
+        
+        // Add logic to save course data
+        fetch('http://example.com/api/inscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
     };
 
     return (
