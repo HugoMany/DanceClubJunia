@@ -1,35 +1,51 @@
 import React, { useState } from 'react';
 
-function CreerProf() {
+const CreerProf = () => {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
-    const [mail,setMail] = useState('');
+    const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [connectionMethod, setConnectionMethod] = useState('');
-    const [photo,setPhoto] = useState('');
+    const [photo, setPhoto] = useState('');
     const [description, setDescription] = useState('');
 
-    
     const handleSubmit = (e) => {
         e.preventDefault();
-        const json = {
-            "firstname": "John",
-            "surname": "Doe",
-            "email": "john.doe@example.com",
-            "password": "securepassword123",
-            "connectionMethod": "email",
-            "userId": "12345",
-            "photo": "image.png",
-            "description": "A description about John Doe."
-        }
         
-        // Ajoutez ici la logique pour enregistrer les données du cours
+        const formData = {
+            firstname,
+            surname,
+            mail,
+            password,
+            connectionMethod,
+            photo,
+            description
+        };
+
+        console.log('Form Data:', formData);
+
+        // Envoyer les données à l'API ou les traiter comme nécessaire
+        // Exemple d'envoi via fetch:
+        fetch('http://example.com/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                firstname :
+                firstname:
                 <input
                     type="text"
                     value={firstname}
@@ -38,7 +54,7 @@ function CreerProf() {
             </label>
             <br />
             <label>
-                surname :
+                surname:
                 <input
                     type="text"
                     value={surname}
@@ -47,7 +63,7 @@ function CreerProf() {
             </label>
             <br />
             <label>
-                mail :
+                mail:
                 <input
                     type="email"
                     value={mail}
@@ -56,7 +72,7 @@ function CreerProf() {
             </label>
             <br />
             <label>
-                password :
+                password:
                 <input
                     type="password"
                     value={password}
@@ -65,7 +81,7 @@ function CreerProf() {
             </label>
             <br />
             <label>
-                connectionMethod :
+                connectionMethod:
                 <input
                     type="text"
                     value={connectionMethod}
@@ -74,25 +90,24 @@ function CreerProf() {
             </label>
             <br />
             <label>
-                photo :
+                photo:
                 <input
                     type="file"
-                    value={photo}
-                    onChange={(e) => setPhoto(e.target.value)}
+                    onChange={(e) => setPhoto(e.target.files[0].name)}
                 />
             </label>
             <br />
             <label>
-                description :
+                description:
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
             </label>
             <br />
-            <button type="submit">Créer le cours</button>
+            <button type="submit">Créer le prof</button>
         </form>
     );
-}
+};
 
 export default CreerProf;
