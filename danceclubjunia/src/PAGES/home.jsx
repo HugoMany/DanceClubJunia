@@ -12,14 +12,36 @@ function Home (){
            
         <br/>
         
+        <>Dance Club -----------------</><br></br>
 
         <a href='/rgpd/'>RGPD</a><br></br>
         <a href='/connexion/'>Connexion</a><br></br>
             <a href='/profil/'>Profil</a><br></br>
             <a href='/inscription/'>Créer un compte</a>
 
+            <h2>Choisissez votre cours</h2>
 
-        <h1 style={h1Style}>Bienvenue sur le site de la dance</h1>
+        <div>
+            <div class="cours">
+                <h3>Rock</h3>
+                <p>Le rock est une danse très populaire en France. Elle se danse en couple et est très simple à apprendre.</p>
+                <img src="" alt="" srcset="" />
+                <button>Acheter</button>
+            </div>
+            <div class="cours">
+                <h3>Classique</h3>
+                <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                <img src="" alt="" srcset="" />
+                <button>Acheter</button>
+            </div>
+            <div class="cours">
+                <h3>Contemporain</h3>
+                <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
+                <img src="" alt="" srcset="" />
+                <button>Acheter</button>
+            </div>
+        </div>
+
         
         </div>
     );
