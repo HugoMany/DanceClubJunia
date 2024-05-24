@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import Header from '../elements/header';
 const Profil = () => {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -52,6 +52,7 @@ const Profil = () => {
 
     return (
         <div>
+            <Header></Header>
             <h1>Profil</h1>
             <form onSubmit={handleSubmit}>
                 <label>
