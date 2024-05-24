@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 
 function Inscription() {
-    const [nom, setNom] = useState('');
-    const [prenom, setPrenom] = useState('');
-    const [motDePasse, setMotDePasse] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [connectionMethod, setConnectionMethod] = useState('');
+    const credit = 0;
+
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Ajoutez ici la logique pour traiter les données d'inscription
         const json = {
-            nom,
-            prenom,
-            motDePasse,
-            email
+            firstname,
+            surname,
+            email,
+            password,
+            connectionMethod,
+            credit
         };
         console.log('Form Data:', json);
         
@@ -40,30 +46,30 @@ function Inscription() {
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="nom">Nom:</label>
+                    <label htmlFor="nom">Firstname:</label>
                     <input
                         type="text"
                         id="nom"
-                        value={nom}
-                        onChange={(e) => setNom(e.target.value)}
+                        value={firstname}
+                        onChange={(e) => setFirstname(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="prenom">Prénom:</label>
+                    <label htmlFor="prenom">Surname:</label>
                     <input
                         type="text"
                         id="prenom"
-                        value={prenom}
-                        onChange={(e) => setPrenom(e.target.value)}
+                        value={surname}
+                        onChange={(e) => setSurname(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="motDePasse">Mot de passe:</label>
+                    <label htmlFor="motDePasse">Password:</label>
                     <input
                         type="password"
                         id="motDePasse"
-                        value={motDePasse}
-                        onChange={(e) => setMotDePasse(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div>
@@ -73,6 +79,15 @@ function Inscription() {
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="connection">Connection Method:</label>
+                    <input
+                        type="text"
+                        id="connectionMethod"
+                        value={connectionMethod}
+                        onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 </div>
                 <button type="submit">S'inscrire</button>
