@@ -1,6 +1,7 @@
 import '../font/Hagrid-Text-Extrabold-trial.ttf'; // Import the font file
 import React from 'react';
 import Header from '../elements/header';
+import '../css/home.css';
 
 function Home (){
     const h1Style = {
@@ -14,11 +15,7 @@ function Home (){
         
         <>Dance Club -----------------</><br></br>
 
-        <a href='/rgpd/'>RGPD</a><br></br>
-        <a href='/connexion/'>Connexion</a><br></br>
-            <a href='/profil/'>Profil</a><br></br>
-            <a href='/inscription/'>Créer un compte</a>
-
+       
             <h2>Choisissez votre cours</h2>
 
         <div>
@@ -41,6 +38,14 @@ function Home (){
                 <button>Acheter</button>
             </div>
         </div>
+
+
+
+
+        <a href='/rgpd/'>RGPD</a><br></br>
+        <a href='/connexion/'>Connexion</a><br></br>
+        <a href='/profil/'>Profil</a><br></br>
+        <a href='/inscription/'>Créer un compte</a>
 
         
         </div>
