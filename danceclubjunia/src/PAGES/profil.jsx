@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
 
 const Profil = () => {
-    const [nom, setNom] = useState('');
-    const [prenom, setPrenom] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
-    const [motDePasse, setMotDePasse] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleNomChange = (e) => {
-        setNom(e.target.value);
+    const handleFirstname = (e) => {
+        setFirstname(e.target.value);
     };
 
-    const handlePrenomChange = (e) => {
-        setPrenom(e.target.value);
+    const handleSurname = (e) => {
+        setSurname(e.target.value);
     };
 
-    const handleEmailChange = (e) => {
+    const handleEmail = (e) => {
         setEmail(e.target.value);
     };
 
-    const handleMotDePasseChange = (e) => {
-        setMotDePasse(e.target.value);
+    const handlePassword = (e) => {
+        setPassword(e.target.value);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Ajoutez ici la logique pour mettre à jour les informations de l'utilisateur
         const json = {
-            nom,
-            prenom,
+            firstname,
+            surname,
             email,
-            motDePasse
+            password
         };
         console.log('Form Data:', json);
 
@@ -55,26 +55,26 @@ const Profil = () => {
             <h1>Profil</h1>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Nom:
-                    <input type="text" value={nom} onChange={handleNomChange} />
+                    Firstname:
+                    <input type="text" value={firstname} onChange={handleFirstname} />
                 </label>
                 <br />
                 <label>
-                    Prénom:
-                    <input type="text" value={prenom} onChange={handlePrenomChange} />
+                    Surname:
+                    <input type="text" value={surname} onChange={handleSurname} />
                 </label>
                 <br />
                 <label>
                     Email:
-                    <input type="email" value={email} onChange={handleEmailChange} />
+                    <input type="email" value={email} onChange={handleEmail} />
                 </label>
                 <br />
                 <label>
-                    Mot de passe:
+                    Password:
                     <input
                         type="password"
-                        value={motDePasse}
-                        onChange={handleMotDePasseChange}
+                        value={password}
+                        onChange={handlePassword}
                     />
                 </label>
                 <br />
