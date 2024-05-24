@@ -13,6 +13,8 @@ function Header() {
         border: 'none',
         borderRadius: '5px',
         alignItems: 'center',
+        flexwrap: 'nowrap',
+        justifycontent: 'space-evenly',
         };
     return (
         <div class="header" style={styleHeader}>

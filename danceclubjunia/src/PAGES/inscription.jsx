@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../elements/header';
 
 function Inscription() {
     const [firstname, setFirstname] = useState('');
@@ -43,6 +44,7 @@ function Inscription() {
 
     return (
         <div>
+            <Header></Header>
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>

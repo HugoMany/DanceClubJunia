@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../elements/header';
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -40,6 +41,7 @@ function Connexion() {
 
     return (
         <div>
+            <Header></Header>
             <h1>Page de Connexion</h1>
             <form onSubmit={handleSubmit}>
                 <label>
