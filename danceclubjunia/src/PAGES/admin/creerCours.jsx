@@ -22,6 +22,28 @@ function CreerCours() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Check if any field is empty
+        if (
+            image === '' ||
+            title === '' ||
+            type === '' ||
+            duration === '' ||
+            startDate === '' ||
+            startTime === '' ||
+            location === '' ||
+            maxParticipants === '' ||
+            paymentType === '' ||
+            price === '' ||
+            paymentOptions === '' ||
+            recurrence === '' ||
+            teachers === '' ||
+            links === '' ||
+            tags === ''
+        ) {
+            alert('Please fill in all fields');
+            return;
+        }
+
         const json = {
             image,
             title,
@@ -38,7 +60,7 @@ function CreerCours() {
             recurrence,
             teachers, // Assume teachers is a JSON string
             links, // Assume links is a JSON string
-            students : 0, // Assume students is a JSON string
+            students: 0, // Assume students is a JSON string
             tags: tags.split(',') // Assume tags is a comma-separated string
         };
 
@@ -52,13 +74,13 @@ function CreerCours() {
             },
             body: JSON.stringify(json)
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     };
 
     return (
