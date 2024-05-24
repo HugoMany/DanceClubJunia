@@ -15,7 +15,7 @@ function Header() {
         alignItems: 'center',
         };
     return (
-        <div style={styleHeader}>
+        <div class="header" style={styleHeader}>
             <a href='/'><img style={{ width: '150px' }} src={danceImage} alt="Dance" /></a>
 <br/>       
         {isAdmin ? (
