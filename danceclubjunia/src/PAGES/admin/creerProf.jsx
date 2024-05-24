@@ -11,7 +11,18 @@ const CreerProf = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+        if (
+            firstname === '' ||
+            surname === '' ||
+            mail === '' ||
+            password === '' ||
+            connectionMethod === '' ||
+            photo === '' ||
+            description === ''
+        ) {
+            alert('Please fill in all fields');
+            return;
+        }
         const formData = {
             firstname,
             surname,
