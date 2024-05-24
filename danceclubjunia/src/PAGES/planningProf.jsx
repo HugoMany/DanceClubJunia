@@ -34,11 +34,27 @@ const deleteCourse = (courseId) => {
     coursesData = coursesData.filter(course => course.courseId !== courseId);
 };
 
+const addStudentToCourse = (courseId, studentId) => {
+    const course = coursesData.find(course => course.courseId === courseId);
+    if (course && !course.students.includes(studentId)) {
+        course.students.push(studentId);
+    }
+};
+
+const removeStudentFromCourse = (courseId, studentId) => {
+    const course = coursesData.find(course => course.courseId === courseId);
+    if (course) {
+        course.students = course.students.filter(student => student !== studentId);
+    }
+};
+
 // React component
 const TeacherCourses = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [newStudentId, setNewStudentId] = useState('');
+    const [selectedCourseId, setSelectedCourseId] = useState('');
 
     useEffect(() => {
         // Simulate fetching courses for the teacher
@@ -70,6 +86,37 @@ const TeacherCourses = ({ teacherId }) => {
         }
     };
 
+    const handleAddStudent = (courseId) => {
+        try {
+            addStudentToCourse(courseId, newStudentId);
+            // Update the course list with the new student added
+            setCourses(courses.map(course => 
+                course.courseId === courseId 
+                ? { ...course, students: [...course.students, newStudentId] }
+                : course
+            ));
+            setNewStudentId('');
+        } catch (error) {
+            console.error('Error adding student:', error);
+            setError(error);
+        }
+    };
+
+    const handleRemoveStudent = (courseId, studentId) => {
+        try {
+            removeStudentFromCourse(courseId, studentId);
+            // Update the course list with the student removed
+            setCourses(courses.map(course => 
+                course.courseId === courseId 
+                ? { ...course, students: course.students.filter(student => student !== studentId) }
+                : course
+            ));
+        } catch (error) {
+            console.error('Error removing student:', error);
+            setError(error);
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading courses: {error.message}</div>;
 
@@ -85,8 +132,28 @@ const TeacherCourses = ({ teacherId }) => {
                         <p>Start Time: {course.startTime}</p>
                         <p>Location: {course.location}</p>
                         <p>Duration: {course.duration}</p>
-                        <p>Students: {course.students.length}</p>
+                        <p>Students: {course.students.join(', ')}</p>
                         <button onClick={() => handleDelete(course.courseId)}>Delete</button>
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="New Student ID"
+                                value={newStudentId}
+                                onChange={(e) => {
+                                    setNewStudentId(e.target.value);
+                                    setSelectedCourseId(course.courseId);
+                                }}
+                            />
+                            <button onClick={() => handleAddStudent(course.courseId)}>Add Student</button>
+                        </div>
+                        <ul>
+                            {course.students.map(student => (
+                                <li key={student}>
+                                    {student}
+                                    <button onClick={() => handleRemoveStudent(course.courseId, student)}>Remove</button>
+                                </li>
+                            ))}
+                        </ul>
                     </li>
                 ))}
             </ul>

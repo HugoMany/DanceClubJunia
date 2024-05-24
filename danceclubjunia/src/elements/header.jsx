@@ -21,7 +21,7 @@ function Header() {
         {isAdmin ? (
                 <>
                 {/* <h4>isAdmin</h4> */}
-                                <a href='/admin/'><button>Admin</button></a>
+                                <a href='/admin/' ><button class="styled-button">Admin</button></a>
                 </>
 
             ) : (<>
