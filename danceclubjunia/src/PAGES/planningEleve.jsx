@@ -1,12 +1,3 @@
-// Endpoint to get courses for a specific student 
-// app.get('/api/students/:studentId/courses', (req, res) => {
-//     const { studentId } = req.params;
-//     // Retrieve courses for the student from the database
-//     const courses = db.getCoursesForStudent(studentId);
-//     res.json(courses);
-// });
-
-
 import React, { useState, useEffect } from 'react';
 
 const StudentCourses = ({ studentId }) => {
