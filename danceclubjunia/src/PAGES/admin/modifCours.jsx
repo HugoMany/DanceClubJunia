@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Header from '../../elements/header';
 
 
 
@@ -93,6 +94,7 @@ const ModifCours = ({ courseId }) => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <Header></Header>
             <label htmlFor="courseId">Course ID:</label>
             <input type="text" id="courseId" value={courseId} readOnly />
 

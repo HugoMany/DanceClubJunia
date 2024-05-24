@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React , { useState } from 'react';
+import Header from '../../elements/header';
+
 
 function Achat() {
   const [paymentStatus, setPaymentStatus] = useState('');
@@ -35,6 +37,7 @@ function Achat() {
 
   return (
     <div>
+      <Header></Header>
       <h1>Acheter des titres de cours de danse</h1>
       <h2>Choisissez votre cours</h2>
       <div>

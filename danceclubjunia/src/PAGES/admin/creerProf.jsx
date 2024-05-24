@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../elements/header';
 
 const CreerProf = () => {
     const [firstname, setFirstname] = useState('');
@@ -55,6 +56,7 @@ const CreerProf = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <Header></Header>
             <label>
                 firstname:
                 <input

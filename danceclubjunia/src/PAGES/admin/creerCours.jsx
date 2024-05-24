@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../elements/header';
 
 function CreerCours() {
     const [image, setImage] = useState('');
@@ -85,7 +86,7 @@ function CreerCours() {
 
     return (
         <form onSubmit={handleSubmit}>
-
+            <Header></Header>
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
