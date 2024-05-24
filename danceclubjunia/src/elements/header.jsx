@@ -2,7 +2,7 @@ import danceImage from '../img/dance.png';
 
 function Header() {
     const isAdmin = true;
-    const isConnect = false  ;
+    const isConnect = true  ;
     const styleHeader = {
         display: 'flex',
         padding: '10px 20px',
@@ -16,7 +16,7 @@ function Header() {
         };
     return (
         <div style={styleHeader}>
-            <img style={{ width: '150px' }} src={danceImage} alt="Dance" />
+            <a href='/'><img style={{ width: '150px' }} src={danceImage} alt="Dance" /></a>
 <br/>       
         {isAdmin ? (
                 <>
@@ -31,7 +31,7 @@ function Header() {
             {isConnect ? (
                 <>
                 {/* <h4>isConnect</h4> */}
-                <a href='/profil/'><button>Admin</button></a>
+                <a href='/profil/'><button>Profil</button></a>
                 </>
 
             ) : (<>
