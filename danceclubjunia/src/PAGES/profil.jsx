@@ -81,6 +81,11 @@ const Profil = () => {
                 <br />
                 <button type="submit">Enregistrer</button>
             </form>
+            <h2>Vos anciens cours</h2>
+            <a href='/cours/4/5'>Cours 4/5</a><br></br>
+            <a href='/cours/2/4'>Cours 2/4</a><br />
+            <a href='/cours/1/3'>cours 1/3</a><br />
+
         </div>
     );
 };
