@@ -10,6 +10,7 @@ import Home from './PAGES/home';
 import CreerProf from './PAGES/admin/creerProf';
 import CreerCours from './PAGES/admin/creerCours';
 import Admin from './PAGES/admin/admin';
+import Recherche from './PAGES/recherche';
 function App() {
   return (
     <div className="App">
@@ -23,6 +24,7 @@ function App() {
           <Route path="/admin/creerProf" element={<CreerProf />} />
           <Route path="/admin/creerCours" element={<CreerCours />} />
           <Route path="/admin/" element={<Admin />} />
+          <Route path="/recherche" element={<Recherche />} />
         </Routes>
       </Router>
     </div>
