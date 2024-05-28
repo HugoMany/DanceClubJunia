@@ -7,11 +7,23 @@ import ReactModal from 'react-modal';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+// import Swiper JS
+import Swiper from 'swiper';
+// import Swiper styles
+import 'swiper/swiper-bundle.css';
+
+const swiper = new Swiper(".mySwiper", {
+    pagination: {
+        el: ".swiper-pagination",
+        dynamicBullets: true,
+    },
+});
 
 function Home() {
     const h1Style = {
         fontFamily: 'Hagrid-Text-Extrabold-trial', // Use the font family name
     };
+
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
     const [open3, setOpen3] = React.useState(false);
@@ -65,25 +77,10 @@ function Home() {
 
 
 
-                <div className="cours">
-                    <h3>Classique</h3>
-                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
-                    <img src="" alt="" srcSet="" />
-                    <button onClick={handleOpen1}>Acheter</button>
-                </div>
-                <div className="cours">
-                    <h3>Contemporain</h3>
-                    <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
-                    <img src="" alt="" srcSet="" />
-                    <button onClick={handleOpen2}>Acheter</button>
-                </div>
+
+
             </div>
-            <div class="cours">
-                <h3>Contemporain</h3>
-                <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
-                <img src="" alt="" srcset="" />
-                <button onClick={handleOpen3}>Acheter</button>
-            </div>
+
 
             <Modal
                 open={open1}
@@ -122,6 +119,40 @@ function Home() {
             <a href='/inscription/'>Créer un compte</a><br></br>
             <a href='/cours/'>Cours</a>
 
+
+            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+            <div class="cours">
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><div className="cours">
+                            <h3>Classique</h3>
+                            <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                            <img src="" alt="" srcSet="" />
+                            <button onClick={handleOpen1}>Acheter</button>
+                        </div></div>
+                        <div class="swiper-slide"> <div className="cours">
+                            <h3>Contemporain</h3>
+                            <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
+                            <img src="" alt="" srcSet="" />
+                            <button onClick={handleOpen2}>Acheter</button>
+                        </div></div>
+                        <div class="swiper-slide"><div class="cours">
+                            <h3>Contemporain</h3>
+                            <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
+                            <img src="" alt="" srcset="" />
+                            <button onClick={handleOpen3}>Acheter</button>
+                        </div></div>
+                        <div class="swiper-slide">SLIDER3</div>
+                        <div class="swiper-slide">SLIDER4</div>
+                        <div class="swiper-slide">SLIDER5</div>
+                        <div class="swiper-slide">SLIDER6</div>
+                        <div class="swiper-slide">SLIDER6</div>
+                        <div class="swiper-slide">SLIDER7</div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
 
         </div>
     );
