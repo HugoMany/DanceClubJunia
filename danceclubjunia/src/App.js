@@ -12,6 +12,7 @@ import CreerCours from './PAGES/admin/creerCours';
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
 
+import Recherche from './PAGES/recherche';
 function App() {
   return (
     <div className="App">
@@ -27,6 +28,7 @@ function App() {
           <Route path="/admin/" element={<Admin />} />
           <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
 
+          <Route path="/recherche" element={<Recherche />} />
         </Routes>
       </Router>
     </div>
