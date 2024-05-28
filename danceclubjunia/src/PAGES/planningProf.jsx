@@ -1,6 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { Course } from './Course'; // Assuming the Course class is exported from another file
+// Define the Course class
+class Course {
+    constructor({
+        courseId,
+        image,
+        title,
+        type,
+        duration,
+        startDate,
+        startTime,
+        location,
+        maxParticipants,
+        paymentType,
+        price,
+        paymentOptions,
+        isEvening,
+        teachers,
+        links,
+        students,
+        tags
+    }) {
+        this.courseId = courseId;
+        this.image = image;
+        this.title = title;
+        this.type = type;
+        this.duration = duration;
+        this.startDate = new Date(startDate);
+        this.startTime = startTime;
+        this.location = location;
+        this.maxParticipants = maxParticipants;
+        this.paymentType = paymentType;
+        this.price = price;
+        this.paymentOptions = paymentOptions;
+        this.isEvening = isEvening;
+        this.teachers = teachers;
+        this.links = links;
+        this.students = students;
+        this.tags = tags;
+    }
 
+    addStudent(studentId) {
+        if (this.students.includes(studentId)) {
+            throw new Error('Student is already enrolled in this course.');
+        }
+        this.students.push(studentId);
+    }
+
+    removeStudent(studentId) {
+        this.students = this.students.filter(student => student !== studentId);
+    }
+}
 // Simulated backend data and functions
 let coursesData = [
     new Course({
@@ -176,8 +225,8 @@ const TeacherCourses = ({ teacherId }) => {
 };
 
 // Usage example
-const App = () => {
+const PlanningProf = () => {
     return <TeacherCourses teacherId="Teacher 1" />;
 };
 
-export default App;
+export default PlanningProf;
