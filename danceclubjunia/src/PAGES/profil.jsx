@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
-import Title from '../elements/title';
 const Profil = () => {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -54,7 +53,6 @@ const Profil = () => {
     return (
         <div>
             <Header></Header>
-            <Title firstPart={"Profil"}></Title>
             <form onSubmit={handleSubmit}>
                 <label>
                     Firstname:

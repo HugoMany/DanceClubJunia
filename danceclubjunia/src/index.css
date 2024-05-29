@@ -1,13 +1,11 @@
 html body {
-  font-family: "Copper Black", sans-serif; 
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  color: white;
-  background-image: url('./img/Danse2.png');
-  background-size: cover;
-  background-position: center;
+  color: black;
+  background-color: #F1F1F1;
   }
   
 
@@ -15,8 +13,8 @@ html body {
 
 button {
   background-color: transparent; /* Match the button background color */
-  border: 2px solid #fff; /* White border */
-  color: #fff; /* White text */
+  border: 2px solid #000000; /* White border */
+  color: #000000; /* White text */
   padding: 10px 10px; /* Padding for the button */
   font-size: 16px; /* Text size */
   border-radius: 20px; /* Rounded corners */
@@ -32,16 +30,19 @@ button:hover {
 
 .header {
   position: absolute;
+  background-color: #FFFFFF;
+  color: black;
   bottom: 0px;
-  width: 80vw;
+  width: 100vw;
   height: 15vh;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   flex-direction: row;
-  margin: 0px 10vw;
+  padding: 0px 2.5vw;
+  left: 0px;
 }
 
 .App > div {
@@ -61,4 +62,10 @@ html .swiper{
 }
 h1 p{
   margin: 0px;
+}
+.header button{
+  margin: 0px;
+  width: 50px;
+  height: 50px; 
+  margin: 2px solid #FDD93B;
 }

@@ -16,7 +16,6 @@ import 'swiper/css/pagination';
 
 // import required modules
 import { Pagination } from 'swiper/modules';
-import Title from '../elements/title';
 
 function Home() {
     const h1Style = {
@@ -59,7 +58,6 @@ function Home() {
             <Header ></Header>
 
             <br />
-            <Title firstPart="Welcome to" secondPart="Dance Club"/>
 
 
 
