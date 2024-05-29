@@ -129,10 +129,10 @@ const TeacherCourses = ({ teacherId }) => {
         // Simulate fetching courses for the teacher
         try {
             const data = getCoursesForTeacher(teacherId);
-            // Sort courses by start date and time
-            const sortedCourses = data.sort((a, b) => a.startDate - b.startDate);
+            const now = new Date();
+            const upcomingCourses = data.filter(course => course.startDate > now);
+            const sortedCourses = upcomingCourses.sort((a, b) => a.startDate - b.startDate);
             setCourses(sortedCourses);
-            setLoading(false);
         } catch (error) {
             console.error('Error fetching courses:', error);
             setError(error);
