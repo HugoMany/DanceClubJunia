@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import Header from '../elements/header';
 
 const CoursDynamique = () => {
   const { courseId,idPerson } = useParams();
@@ -20,6 +21,7 @@ const CoursDynamique = () => {
 
   return (
     <div>
+      <Header></Header>
       <h1>Dynamic Course Page</h1>
       <p>Course ID: {courseId}</p>
       <p>Person ID: {idPerson}</p>

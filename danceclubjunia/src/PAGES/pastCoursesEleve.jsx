@@ -86,20 +86,19 @@ const getCoursesForStudent = (studentId) => {
     return coursesData.filter(course => course.students.includes(studentId));
 };
 
-const StudentCourses = ({ studentId }) => {
+// Component to display past courses for a student
+const StudentPastCourses = ({ studentId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate fetching courses for the student
         try {
             const data = getCoursesForStudent(studentId);
             const now = new Date();
-            const upcomingCourses = data.filter(course => course.startDate > now);
-            const sortedCourses = upcomingCourses.sort((a, b) => a.startDate - b.startDate);
+            const pastCourses = data.filter(course => course.startDate < now);
+            const sortedCourses = pastCourses.sort((a, b) => b.startDate - a.startDate);
             setCourses(sortedCourses);
-            // Sort courses by start date and time
             setLoading(false);
         } catch (error) {
             console.error('Error fetching courses:', error);
@@ -113,7 +112,7 @@ const StudentCourses = ({ studentId }) => {
 
     return (
         <div>
-            <h2>Upcoming Courses</h2>
+            <h2>Your Past Courses</h2>
             <ul>
                 {courses.map(course => (
                     <li key={course.courseId}>
@@ -133,7 +132,7 @@ const StudentCourses = ({ studentId }) => {
 };
 
 const PlanningEleve = () => {
-    return <StudentCourses studentId="Student 3" />;
+    return <StudentPastCourses studentId="Student 3" />;
 };
 
 export default PlanningEleve;

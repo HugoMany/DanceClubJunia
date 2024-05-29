@@ -55,7 +55,10 @@ function Connexion() {
                 </label>
                 <br />
                 <button type="submit">Se connecter</button>
+
+                
             </form>
+            <a href='/inscription/'>Inscription</a>
         </div>
     );
 }

@@ -2,22 +2,21 @@ import '../font/Hagrid-Text-Extrabold-trial.ttf'; // Import the font file
 import React from 'react';
 import Header from '../elements/header';
 import '../css/home.css';
-import { useState } from 'react';
-import ReactModal from 'react-modal';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-// import Swiper JS
-import Swiper from 'swiper';
-// import Swiper styles
-import 'swiper/swiper-bundle.css';
 
-const swiper = new Swiper(".mySwiper", {
-    pagination: {
-        el: ".swiper-pagination",
-        dynamicBullets: true,
-    },
-});
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+
+// import required modules
+import { Pagination } from 'swiper/modules';
+import Title from '../elements/title';
 
 function Home() {
     const h1Style = {
@@ -60,22 +59,11 @@ function Home() {
             <Header ></Header>
 
             <br />
+            <Title firstPart="Welcome to" secondPart="Dance Club"/>
 
-            <>Dance Club -----------------</><br></br>
 
-
-            <h2>Choisissez votre cours</h2>
 
             <div>
-
-                {/* // Installez la bibliothèque React Modal
-            // npm install react-modal
-
-            // Importez la bibliothèque React Modal dans votre fichier
-            import React, { useState } from 'react';
-            import ReactModal from 'react-modal'; */}
-
-
 
 
 
@@ -112,49 +100,80 @@ function Home() {
 
 
 
+        
+       
 
-            <a href='/rgpd/'>RGPD</a><br></br>
+            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+            <Swiper
+                pagination={{
+                    dynamicBullets: true,
+                }}
+                modules={[Pagination]}
+                className="mySwiper"
+            >
+                <SwiperSlide><div className="cours">
+                    <h3>Jazz</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen1}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Dance</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen1}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Jazz</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen1}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Moderne</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen1}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Jazz</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen1}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Classique</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen2}>Acheter</button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours">
+                    <h3>Rock</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <button onClick={handleOpen3}>Acheter</button>
+
+                </div></SwiperSlide>
+            </Swiper>
+            <button onClick={handleOpen1}>Mes cours</button>
+            <div style={{ fontSize: '8px' }}>
+                <a href='/rgpd/'>RGPD</a><br></br>
             <a href='/connexion/'>Connexion</a><br></br>
             <a href='/profil/'>Profil</a><br></br>
             <a href='/inscription/'>Créer un compte</a><br></br>
             <a href='/cours/'>Cours</a>
-
-
-            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-            <div class="cours">
-                <div class="swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide"><div className="cours">
-                            <h3>Classique</h3>
-                            <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
-                            <img src="" alt="" srcSet="" />
-                            <button onClick={handleOpen1}>Acheter</button>
-                        </div></div>
-                        <div class="swiper-slide"> <div className="cours">
-                            <h3>Contemporain</h3>
-                            <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
-                            <img src="" alt="" srcSet="" />
-                            <button onClick={handleOpen2}>Acheter</button>
-                        </div></div>
-                        <div class="swiper-slide"><div class="cours">
-                            <h3>Contemporain</h3>
-                            <p>La danse contemporaine est une danse très libre qui permet de s'exprimer.</p>
-                            <img src="" alt="" srcset="" />
-                            <button onClick={handleOpen3}>Acheter</button>
-                        </div></div>
-                        <div class="swiper-slide">SLIDER3</div>
-                        <div class="swiper-slide">SLIDER4</div>
-                        <div class="swiper-slide">SLIDER5</div>
-                        <div class="swiper-slide">SLIDER6</div>
-                        <div class="swiper-slide">SLIDER6</div>
-                        <div class="swiper-slide">SLIDER7</div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
             </div>
 
         </div>
+
+        
     );
 
 }
