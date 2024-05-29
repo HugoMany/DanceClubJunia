@@ -13,6 +13,7 @@ import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
 import PlanningProf from './PAGES/planningProf';
 import PlanningEleve from './PAGES/planningEleve';
+import CoursesList from './PAGES/listCourse';
 
 import Recherche from './PAGES/recherche';
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/planningProf" element={<PlanningProf/>} />
           <Route path="/planningEleve" element={<PlanningEleve/>}/>
+          <Route path="/listCourse" element={<CoursesList/>}/>
         </Routes>
       </Router>
     </div>
