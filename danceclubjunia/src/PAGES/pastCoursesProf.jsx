@@ -81,39 +81,36 @@ let coursesData = [
     })
 ];
 
-// Function to get courses for a student
-const getCoursesForStudent = (studentId) => {
-    return coursesData.filter(course => course.students.includes(studentId));
+const getCoursesForTeacher = (teacherId) => {
+    return coursesData.filter(course => course.teachers.includes(teacherId));
 };
 
-const StudentCourses = ({ studentId }) => {
+const TeacherPastCourses = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate fetching courses for the student
         try {
-            const data = getCoursesForStudent(studentId);
+            const data = getCoursesForTeacher(teacherId);
             const now = new Date();
-            const upcomingCourses = data.filter(course => course.startDate > now);
-            const sortedCourses = upcomingCourses.sort((a, b) => a.startDate - b.startDate);
+            const pastCourses = data.filter(course => course.startDate < now);
+            const sortedCourses = pastCourses.sort((a, b) => b.startDate - a.startDate);
             setCourses(sortedCourses);
-            // Sort courses by start date and time
             setLoading(false);
         } catch (error) {
             console.error('Error fetching courses:', error);
             setError(error);
             setLoading(false);
         }
-    }, [studentId]);
+    }, [teacherId]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading courses: {error.message}</div>;
 
     return (
         <div>
-            <h2>Upcoming Courses</h2>
+            <h2>Your Past Courses</h2>
             <ul>
                 {courses.map(course => (
                     <li key={course.courseId}>
@@ -124,7 +121,7 @@ const StudentCourses = ({ studentId }) => {
                         <p>Start Time: {course.startTime}</p>
                         <p>Location: {course.location}</p>
                         <p>Duration: {course.duration}</p>
-                        <p>Teachers: {course.teachers.join(', ')}</p>
+                        <p>Students: {course.students.join(', ')}</p>
                     </li>
                 ))}
             </ul>
@@ -132,8 +129,8 @@ const StudentCourses = ({ studentId }) => {
     );
 };
 
-const PlanningEleve = () => {
-    return <StudentCourses studentId="Student 3" />;
+const PastCoursesProf = () => {
+    return <TeacherPastCourses teacherId="Teacher 1" />;
 };
 
-export default PlanningEleve;
+export default PastCoursesProf;
