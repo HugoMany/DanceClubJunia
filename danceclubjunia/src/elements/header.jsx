@@ -1,29 +1,18 @@
 import danceImage from '../img/dance.png';
 
 function Header() {
-    const isAdmin = true;
-    const isConnect = true  ;
-    const styleHeader = {
-        display: 'flex',
-        padding: '10px 20px',
-        fontSize: '16px',
-        cursor: 'pointer',
-        backgroundColor: '#FDD93B',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        alignItems: 'center',
-        flexwrap: 'nowrap',
-        justifycontent: 'space-evenly',
-        };
+    const isAdmin = false;
+    const isConnect = true ;
+
+
     return (
-        <div class="header" style={styleHeader}>
-            <a href='/'><img style={{ width: '150px' }} src={danceImage} alt="Dance" /></a>
+        <div class="header">
+            <a href='/' style={{ textDecoration: 'none', color: 'white' }}> <h1>Dance <br></br>Club </h1></a>
 <br/>       
         {isAdmin ? (
                 <>
                 {/* <h4>isAdmin</h4> */}
-                                <a href='/admin/' ><button class="styled-button">Admin</button></a>
+                                <a href='/admin/' ><button class="styled-button">A</button></a>
                 </>
 
             ) : (<>
@@ -33,13 +22,12 @@ function Header() {
             {isConnect ? (
                 <>
                 {/* <h4>isConnect</h4> */}
-                <a href='/profil/'><button>Profil</button></a>
+                <a href='/profil/'><button>P</button></a>
                 </>
 
             ) : (<>
             {/* <h4>isNotConnect</h4> */}
-                <a href='/connexion/'><button>Connexion</button></a>
-                <a href='/inscription/'><button>Inscription</button></a>
+                <a href='/connexion/'><button>C</button></a>
                 </>
             )}
 <br/><br/>

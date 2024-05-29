@@ -59,7 +59,6 @@ function Home() {
 
             <br />
 
-            <>Dance Club -----------------</><br></br>
 
 
             <h2>Choisissez votre cours</h2>
@@ -102,12 +101,7 @@ function Home() {
 
 
         
-            <a href='/rgpd/'>RGPD</a><br></br>
-            <a href='/connexion/'>Connexion</a><br></br>
-            <a href='/profil/'>Profil</a><br></br>
-            <a href='/inscription/'>Créer un compte</a><br></br>
-            <a href='/cours/'>Cours</a>
-
+       
 
             <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -168,8 +162,16 @@ function Home() {
 
                 </div></SwiperSlide>
             </Swiper>
+            <div><a href='/rgpd/'>RGPD</a><br></br>
+            <a href='/connexion/'>Connexion</a><br></br>
+            <a href='/profil/'>Profil</a><br></br>
+            <a href='/inscription/'>Créer un compte</a><br></br>
+            <a href='/cours/'>Cours</a>
+            </div>
 
         </div>
+
+        
     );
 
 }
