@@ -4,6 +4,7 @@ import axios from 'axios';
 // Liste de tous les tags possibles pour l'autocomplétion.
 const listeDeTags = ['danse', 'yoga', 'peinture', 'cuisine', 'programmation', /* ... */];
 
+
 function Recherche() {
   const [tag, setTag] = useState('');
   const [resultats, setResultats] = useState([]);
