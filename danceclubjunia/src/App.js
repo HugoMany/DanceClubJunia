@@ -11,6 +11,7 @@ import CreerProf from './PAGES/admin/creerProf';
 import CreerCours from './PAGES/admin/creerCours';
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
+import PlanningProf from './PAGES/planningProf';
 
 import Recherche from './PAGES/recherche';
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
 
           <Route path="/recherche" element={<Recherche />} />
+          <Route path="/planningProf" element={<PlanningProf/>} />
         </Routes>
       </Router>
     </div>
