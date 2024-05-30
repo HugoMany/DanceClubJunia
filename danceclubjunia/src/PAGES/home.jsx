@@ -16,6 +16,7 @@ import 'swiper/css/pagination';
 
 // import required modules
 import { Pagination } from 'swiper/modules';
+import ListeFuturCours from '../elements/listeFuturCours';
 
 function Home() {
     const h1Style = {
@@ -55,7 +56,7 @@ function Home() {
 
     return (
         <div><div>
-            <Header ></Header>
+            <Header title={"Accueil"}></Header>
 
             <br />
 
@@ -160,15 +161,8 @@ function Home() {
 
                 </div></SwiperSlide>
             </Swiper>
-            <button onClick={handleOpen1}>Mes cours</button>
-            <div style={{ fontSize: '8px' }}>
-                <a href='/rgpd/'>RGPD</a><br></br>
-            <a href='/connexion/'>Connexion</a><br></br>
-            <a href='/profil/'>Profil</a><br></br>
-            <a href='/inscription/'>Créer un compte</a><br></br>
-            <a href='/cours/'>Cours</a>
-            </div>
-
+            <ListeFuturCours></ListeFuturCours>
+            
         </div>
 
         

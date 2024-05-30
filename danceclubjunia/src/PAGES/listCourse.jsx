@@ -105,10 +105,9 @@ const CoursesList = () => {
 
     return (
         <div>
-            <h2>All Available Courses</h2>
-            <ul>
+            <div>
                 {courses.map(course => (
-                    <li key={course.courseId}>
+                    <div class="coursesCase" key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
                         <p>Type: {course.type}</p>
@@ -117,9 +116,9 @@ const CoursesList = () => {
                         <p>Location: {course.location}</p>
                         <p>Duration: {course.duration}</p>
                         <p>Teachers: {course.teachers.join(', ')}</p>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
