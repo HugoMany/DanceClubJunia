@@ -56,7 +56,7 @@ function Home() {
 
     return (
         <div><div>
-            <Header></Header>
+            <Header title={"Accueil"}></Header>
 
             <br />
 

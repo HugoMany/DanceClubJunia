@@ -84,3 +84,20 @@ h1 p{
 .footer div{
   width: 33.333vw;
 }
+.coursesCase {
+  border: 1px solid white;
+  background-color: white;
+  border-radius: 20px;
+  margin: 3vw 3vh;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+html .swiper-slide {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}

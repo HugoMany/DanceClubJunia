@@ -105,10 +105,9 @@ const CoursesList = () => {
 
     return (
         <div>
-            <h2>All Available Courses</h2>
             <div>
                 {courses.map(course => (
-                    <div key={course.courseId}>
+                    <div class="coursesCase" key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
                         <p>Type: {course.type}</p>
