@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Configurer la base de données MySQL
+// Configurer la base de donn�es MySQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'admin123',
@@ -32,19 +32,19 @@ app.post('/addCredit', (req, res) => {
 
   console.log("addCredit | studentID, credit : " + studentID + ", " + credit);
 
-  // Vérifier si credit est un entier
+  // V�rifier si credit est un entier
   if (!Number.isInteger(credit)) {
     res.json(false);
     return console.error('addCredit | error: credit is not an integer');
   }
 
-  // Vérifier si credit est négatif ou nul
+  // V�rifier si credit est n�gatif ou nul
   if (credit <= 0) {
     res.json(false);
     return console.error('addCredit | error: invalid credit');
   }
 
-  // Vérifier si studentID est négatif ou nul
+  // V�rifier si studentID est n�gatif ou nul
   if (studentID <= 0) {
     res.json(false);
     return console.error('addCredit | error: invalid studentID');
@@ -94,7 +94,7 @@ app.post('/getSubscriptionEndDate', (req, res) => {
 app.post('/getCourses', (req, res) => {
   const { studentID } = req.body;
 
-  // Vérifier si studentID est négatif ou nul
+  // V�rifier si studentID est n�gatif ou nul
   if (studentID <= 0) {
     res.json(false);
     return console.error('addCredit | error: invalid studentID');
@@ -107,7 +107,7 @@ app.post('/getCourses', (req, res) => {
     WHERE JSON_CONTAINS(studentsID, ?)
   `;
 
-  // Afficher la requête SQL avec les valeurs substituées
+  // Afficher la requ�te SQL avec les valeurs substitu�es
   const formattedSql = mysql.format(sql, [studentID]);
   console.log('getCourses | Executing SQL query:', formattedSql);
 
@@ -131,7 +131,7 @@ app.post('/addLink', (req, res) => {
     return console.error('addLink | error: need text link');
   }
 
-  // SQL pour vérifier si l'étudiant est inscrit au cours
+  // SQL pour v�rifier si l'�tudiant est inscrit au cours
   const checkStudentSql = `
     SELECT JSON_CONTAINS(studentsID, ?) AS isParticipant
     FROM Courses
@@ -145,9 +145,9 @@ app.post('/addLink', (req, res) => {
       return;
     }
 
-    // Si l'étudiant est inscrit au cours
+    // Si l'�tudiant est inscrit au cours
     if (result.length > 0 && result[0].isParticipant) {
-      // SQL pour ajouter le lien à la colonne links
+      // SQL pour ajouter le lien � la colonne links
       const updateLinkSql = `
         UPDATE Courses
         SET links = JSON_ARRAY_APPEND(links, '$', ?)
@@ -176,20 +176,20 @@ app.post('/buyPlace', (req, res) => {
   number = parseInt(number);
   console.log("buyPlace | studentID, type, number : " + studentID + ", " + type + ", " + number);
 
-  // Vérifier si number est un entier
+  // V�rifier si number est un entier
   if (!Number.isInteger(number)) {
     res.json(false);
     console.log("number",number,Number.isInteger(number),1,Number.isInteger(1));
     return console.error('buyPlace | error: number is not an integer');
   }
 
-  // Vérifier si number est négatif ou nul
+  // V�rifier si number est n�gatif ou nul
   if (number <= 0) {
     res.json(false);
     return console.error('buyPlace | error: invalid number');
   }
 
-  // Vérifier si studentID est négatif ou nul
+  // V�rifier si studentID est n�gatif ou nul
   if (studentID <= 0) {
     res.json(false);
     return console.error('buyPlace | error: invalid studentID');
@@ -203,7 +203,7 @@ app.post('/buyPlace', (req, res) => {
   }
   const updateUserCreditQuery = 'UPDATE Users SET credit = credit - ? WHERE userID = ?';
 
-  // Récupération du prix
+  // R�cup�ration du prix
   db.query(priceQuery, [type], (err, result) => {
     if (err) {
       res.json(false);
@@ -212,7 +212,7 @@ app.post('/buyPlace', (req, res) => {
 
     let price = result[0].price;
     if(type!="card"){
-      price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achetés
+      price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achet�s
     }
 
     if(!price){
@@ -220,7 +220,7 @@ app.post('/buyPlace', (req, res) => {
       return console.error('buyPlace | place not found ');
     }
 
-    // Vérifier si l'utilisateur a suffisamment de crédits
+    // V�rifier si l'utilisateur a suffisamment de cr�dits
     const getUserCreditQuery = 'SELECT credit FROM Users WHERE userID = ?';
     db.query(getUserCreditQuery, [studentID], (err, result) => {
       if (err) {
@@ -230,7 +230,7 @@ app.post('/buyPlace', (req, res) => {
         const userCredit = result[0].credit;
           
         if (userCredit >= price) {
-          // Soustraire le prix du ticket du crédit de l'utilisateur
+          // Soustraire le prix du ticket du cr�dit de l'utilisateur
           db.query(updateUserCreditQuery, [price, studentID], (err, result) => {
             if (err) {
               console.error('Error updating user credit:', err);
@@ -278,7 +278,7 @@ app.post('/buyPlace', (req, res) => {
                     WHERE userID = '` + studentID + `'
                   `;
 
-                  // Afficher la requête SQL avec les valeurs substituées
+                  // Afficher la requ�te SQL avec les valeurs substitu�es
                   const formattedSql = mysql.format(sql);
                   console.log('buyPlace | Executing SQL query:', formattedSql);
             
@@ -336,14 +336,14 @@ app.post('/resetPassword', (req, res) => {
 
   console.log("resetPassword | studentID : " + studentID);
 
-  // Générer un token aléatoire de 6 chiffres
+  // G�n�rer un token al�atoire de 6 chiffres
   const generateToken = () => {
-    return Math.floor(100000 + Math.random() * 900000); // Génère un nombre à 6 chiffres
+    return Math.floor(100000 + Math.random() * 900000); // G�n�re un nombre � 6 chiffres
   };
 
   let token = generateToken();
 
-  // Vérifier l'unicité du token
+  // V�rifier l'unicit� du token
   const checkTokenUnique = async (token) => {
     return new Promise((resolve, reject) => {
       const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
@@ -451,6 +451,264 @@ app.post('/resetPasswordToken', (req, res) => {
     }
   })();
 });
+
+app.post('/searchParticipatedCourses', (req, res) => {
+  const { studentID, startDate, tags } = req.body;
+
+  console.log("searchParticipatedCourses | studentID, startDate, tags : " + studentID + ", "+ startDate +", " + tags);
+
+  let sql = `
+    SELECT * FROM Courses
+    WHERE JSON_CONTAINS(studentsID, ?)
+  `;
+  const params = [studentID];
+
+  if (startDate) {
+    sql += ` AND DATE_FORMAT(startDate, '%Y-%m-%d') = ?`;
+    params.push(startDate);
+  }
+
+  if (tags.length > 0) {
+    sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
+    params.push(...tags);
+  }
+
+  // Afficher la requ�te SQL avec les valeurs substitu�es
+  const formattedSql = mysql.format(sql, params);
+  console.log('searchParticipatedCourses | Executing SQL query:', formattedSql);
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      res.json(false);
+      console.error("searchParticipatedCourses | Error: ", err);
+    }
+    console.log('searchParticipatedCourses | Courses found:', results);
+    res.json(results);
+  });
+});
+
+// ---------------------------------
+// ---------- TEACHER --------------
+// ---------------------------------
+
+app.post('/getStudent', (req, res) => {
+  const { studentID } = req.body;
+
+  // V�rifier si studentID est n�gatif ou nul
+  if (studentID <= 0) {
+    res.json(false);
+    return console.error('getStudent | error: invalid studentID');
+  }
+  
+  console.log("getStudent | studentID : " + studentID);
+
+  const sql = `
+    SELECT * FROM Users 
+    WHERE userID = ?
+  `;
+
+  // Afficher la requ�te SQL avec les valeurs substitu�es
+  const formattedSql = mysql.format(sql, [studentID]);
+  console.log('getStudent | Executing SQL query:', formattedSql);
+
+  db.query(sql, [studentID], (err, result) => {
+    if (err) {
+      res.json(false);
+      return console.error('getStudent | error executing query: ' + err.stack);
+    }
+    
+    res.json(result[0]);
+  });
+});
+
+app.post('/newStudent', (req, res) => {
+  const { firstname, surname, email, password, connectionMethod, credit } = req.body;
+
+  // Vérification que tous les champs sont remplis
+  if (!firstname || !surname || !email || !password || !connectionMethod || credit === undefined) {
+    return res.status(400).json({ error: 'Tous les champs doivent être remplis.' });
+  }
+
+  // Vérification de la validité du nombre de crédits
+  if(credit < 0){
+    return res.status(400).json({ error: 'Credit invalide.' });
+  }
+
+  // Vérification de la validité de l'email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Email invalide.' });
+  }
+  
+  console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit);
+
+  const sql = `
+    INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, credit)
+    VALUES (?, ?, ?, ?, ?, 'student', ?)
+  `;
+
+  // Afficher la requ�te SQL avec les valeurs substitu�es
+  const formattedSql = mysql.format(sql, [firstname, surname, email, password, connectionMethod, credit]);
+  console.log('newStudent | Executing SQL query:', formattedSql);
+
+  db.query(sql, [firstname, surname, email, password, connectionMethod, credit], (err, result) => {
+    if (err) {
+      res.json(false);
+      return console.error('newStudent | error executing query: ' + err.stack);
+    }
+
+    // Récupérer l'ID de l'utilisateur nouvellement inséré
+    const newUserID = result.insertId;
+
+    // Sélectionner les informations complètes de l'utilisateur nouvellement inséré
+    const selectSql = 'SELECT * FROM Users WHERE userID = ?';
+    db.query(selectSql, [newUserID], (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
+        return console.error('newStudent | error executing query: ' + err.stack);
+      }
+
+      // Renvoi de la ligne nouvellement insérée
+      res.json(rows[0]);
+    });
+  });
+});
+
+app.post('/modifyStudent', (req, res) => {
+  const { studentID, firstname, surname, email, password, connectionMethod, credit } = req.body;
+
+  if (!studentID) {
+    return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
+  }
+
+  const fieldsToUpdate = [];
+  const values = [];
+
+  if (firstname) {
+    fieldsToUpdate.push('firstname = ?');
+    values.push(firstname);
+  }
+
+  if (surname) {
+    fieldsToUpdate.push('surname = ?');
+    values.push(surname);
+  }
+
+  if (email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Email invalide.' });
+    }
+    fieldsToUpdate.push('email = ?');
+    values.push(email);
+  }
+
+  if (password) {
+    fieldsToUpdate.push('password = ?');
+    values.push(password);
+  }
+
+  if (connectionMethod) {
+    fieldsToUpdate.push('connectionMethod = ?');
+    values.push(connectionMethod);
+  }
+
+  if (credit !== undefined) {
+    if (credit < 0) {
+      return res.status(400).json({ error: 'Credit invalide.' });
+    }
+    fieldsToUpdate.push('credit = ?');
+    values.push(credit);
+  }
+
+  if (fieldsToUpdate.length === 0) {
+    return res.status(400).json({ error: 'Aucun champ à mettre à jour.' });
+  }
+
+  values.push(studentID);
+
+  const sql = `
+    UPDATE Users
+    SET ${fieldsToUpdate.join(', ')}
+    WHERE userID = ?
+  `;
+
+  // Afficher la requête SQL avec les valeurs substituées
+  const formattedSql = mysql.format(sql, values);
+  console.log('modifyStudent | Executing SQL query:', formattedSql);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      res.json(false);
+      return console.error('modifyStudent | error executing query: ' + err.stack);
+    }
+
+    // Si la mise à jour a réussi, récupérer les informations mises à jour de l'utilisateur
+    if (result.affectedRows > 0) {
+      const selectSql = 'SELECT * FROM Users WHERE userID = ?';
+      db.query(selectSql, [studentID], (err, rows) => {
+        if (err) {
+          res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
+          return console.error('modifyStudent | error executing query: ' + err.stack);
+        }
+
+        // Renvoi de la ligne mise à jour
+        res.json(rows[0]);
+      });
+    } else {
+      res.status(404).json({ error: 'Utilisateur non trouvé.' });
+    }
+  });
+});
+
+app.post('/removeStudent', (req, res) => {
+  const { courseID, studentID } = req.body;
+
+  // Vérifier si les champs sont remplis
+  if (!courseID || !studentID) {
+    return res.status(400).json({ error: 'removeStudent | Les champs courseID et studentID doivent être fournis.' });
+  }
+
+  console.log("removeStudent | courseID, studentID : " + courseID + ", " + studentID);
+
+  const selectSql = 'SELECT studentsID FROM Courses WHERE courseID = ?';
+  db.query(selectSql, [courseID], (err, rows) => {
+    if (err) {
+      res.json(false);
+      res.status(500).json({ error: 'removeStudent | Erreur lors de la récupération des données.' });
+      return console.error('removeStudent | error executing query: ' + err.stack);
+    }
+
+    let studentsID = [];
+    if (rows.length > 0) {
+      studentsID = JSON.parse(rows[0].studentsID);
+    }
+
+    // Retirer l'étudiant de la liste
+    const index = studentsID.indexOf(parseInt(studentID));
+
+    if (index !== -1) {
+      studentsID.splice(index, 1);
+
+      // Mettre à jour la liste des étudiants dans la base de données
+      const updateSql = 'UPDATE Courses SET studentsID = ? WHERE courseID = ?';
+      const updatedStudentsID = JSON.stringify(studentsID);
+      db.query(updateSql, [updatedStudentsID, courseID], (err, result) => {
+        if (err) {
+          res.json(false);
+          res.status(500).json({ error: 'removeStudent | Erreur lors de la mise à jour des données.' });
+          return console.error('removeStudent | error executing query: ' + err.stack);
+        }
+        res.json(true);
+      });
+    } else {
+      res.json(false);
+      console.log("removeStudent | student not in course");
+    }
+  });
+});
+
+
 
 // Servir les fichiers statiques de l'application React
 app.use(express.static(path.join(__dirname, '../frontend/build')));
