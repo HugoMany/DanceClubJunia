@@ -5,7 +5,7 @@ function Header({ title }) {
     return (
         <div>
             <div class="header">
-                <h1>{title}</h1>
+                <h1>Dance Club</h1>
             </div>
             <div class="footer">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />

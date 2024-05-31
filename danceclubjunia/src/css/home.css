@@ -18,3 +18,78 @@ h2{
     margin: 1vh 0vh;
     font-size: 22px;
 }
+
+.imageCoursSuivanteHomePage {
+    height: 60%;
+    width: 60%;
+    border: 0px solid white;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.imageCoursSuivanteHomePage img{
+    height: 100%;
+    width: 100%;
+}
+
+.divImageCoursSuivanteHomePage {
+    width: 25%;
+    display: flex;
+    height: 100%;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.imageCoursSuivanteHomePage {
+    /* height: 100%; */
+    width: 100%;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: row;
+}
+.imageCoursSuivanteHomePage img {
+    height: 100%;
+    width: 100%;
+} 
+.coursesCase {
+    padding: 5px;
+    border: 1px solid white;
+      background-color: white;
+      border-radius: 20px;
+      margin: 3vw 3vh;
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      align-items: center;
+  }
+
+  .timeCoursSuivantHomePage {
+    text-align: left;
+    padding: 3px;
+}  
+.timeCoursSuivantHomePage p {
+    margin: 0px;
+    font-size: 12px;
+}
+.timeCoursSuivantHomePage h5 {
+    margin: 8px 0px;
+    font-size: 18px;
+
+}
+.typeEtProfCoursSuivantHomePage {
+    height: 100%;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+.typeEtProfCoursSuivantHomePage p{
+    text-align: left;
+    margin: 0px;
+    font-size: 12px;
+}

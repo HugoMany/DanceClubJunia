@@ -148,14 +148,19 @@ const CoursesList = () => {
             <div>
                 {courses.map(course => (
                     <div class="coursesCase" key={course.courseId}>
-                        <h3>{course.title}</h3>
-                        <img src={course.image} alt={course.title} />
-                        <p>Type: {course.type}</p>
-                        <p>Start Date: {course.startDate.toDateString()}</p>
-                        <p>Start Time: {course.startTime}</p>
-                        <p>Location: {course.location}</p>
-                        <p>Duration: {course.duration}</p>
-                        <p>Teachers: {course.teachers.join(', ')}</p>
+                        <div className='divImageCoursSuivanteHomePage'>
+                        <div className='imageCoursSuivanteHomePage'><img src={"https://gap.asptt.com/files/2021/08/salsa.png"} alt={course.title} /></div>
+                        </div>
+                        <div className='timeCoursSuivantHomePage'>                        
+                            <h5>{course.title}</h5>
+                            <p>{course.startDate.toDateString()}</p>
+                            <p>{course.startTime}</p>
+                        </div>
+                        <div className='typeEtProfCoursSuivantHomePage'>
+                            <p>{course.type}</p>
+                            <p>{course.teachers.join(', ')}</p>
+                        </div>
+
                     </div>
                 ))}
             </div>
