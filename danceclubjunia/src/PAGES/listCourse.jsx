@@ -79,6 +79,46 @@ let coursesData = [
         students: ['Student 3', 'Student 4'],
         tags: []
     })
+    ,
+    new Course({
+        courseId: '2',
+        image: 'image2.jpg',
+        title: 'Ballet Class',
+        type: 'Ballet',
+        duration: '1.5 hours',
+        startDate: '2024-06-01',
+        startTime: '17:00',
+        location: 'Studio B',
+        maxParticipants: 15,
+        paymentType: 'one-time',
+        price: 25,
+        paymentOptions: [],
+        isEvening: false,
+        teachers: ['Teacher 1'],
+        links: [],
+        students: ['Student 3', 'Student 4'],
+        tags: []
+    })
+    ,
+    new Course({
+        courseId: '2',
+        image: 'image2.jpg',
+        title: 'Ballet Class',
+        type: 'Ballet',
+        duration: '1.5 hours',
+        startDate: '2024-06-01',
+        startTime: '17:00',
+        location: 'Studio B',
+        maxParticipants: 15,
+        paymentType: 'one-time',
+        price: 25,
+        paymentOptions: [],
+        isEvening: false,
+        teachers: ['Teacher 1'],
+        links: [],
+        students: ['Student 3', 'Student 4'],
+        tags: []
+    })
 ];
 
 const CoursesList = () => {
@@ -108,14 +148,19 @@ const CoursesList = () => {
             <div>
                 {courses.map(course => (
                     <div class="coursesCase" key={course.courseId}>
-                        <h3>{course.title}</h3>
-                        <img src={course.image} alt={course.title} />
-                        <p>Type: {course.type}</p>
-                        <p>Start Date: {course.startDate.toDateString()}</p>
-                        <p>Start Time: {course.startTime}</p>
-                        <p>Location: {course.location}</p>
-                        <p>Duration: {course.duration}</p>
-                        <p>Teachers: {course.teachers.join(', ')}</p>
+                        <div className='divImageCoursSuivanteHomePage'>
+                        <div className='imageCoursSuivanteHomePage'><img src={"https://gap.asptt.com/files/2021/08/salsa.png"} alt={course.title} /></div>
+                        </div>
+                        <div className='timeCoursSuivantHomePage'>                        
+                            <h5>{course.title}</h5>
+                            <p>{course.startDate.toDateString()}</p>
+                            <p>{course.startTime}</p>
+                        </div>
+                        <div className='typeEtProfCoursSuivantHomePage'>
+                            <p>{course.type}</p>
+                            <p>{course.teachers.join(', ')}</p>
+                        </div>
+
                     </div>
                 ))}
             </div>
