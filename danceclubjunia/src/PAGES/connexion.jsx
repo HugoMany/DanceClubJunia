@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
-
+import '../css/login.css';
 function Connexion() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -41,7 +41,8 @@ function Connexion() {
 
     return (
         <div>
-            <Header></Header>
+            <Header title="Login"></Header>
+            <div className='Connexion'>
             <h1>Page de Connexion</h1>
             <form onSubmit={handleSubmit}>
                 <label>
@@ -59,6 +60,7 @@ function Connexion() {
                 
             </form>
             <a href='/inscription/'>Inscription</a>
+            </div>
         </div>
     );
 }

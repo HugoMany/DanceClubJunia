@@ -1,6 +1,6 @@
 function Header({ title }) {
     const isAdmin = false;
-    const isConnect = true ;
+    const isConnect = false ;
 
     return (
         <div>
