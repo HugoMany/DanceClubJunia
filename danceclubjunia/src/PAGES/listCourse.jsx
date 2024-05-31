@@ -79,6 +79,46 @@ let coursesData = [
         students: ['Student 3', 'Student 4'],
         tags: []
     })
+    ,
+    new Course({
+        courseId: '2',
+        image: 'image2.jpg',
+        title: 'Ballet Class',
+        type: 'Ballet',
+        duration: '1.5 hours',
+        startDate: '2024-06-01',
+        startTime: '17:00',
+        location: 'Studio B',
+        maxParticipants: 15,
+        paymentType: 'one-time',
+        price: 25,
+        paymentOptions: [],
+        isEvening: false,
+        teachers: ['Teacher 1'],
+        links: [],
+        students: ['Student 3', 'Student 4'],
+        tags: []
+    })
+    ,
+    new Course({
+        courseId: '2',
+        image: 'image2.jpg',
+        title: 'Ballet Class',
+        type: 'Ballet',
+        duration: '1.5 hours',
+        startDate: '2024-06-01',
+        startTime: '17:00',
+        location: 'Studio B',
+        maxParticipants: 15,
+        paymentType: 'one-time',
+        price: 25,
+        paymentOptions: [],
+        isEvening: false,
+        teachers: ['Teacher 1'],
+        links: [],
+        students: ['Student 3', 'Student 4'],
+        tags: []
+    })
 ];
 
 const CoursesList = () => {

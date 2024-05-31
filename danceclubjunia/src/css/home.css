@@ -1,5 +1,5 @@
 .cours{
-    margin:  20px 5vw;
+    margin:  10px 5vw;
     padding: 20px;
     border: 2px solid #fff;
     background-color: #fff;
@@ -14,5 +14,7 @@
     justify-content: center;
     align-items: center;
 }
-
-
+h2{
+    margin: 1vh 0vh;
+    font-size: 22px;
+}
