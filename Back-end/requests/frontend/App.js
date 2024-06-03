@@ -430,6 +430,39 @@ function App() {
     }
   };
 
+
+  const cancelCourse = async (event) => {
+    event.preventDefault(); // Emp�che le formulaire de se soumettre de mani�re traditionnelle
+
+    const form = document.getElementById('cancelCourse');
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    const url = '/api/teacher/cancelCourse';
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST', // M�thode de la requ�te
+        headers: {
+          'Content-Type': 'application/json' // Type de contenu
+        },
+        body: JSON.stringify(data) // corps de la requ�te converti en JSON
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur dans la requ�te:" + response.statusText);
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('fr-FR', options);
@@ -671,6 +704,14 @@ function App() {
         <input type="text" id="studentID" name="studentID" required></input>
 
         <button onClick={removeStudent} type="submit">Envoyer</button>
+      </form>
+
+      <h2> Cancel course </h2>
+      <form id="cancelCourse">
+        <label htmlFor="courseID">courseID:</label>
+        <input type="text" id="courseID" name="courseID" required></input>
+
+        <button onClick={cancelCourse} type="submit">Envoyer</button>
       </form>
     </div>
   );
