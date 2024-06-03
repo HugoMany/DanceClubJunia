@@ -1,5 +1,5 @@
 function Header({ title }) {
-    const isAdmin = false;
+    const isAdmin = true;
     const isConnect = false ;
 
     return (
@@ -7,6 +7,17 @@ function Header({ title }) {
             <div class="header">
                 <h1>Dance Club</h1>
             </div>
+            {isAdmin ? (
+                    <>
+                        {/* <h4>isAdmin</h4> */}
+                        <div className="AdminButton"><a href='/admin/' ><button class="styled-button">Admin</button></a></div>
+                    </>
+
+                ) : (
+                    <>
+                        {/* <h4>isNotAdmin</h4> */}
+                    </>
+                )}
             <div class="footer">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
                 <div><a href='/'><button><span class="material-symbols-outlined">
@@ -15,17 +26,7 @@ function Header({ title }) {
 
                 <h1>{title}</h1>
                 <br/>       
-                {isAdmin ? (
-                    <>
-                        {/* <h4>isAdmin</h4> */}
-                        <div><a href='/admin/' ><button class="styled-button">A</button></a></div>
-                    </>
-
-                ) : (
-                    <>
-                        {/* <h4>isNotAdmin</h4> */}
-                    </>
-                )}
+                
                 {isConnect ? (
                     <>
                         {/* <h4>isConnect</h4> */}
