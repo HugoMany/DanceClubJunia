@@ -136,3 +136,24 @@ exports.removeStudent = async (req, res) => {
         res.status(500).json(false);
     }
 };
+
+exports.cancelCourse = async (req, res) => {
+    try {
+        const { courseID } = req.body;
+      
+        // Vérifier si les champs sont remplis
+        if (!courseID) {
+          return res.status(400).json({ error: 'cancelCourse | Le champ courseID doit être fourni.' });
+        }
+      
+        console.log("cancelCourse | courseID : " + courseID);
+
+        await teacherService.cancelCourse(courseID);
+
+        res.json(true);
+
+    } catch (error) {
+        console.error('cancelCourse | error:', error);
+        res.status(500).json(false);
+    }
+};
