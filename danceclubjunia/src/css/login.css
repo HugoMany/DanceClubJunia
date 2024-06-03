@@ -1,4 +1,4 @@
-.Connexion {
+.Form {
     /* height: 40vh; */
     margin: 20vh 5vw;
     background: white;
@@ -44,14 +44,14 @@ button.inscriptionLogin a {
     color: black;
     text-decoration: none;
 }
-.Connexion input {
+.Form input {
     padding: 10px;
     margin: 10px;
     width: 60vw;
     border: 1px solid;
     border-radius: 5px;
 }
-html .Connexion .Swiper{
+html .Form .Swiper{
     height: auto;
 }
 img.LogoTemp {

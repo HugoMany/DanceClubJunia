@@ -85,7 +85,7 @@ function CreerCours() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='Form'>
             <Header></Header>
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />

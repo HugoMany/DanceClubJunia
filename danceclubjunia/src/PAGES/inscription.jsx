@@ -43,7 +43,7 @@ function Inscription() {
     };
 
     return (
-        <div className='Connexion'>
+        <div className='Form'>
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>

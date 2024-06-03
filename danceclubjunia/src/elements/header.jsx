@@ -1,6 +1,6 @@
 import logo from "../img/logo.jpg"
 function Header({ title }) {
-    const isAdmin = true;
+    const isAdmin = false;
     const isConnect = false ;
 
     return (

@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from './img/logo.jpg';
 import './App.css';
 import Rgpd from './PAGES/rgpd'
 import Inscription from './PAGES/inscription';

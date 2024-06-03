@@ -54,7 +54,7 @@ function Connexion() {
             
         
       
-         <div className='Connexion'>
+         <div className='Form'>
             {/* <h1>Page de Connexion</h1> */}
             <form onSubmit={handleSubmit}>
                 <label>
