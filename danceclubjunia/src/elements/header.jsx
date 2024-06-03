@@ -1,9 +1,11 @@
+import logo from "../img/logo.jpg"
 function Header({ title }) {
     const isAdmin = true;
     const isConnect = false ;
 
     return (
         <div>
+            <img src={logo} className="LogoTemp" alt="Logo" />
             <div class="header">
                 <h1>Dance Club</h1>
             </div>

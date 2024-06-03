@@ -20,10 +20,10 @@ function ConnexionEtInscriptionSlider() {
         <div className='connexionInscription'>    
         
          <Swiper
-         pagination={{
-             dynamicBullets: true,
-         }}
-         modules={[Pagination]}
+        //  pagination={{
+        //      dynamicBullets: true,
+        //  }}
+        //  modules={[Pagination]}
          className="mySwiper"
      >
          <SwiperSlide>
