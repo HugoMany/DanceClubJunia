@@ -43,13 +43,13 @@ function Inscription() {
     };
 
     return (
-        <div>
-            <Header></Header>
+        <div className='Connexion'>
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="nom">Firstname:</label>
+                    <label htmlFor="nom"></label>
                     <input
+                        placeholder='Firstname'
                         type="text"
                         id="nom"
                         value={firstname}
@@ -57,8 +57,9 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="prenom">Surname:</label>
+                    <label htmlFor="prenom"></label>
                     <input
+                        placeholder='Surname'
                         type="text"
                         id="prenom"
                         value={surname}
@@ -66,8 +67,9 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="motDePasse">Password:</label>
+                    <label htmlFor="motDePasse"></label>
                     <input
+                        placeholder='Password'
                         type="password"
                         id="motDePasse"
                         value={password}
@@ -75,8 +77,9 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="email">Email:</label>
+                    <label htmlFor="email"></label>
                     <input
+                        placeholder='E-mail'
                         type="email"
                         id="email"
                         value={email}
@@ -84,15 +87,16 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="connection">Connection Method:</label>
+                    <label htmlFor="connection"></label>
                     <input
+                        placeholder='Connection Method'
                         type="text"
                         id="connectionMethod"
                         value={connectionMethod}
                         onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 </div>
-                <button type="submit">S'inscrire</button>
+                <button className='connexionLogin' type="submit">S'inscrire</button>
             </form>
         </div>
     );

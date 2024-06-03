@@ -51,17 +51,9 @@ function Connexion() {
 
     return (
         <div>
-            <Header title="Login"></Header>
-        <div>    
+            
         
-         <Swiper
-         pagination={{
-             dynamicBullets: true,
-         }}
-         modules={[Pagination]}
-         className="mySwiper"
-     >
-         <SwiperSlide>
+      
          <div className='Connexion'>
             {/* <h1>Page de Connexion</h1> */}
             <form onSubmit={handleSubmit}>
@@ -80,40 +72,18 @@ function Connexion() {
 
                 
             </form>
-            <button className='inscriptionLogin'><a href='/inscription/'> 
+            <button className='inscriptionLogin'>
             <span class="material-symbols-outlined">
 swipe_right
 </span> Inscription
-            </a></button>
+            
+            </button>
+            <p><a className='mdpOublie' href='/'>Mot de passe oublié</a></p>
             </div>
-         </SwiperSlide>
-         <SwiperSlide>
-         <div className='Connexion'>
-            {/* <h1>Page de Connexion</h1> */}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <input  placeholder="E-mail" type="email" value={email} onChange={handleEmailChange} />
-                </label>
-                <br />
-                <label>
-                    <label>
-                        <input  placeholder="Mot de passe" type="password" value={password} onChange={handlePasswordChange} />
-                    </label>
-                </label>
-                <br />
-                <button className='connexionLogin' type="submit">Se connecter</button>
-
-                
-            </form>
-            {/* <button className='inscriptionLogin'><a href='/inscription/'>Inscription</a></button> */}
-            </div>
-             
-
-         </SwiperSlide>
-         </Swiper>
+        
 
 
-         </div>         </div>
+         </div>        
 
     );
 }

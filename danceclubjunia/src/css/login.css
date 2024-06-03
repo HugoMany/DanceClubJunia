@@ -12,7 +12,24 @@
     padding: 20px;
     border-radius: 30px;
 }
+.connexionInscription {
+    height: 80vh;
+    display: flex;
+    align-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+}
+html .connexionInscription .swiper {
+    width: 100%;
+    height: auto;
+}
+.mdpOublie{
+    color: black;
+    /* text-decoration: none; */
+    margin: 2px;
 
+}
 button.connexionLogin {
     background: black;
     color: white;
