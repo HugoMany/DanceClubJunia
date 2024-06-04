@@ -55,7 +55,7 @@ function Connexion() {
         
       
          <div className='Form'>
-            {/* <h1>Page de Connexion</h1> */}
+            <h2>Page de Connexion</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     <input  placeholder="E-mail" type="email" value={email} onChange={handleEmailChange} />
