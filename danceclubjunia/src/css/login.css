@@ -1,0 +1,65 @@
+.Form {
+    /* height: 40vh; */
+    margin: 20vh 5vw;
+    background: white;
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    border: 0px;
+    padding: 20px;
+    border-radius: 30px;
+}
+.connexionInscription {
+    height: 80vh;
+    display: flex;
+    align-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+}
+html .connexionInscription .swiper {
+    width: 100%;
+    height: auto;
+}
+.mdpOublie{
+    color: black;
+    /* text-decoration: none; */
+    margin: 2px;
+
+}
+button.connexionLogin {
+    background: black;
+    color: white;
+    margin: 15px 0px;
+    width: 40vw;
+}
+button.inscriptionLogin {
+    width: 40vw;
+    border: 0px;
+}
+button.inscriptionLogin a {
+    color: black;
+    text-decoration: none;
+}
+.Form input {
+    padding: 10px;
+    margin: 10px;
+    width: 60vw;
+    border: 1px solid;
+    border-radius: 5px;
+}
+html .Form .Swiper{
+    height: auto;
+}
+img.LogoTemp {
+    position: absolute;
+    top: 5px;
+    left: 30px;
+    z-index: 100;
+    width: 8vh;
+    border: 0px solid;
+    border-radius: 70px;
+}

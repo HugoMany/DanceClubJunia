@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
-
+import '../css/login.css';
 function CreerEleve() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -43,7 +43,7 @@ function CreerEleve() {
     };
 
     return (
-        <div>
+        <div className='Form'>
             <Header></Header>
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>

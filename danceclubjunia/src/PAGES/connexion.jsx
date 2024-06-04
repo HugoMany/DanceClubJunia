@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
+import '../css/login.css';
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+// import required modules
+import { Pagination } from 'swiper/modules';
 
 function Connexion() {
     const [email, setEmail] = useState('');
@@ -41,25 +51,40 @@ function Connexion() {
 
     return (
         <div>
-            <Header></Header>
-            <h1>Page de Connexion</h1>
+            
+        
+      
+         <div className='Form'>
+            <h2>Page de Connexion</h2>
             <form onSubmit={handleSubmit}>
                 <label>
-                    E-mail:
-                    <input type="email" value={email} onChange={handleEmailChange} />
+                    <input  placeholder="E-mail" type="email" value={email} onChange={handleEmailChange} />
                 </label>
                 <br />
                 <label>
-                    Mot de passe:
-                    <input type="password" value={password} onChange={handlePasswordChange} />
+                    <label>
+                        
+                        <input  placeholder="Mot de passe" type="password" value={password} onChange={handlePasswordChange} />
+                    </label>
                 </label>
                 <br />
-                <button type="submit">Se connecter</button>
+                <button className='connexionLogin' type="submit">Se connecter</button>
 
                 
             </form>
-            <a href='/inscription/'>Inscription</a>
-        </div>
+            <button className='inscriptionLogin'>
+            <span class="material-symbols-outlined">
+swipe_right
+</span> Inscription
+            
+            </button>
+            <p><a className='mdpOublie' href='/'>Mot de passe oublié</a></p>
+            </div>
+        
+
+
+         </div>        
+
     );
 }
 

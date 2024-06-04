@@ -112,6 +112,20 @@ class TeacherService {
     });
   }
 
+  async cancelCourse(courseID) {
+    return new Promise((resolve, reject) => {
+    const selectSql = 'DELETE FROM Courses WHERE startDate > CURRENT_DATE AND courseID = ?;';
+    db.query(sql, [courseID], (err, result) => {
+      if (err) {
+          return reject(err);
+      }
+      resolve(result);
+    });
+  })
+    
+    
+  }
+
 }
 
 module.exports = new TeacherService();

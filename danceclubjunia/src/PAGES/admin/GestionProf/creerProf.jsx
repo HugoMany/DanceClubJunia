@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../../elements/header';
+import Header from '../../../elements/header';
 
 const CreerProf = () => {
     const [firstname, setFirstname] = useState('');
@@ -55,6 +55,7 @@ const CreerProf = () => {
     };
 
     return (
+        <div className='Form'>
         <form onSubmit={handleSubmit}>
             <Header></Header>
             <label>
@@ -120,6 +121,7 @@ const CreerProf = () => {
             <br />
             <button type="submit">Créer le prof</button>
         </form>
+    </div>
     );
 };
 

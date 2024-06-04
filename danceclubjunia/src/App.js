@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from './img/logo.jpg';
 import './App.css';
 import Rgpd from './PAGES/rgpd'
 import Inscription from './PAGES/inscription';
@@ -7,14 +7,14 @@ import Profil from './PAGES/profil';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './PAGES/home';
-import CreerProf from './PAGES/admin/creerProf';
-import CreerCours from './PAGES/admin/creerCours';
+import CreerProf from './PAGES/admin/GestionProf/creerProf';
+import CreerCours from './PAGES/admin/GestionCours/creerCours';
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
 import PlanningProf from './PAGES/planningProf';
 import PlanningEleve from './PAGES/planningEleve';
 import CoursesList from './PAGES/listCourse';
-
+import ConnexionEtInscriptionSlider from './PAGES/connexionEtInscriptionSlider';
 import Recherche from './PAGES/recherche';
 function App() {
   return (
@@ -22,10 +22,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/inscription" element={<Inscription />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/rgpd" element={<Rgpd />} />
-          <Route path="/connexion/" element={<Connexion />} />
+          <Route path="/connexion/" element={<ConnexionEtInscriptionSlider />} />
           <Route path="/admin/creerProf" element={<CreerProf />} />
           <Route path="/admin/creerCours" element={<CreerCours />} />
           <Route path="/admin/" element={<Admin />} />
