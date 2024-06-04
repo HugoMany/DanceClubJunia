@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
+import PastCoursesEleve from './pastCoursesEleve';
 const Profil = () => {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -54,37 +55,16 @@ const Profil = () => {
     return (
         <div className='Profil'>
             <Header title="Profil"></Header>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Firstname:
-                    <input type="text" value={firstname} onChange={handleFirstname} />
-                </label>
-                <br />
-                <label>
-                    Surname:
-                    <input type="text" value={surname} onChange={handleSurname} />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={handleEmail} />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={handlePassword}
-                    />
-                </label>
-                <br />
-                <button type="submit">Enregistrer</button>
-            </form>
+            {firstname}
+            {surname}
+            {email}
+            {password}
+            
             <h2>Vos anciens cours</h2>
-            <a href='/cours/4/5'>Cours 4/5</a><br></br>
-            <a href='/cours/2/4'>Cours 2/4</a><br />
-            <a href='/cours/1/3'>cours 1/3</a><br />
+            
+            <div>
+            <PastCoursesEleve></PastCoursesEleve>
+            </div>
 
         </div>
     );
