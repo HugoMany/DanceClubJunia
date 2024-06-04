@@ -7,8 +7,11 @@ import Profil from './PAGES/profil';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './PAGES/home';
-import CreerProf from './PAGES/admin/GestionProf/creerProf';
-import CreerCours from './PAGES/admin/GestionCours/creerCours';
+
+import AdminProf from './PAGES/admin/GestionProf/adminProf';
+import AdminCours from './PAGES/admin/GestionCours/adminCours';
+import AdminEleve from './PAGES/admin/GestionEleve/adminEleve';
+
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
 import PlanningProf from './PAGES/planningProf';
@@ -25,8 +28,11 @@ function App() {
           <Route path="/profil" element={<Profil />} />
           <Route path="/rgpd" element={<Rgpd />} />
           <Route path="/connexion/" element={<ConnexionEtInscriptionSlider />} />
-          <Route path="/admin/creerProf" element={<CreerProf />} />
-          <Route path="/admin/creerCours" element={<CreerCours />} />
+
+          <Route path="/admin/prof" element={<AdminProf />} />
+          <Route path="/admin/cours" element={<AdminCours />} />
+          <Route path="/admin/eleve" element={<AdminEleve />} />
+
           <Route path="/admin/" element={<Admin />} />
           <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
 
