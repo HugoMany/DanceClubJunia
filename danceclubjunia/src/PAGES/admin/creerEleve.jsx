@@ -92,7 +92,7 @@ function CreerEleve() {
                         onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 </div>
-                <button type="submit">S'inscrire</button>
+                <button type="submit">Creer l'élève</button>
             </form>
         </div>
     );
