@@ -25,7 +25,7 @@ function ConnexionEtInscriptionSlider() {
         //  }}
         //  modules={[Pagination]}
          className="mySwiper"
-     >
+     >e
          <SwiperSlide>
          <Connexion></Connexion>
          </SwiperSlide>

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../elements/header';
 
-const CoursDynamique = () => {
-  const { courseId,idPerson } = useParams();
+const Appel = () => {
+    const { courseId} = useParams();
 
   const [data,setData] = useState([]);
 
@@ -24,16 +24,17 @@ const CoursDynamique = () => {
             });
     },);
 
-  return (
-    <div>
-      <Header></Header>
-      <h1>Dynamic Course Page</h1>
-      <p>Course ID: {courseId}</p>
-      <p>Type de danse: {data.type}</p>
-      <p>Person ID: {idPerson}</p>
-      {/* Render course details based on the fetched data */}
-    </div>
-  );
+    return (
+        <div>
+            <Header />
+            <h1>Students in Course {data.type}</h1>
+            <ul>
+                {data.student.map(student => (
+                    <li key={student.id}>{student.name}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
-export default CoursDynamique;
+export default Appel;

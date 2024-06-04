@@ -5,10 +5,10 @@ function Header({ title }) {
 
     return (
         <div>
-            <img src={logo} className="LogoTemp" alt="Logo" />
+            <a href="/" className="noTagLink"><img src={logo} className="LogoTemp" alt="Logo" />
             <div class="header">
                 <h1>Dance Club</h1>
-            </div>
+            </div></a>
             {isAdmin ? (
                     <>
                         {/* <h4>isAdmin</h4> */}

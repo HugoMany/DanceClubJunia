@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../../elements/header';
+import Header from '../../../elements/header';
 
-
+    
 //firstname, surname, email, password, connectionMethod, teacherId, photo, description
 const ModifProf = ({ teacherId }) => {
     const [firstname, setFirsname] = useState('');

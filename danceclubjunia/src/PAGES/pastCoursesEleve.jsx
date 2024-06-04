@@ -112,27 +112,33 @@ const StudentPastCourses = ({ studentId }) => {
 
     return (
         <div>
-            <h2>Your Past Courses</h2>
             <ul>
                 {courses.map(course => (
-                    <li key={course.courseId}>
-                        <h3>{course.title}</h3>
-                        <img src={course.image} alt={course.title} />
-                        <p>Type: {course.type}</p>
-                        <p>Start Date: {course.startDate.toDateString()}</p>
-                        <p>Start Time: {course.startTime}</p>
-                        <p>Location: {course.location}</p>
-                        <p>Duration: {course.duration}</p>
-                        <p>Teachers: {course.teachers.join(', ')}</p>
-                    </li>
-                ))}
+                        <a href={'/cours/' + course.courseId + '/1/'} className='courseA'>
+                        <div class="coursesCase" key={course.courseId}>
+                            <div className='divImageCoursSuivanteHomePage'>
+                            <div className='imageCoursSuivanteHomePage'><img src={"https://gap.asptt.com/files/2021/08/salsa.png"} alt={course.title} /></div>
+                            </div>
+                            <div className='timeCoursSuivantHomePage'>                        
+                                <h5>{course.title}</h5>
+                                <p>{course.startDate.toDateString()}</p>
+                                <p>{course.startTime}</p>
+                            </div>
+                            <div className='typeEtProfCoursSuivantHomePage'>
+                                <p>{course.type}</p>
+                                <p>{course.teachers.join(', ')}</p>
+                            </div>
+
+                        </div>
+                        </a>
+                    ))}
             </ul>
         </div>
     );
 };
 
-const PlanningEleve = () => {
+const PastCoursesEleve = () => {
     return <StudentPastCourses studentId="Student 3" />;
 };
 
-export default PlanningEleve;
+export default PastCoursesEleve;
