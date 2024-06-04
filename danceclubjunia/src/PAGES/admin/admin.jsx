@@ -8,9 +8,9 @@ function Admin() {
                            <Header ></Header>
 
             <h1>Admin</h1>
-            <button><a href='/admin/creerProf'>Gestion professeur</a><br></br></button>
-            <button><a href='/admin/creerCours'>Gestion cours</a><br></br></button>
-            <button><a href='/admin/creerEleve'>Gestion Eleve</a></button>
+            <button><a href='/admin/prof'>Gestion professeur</a><br></br></button>
+            <button><a href='/admin/cours'>Gestion cours</a><br></br></button>
+            <button><a href='/admin/eleve'>Gestion Eleve</a></button>
 
         </div>
     );

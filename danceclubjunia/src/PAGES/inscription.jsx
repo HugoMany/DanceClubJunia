@@ -98,6 +98,12 @@ function Inscription() {
                 </div>
                 <button className='connexionLogin' type="submit">S'inscrire</button>
             </form>
+            <button className='inscriptionLogin'>
+            <span class="material-symbols-outlined">
+swipe_left
+</span> Connexion
+            
+            </button>
         </div>
     );
 }
