@@ -1,7 +1,7 @@
 const db = require('../config/database');
 
 class UserService {
-  async generateResetToken(userID) {
+  async generateResetToken(email) {
     return new Promise((resolve, reject) => {
       const generateToken = () => Math.floor(100000 + Math.random() * 900000); // Génère un nombre à 6 chiffres
 
@@ -17,10 +17,10 @@ class UserService {
         });
       };
 
-      const insertToken = (userID, token) => {
-        const sql = 'INSERT INTO ResetPassword (token, userID, date) VALUES (?, ?, NOW())';
+      const insertToken = (email, token) => {
+        const sql = 'INSERT INTO ResetPassword (token, email, date) VALUES (?, ?, NOW())';
         return new Promise((resolve, reject) => {
-          db.query(sql, [token, userID], (err, result) => {
+          db.query(sql, [token, email], (err, result) => {
             if (err) return reject(err);
             resolve(result);
           });
@@ -34,7 +34,7 @@ class UserService {
             token = generateToken();
             isUnique = await checkTokenUnique(token);
           }
-          await insertToken(userID, token);
+          await insertToken(email, token);
           resolve(token);
         } catch (error) {
           reject(error);
@@ -56,10 +56,9 @@ class UserService {
       };
 
       const updatePassword = (userID, newPassword) => {
-        const hashedPassword = bcrypt.hashSync(newPassword, 10);
         const sql = 'UPDATE Users SET password = ? WHERE userID = ?';
         return new Promise((resolve, reject) => {
-          db.query(sql, [hashedPassword, userID], (err, result) => {
+          db.query(sql, [newPassword, userID], (err, result) => {
             if (err) return reject(err);
             resolve(result);
           });
@@ -100,7 +99,126 @@ class UserService {
       })();
     });
   }
-  
+
+  async addLink(userID, courseID, link) {
+    return new Promise(async (resolve, reject) =>  {
+
+      const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
+
+      db.query(checkUserTypeSql, [userID], (err, result) => {
+        userID = userID.toString();
+        if (err) {
+          return reject(err);
+        }
+
+        // Si c'est un étudiant
+        if (result.length > 0 && result[0].userType == "student") {
+          // SQL pour vérifier si l'étudiant est inscrit au cours
+          const checkStudentSql = `
+          SELECT JSON_CONTAINS(studentsID, ?) AS isParticipant
+          FROM Courses
+          WHERE courseID = ?
+          `;
+
+          db.query(checkStudentSql, [userID, courseID], (err, result) => {
+            if (err) {
+              return reject(err);
+            }
+
+            // Si l'étudiant est inscrit au cours
+            if (result.length > 0 && result[0].isParticipant) {
+              // SQL pour ajouter le lien à la colonne links
+              const updateLinkSql = `
+                UPDATE Courses
+                SET links = JSON_ARRAY_APPEND(links, '$', ?)
+                WHERE courseID = ?
+              `;
+
+                db.query(updateLinkSql, [link, courseID], (err, result) => {
+                  if (err) {
+                    return reject(err);
+                  }
+                  resolve(result);
+                });
+              
+            }
+            else {
+              return resolve({ success: false, message: 'Student not enrolled in course' });
+            }
+          });
+        } // on vérifie si c'est un professeur
+        else if (result.length > 0 && result[0].userType == "teacher") {
+          // SQL pour vérifier si le professeur est inscrit au cours
+          const checkTeacherSql = `
+          SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant
+          FROM Courses
+          WHERE courseID = ?
+          `;
+
+          db.query(checkTeacherSql, [userID, courseID], (err, result) => {
+            if (err) {
+              return reject(err);
+            }
+
+            // Si le professeur est inscrit au cours
+            if (result.length > 0 && result[0].isParticipant) {
+              // SQL pour ajouter le lien à la colonne links
+              const updateLinkSql = `
+                UPDATE Courses
+                SET links = JSON_ARRAY_APPEND(links, '$', ?)
+                WHERE courseID = ?
+              `;
+
+                db.query(updateLinkSql, [link, courseID], (err, result) => {
+                  if (err) {
+                    return reject(err);
+                  }
+                  resolve(result);
+                });
+              
+            }
+            else {
+              return resolve({ success: false, message: 'Teacher not enrolled in course' });
+            }
+          });
+        }
+      });
+    });
+  }
+
+  async searchCourses(userID, startDate, tags) {
+    return new Promise((resolve, reject) => {
+      let sql = `
+        SELECT * FROM Courses
+        WHERE JSON_CONTAINS(studentsID, ?)
+      `;
+      const params = [userID];
+
+      if (startDate) {
+        sql += ` AND DATE_FORMAT(startDate, '%Y-%m-%d') = ?`;
+        params.push(startDate);
+      }
+
+      if (tags && tags.length > 0) {
+        sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
+        params.push(...tags);
+      }
+
+      // Afficher la requête SQL avec les valeurs substituées
+      const formattedSql = db.format(sql, params);
+      console.log('searchCourses | Executing SQL query:', formattedSql);
+
+      db.query(sql, params, (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+  }
+
 }
+
+
 
 module.exports = new UserService();
