@@ -12,6 +12,8 @@ import AdminProf from './PAGES/admin/GestionProf/adminProf';
 import AdminCours from './PAGES/admin/GestionCours/adminCours';
 import AdminEleve from './PAGES/admin/GestionEleve/adminEleve';
 
+import { Helmet } from 'react-helmet';
+
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
 import PlanningProf from './PAGES/planningProf';
@@ -22,6 +24,10 @@ import Recherche from './PAGES/recherche';
 function App() {
   return (
     <div className="App">
+      <Helmet>
+        <title>Dance Club</title>
+        <link rel="icon" href={logo} />
+      </Helmet>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
