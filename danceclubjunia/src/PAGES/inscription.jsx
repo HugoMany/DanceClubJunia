@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
+import {URL_DB} from '../const/const';
 
 function Inscription() {
     const [firstname, setFirstname] = useState('');
@@ -25,7 +26,7 @@ function Inscription() {
         console.log('Form Data:', json);
         
         // Add logic to save course data
-        fetch('http://example.com/api/inscription', {
+        fetch(URL_DB+'/inscription', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

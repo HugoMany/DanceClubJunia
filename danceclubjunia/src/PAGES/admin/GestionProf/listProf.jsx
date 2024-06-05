@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import URL_DB from '../../../const/const';
 
 const ListProf = () => {
     const [teacher, setTeacher] = useState([]);
@@ -6,7 +7,7 @@ const ListProf = () => {
     useEffect(() => {
         const fetchProf = async () => {
             try {
-                const response = await fetch('/api/GetAllTeacher', {
+                const response = await fetch(URL_DB+'/GetAllTeacher', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

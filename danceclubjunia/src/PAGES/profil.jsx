@@ -1,73 +1,134 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
 import PastCoursesEleve from './pastCoursesEleve';
+import { URL_DB } from '../const/const';
+import Loading from '../elements/loading';
+
+const ID_CONST_STUDENT = 10;
+
+function showLoading() {
+  }
+  
+  function hideLoading() {
+  }
+
+// Start loading
+showLoading();
+
+
+
+
+
 const Profil = () => {
-    const [firstname, setFirstname] = useState('');
-    const [surname, setSurname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [userData, setUserData] = useState(null);
+    const [userPaymentHistory, setPaymentHistory] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const handleFirstname = (e) => {
-        setFirstname(e.target.value);
-    };
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(URL_DB + 'teacher/getStudent?studentID=' + ID_CONST_STUDENT, {
+                    method: 'GET',
+                });
 
-    const handleSurname = (e) => {
-        setSurname(e.target.value);
-    };
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserData(data);
+                    setLoading(false);
 
-    const handleEmail = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePassword = (e) => {
-        setPassword(e.target.value);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Ajoutez ici la logique pour mettre à jour les informations de l'utilisateur
-        const json = {
-            firstname,
-            surname,
-            email,
-            password
+                } else {
+                    console.error('Erreur lors de la récupération des prof');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des prof', error);
+            }
+            finally {
+                hideLoading();
+            }
         };
-        console.log('Form Data:', json);
+        const fetchPaymentHistory = async () => {
+            try {
+                const response = await fetch(URL_DB + 'student/getPaymentHistory?studentID=2', {
+                    method: 'GET',
+                });
 
-        // Add logic to save course data
-        fetch('http://example.com/api/courses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(json)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    };
+                if (response.ok) {
+                    const data = await response.json();
+                    setPaymentHistory(data);
+                    setLoading(false);
+                    console.log(data);
+                } else {
+                    console.error('Erreur lors de la récupération des prof');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des prof', error);
+            }
+            finally {
+                hideLoading();
+            }
+        };
 
-    return (
-        <div className='Profil'>
-            <Header title="Profil"></Header>
-            {firstname}
-            {surname}
-            {email}
-            {password}
-            
-            <h2>Vos anciens cours</h2>
-            
-            <div>
-            <PastCoursesEleve></PastCoursesEleve>
-            </div>
+        fetchUser();
+        fetchPaymentHistory();
+        
+    }, []);
 
+    
+if (loading) {
+        return <Loading></Loading>;
+      }
+  return (
+    <div className='Profil'>
+      <Header title="Profil"></Header>
+
+
+      <h2>Vos informations</h2>
+      <p>Firstname: {userData?.student.firstname}</p>
+      <p>Surname: {userData?.student.surname}</p>
+      <p>Email: {userData?.student.email}</p>
+      <p>Credit: {userData?.student.credit}</p>
+    
+
+    <h2>Historique d'achat</h2>
+    
+    {/* <div>{userPaymentHistory?.payments[0].paymentID}</div>
+    <div>{userPaymentHistory?.payments[0].price}</div>
+    <div>{userPaymentHistory?.payments[0].type}</div>
+    <div>{userPaymentHistory?.payments[0].quantity}</div> */}
+    <div className='paiementList'>
+    {userPaymentHistory?.payments.map((payment, index) => (
+        <div key={index}>
+            <div>Payment ID: {payment.paymentID}</div>
+            <div>Price: {payment.price}</div>
+            <div>Type: {payment.type}</div>
+            <div>Quantity: {payment.quantity}</div>
+            <br></br>
         </div>
-    );
+    ))}
+</div>
+
+    <div>
+      <h2>Vos anciens cours</h2>
+      <div>
+        
+            {/* <p>Payment ID: {payment.paymentID}</p>
+            <p>User ID: {payment.userID}</p>
+            <p>Price: {payment.price}</p>
+            <p>Type: {payment.type}</p>
+            <p>Quantity: {payment.quantity}</p>
+            <p>Date: {payment.date}</p>
+            <p>Payment Type: {payment.paymentType}</p>
+          </div> */}
+
+      </div>
+    </div>  
+
+      <div>
+        <PastCoursesEleve></PastCoursesEleve>
+      </div>
+    </div>
+  );
 };
 
 export default Profil;

@@ -21,6 +21,9 @@ import PlanningEleve from './PAGES/planningEleve';
 import CoursesList from './PAGES/listCourse';
 import ConnexionEtInscriptionSlider from './PAGES/connexionEtInscriptionSlider';
 import Recherche from './PAGES/recherche';
+
+import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
+import Loading from './elements/loading';
 function App() {
   return (
     <div className="App">
@@ -46,6 +49,10 @@ function App() {
           <Route path="/planningProf" element={<PlanningProf/>} />
           <Route path="/planningEleve" element={<PlanningEleve/>}/>
           <Route path="/listCourse" element={<CoursesList/>}/>
+
+          <Route path='/load' element={<Loading></Loading>}/>
+
+          <Route path="/creerEleve" element={<CreerEleve/>}/>
         </Routes>
       </Router>
     </div>

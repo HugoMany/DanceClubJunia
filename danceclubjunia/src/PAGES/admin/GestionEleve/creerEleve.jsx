@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import Header from '../elements/header';
-import '../css/login.css';
+//import Header from '../elements/header';
+//import '../css/login.css';
+import {URL_DB} from '../../../const/const';
 function CreerEleve() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -8,8 +9,6 @@ function CreerEleve() {
     const [password, setPassword] = useState('');
     const [connectionMethod, setConnectionMethod] = useState('');
     const credit = 0;
-
-    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -25,7 +24,7 @@ function CreerEleve() {
         console.log('Form Data:', json);
         
         // Add logic to save course data
-        fetch('http://example.com/api/inscription', {
+        fetch(URL_DB+'teacher/newStudent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,7 +43,7 @@ function CreerEleve() {
 
     return (
         <div className='Form'>
-            <Header></Header>
+            {/* <Header></Header> */}
             <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>

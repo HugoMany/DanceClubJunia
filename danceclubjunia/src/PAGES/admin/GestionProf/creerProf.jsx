@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../../elements/header';
+import URL_DB from '../../../const/const';
 
 const CreerProf = () => {
     const [firstname, setFirstname] = useState('');
@@ -38,7 +39,7 @@ const CreerProf = () => {
 
         // Envoyer les données à l'API ou les traiter comme nécessaire
         // Exemple d'envoi via fetch:
-        fetch('http://example.com/api/users', {
+        fetch(URL_DB+'/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
