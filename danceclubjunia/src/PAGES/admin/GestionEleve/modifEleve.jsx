@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../../elements/header';
+import URL_DB from '../../../const/const';
 
 
 //firstname, surname, email, password, connectionMethod,userId, credit
@@ -11,7 +12,7 @@ const ModifEleve = ({ userId }) => {
     useEffect(() => {
         if (userId) {
             // Fetch existing course data
-            fetch(`http://example.com/api/courses/${userId}`)
+            fetch(URL_DB+`/${userId}`)
                 .then(response => response.json())
                 .then(data => {
                     setFirsname(data.firstname);

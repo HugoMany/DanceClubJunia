@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../elements/header';
+import {URL_DB} from '../const/const';
 
 const Appel = () => {
     const { courseId} = useParams();
@@ -8,7 +9,7 @@ const Appel = () => {
   const [data,setData] = useState([]);
 
     useEffect(() => {
-        fetch( `http://example.com/api/courses/${courseId}`, {
+        fetch( URL_DB+`/courses/${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
