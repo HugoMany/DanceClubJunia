@@ -40,7 +40,7 @@ function Connexion() {
             console.log('Success:', data);
             if (data.studentId) {
                 // Stocker studentId dans un cookie
-                Cookies.set('studentId', data.studentId, { expires: 7 }); // Le cookie expire dans 7 jours
+                //Cookies.set('studentId', data.studentId, { expires: 7 }); // Le cookie expire dans 7 jours
                 Cookies.set('studentId', '1', { expires: 7 });
                 console.log(Cookies.get("studentId"));
             }
