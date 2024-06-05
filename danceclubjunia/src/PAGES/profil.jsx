@@ -37,7 +37,7 @@ const Profil = () => {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch(URL_DB+'/courses', {
+        fetch(URL_DB+'teacher/getStudent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ const Profil = () => {
             <h2>Vos anciens cours</h2>
             
             <div>
-            <PastCoursesEleve></PastCoursesEleve>
+             <PastCoursesEleve></PastCoursesEleve>
             </div>
 
             {/* Add logic to display user data */}
