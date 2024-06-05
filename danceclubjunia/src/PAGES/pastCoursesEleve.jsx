@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// Component to display past courses for a student
 const StudentPastCourses = ({ studentId }) => {
     const [courses, setCourses] = useState([]);
 
@@ -8,7 +7,7 @@ const StudentPastCourses = ({ studentId }) => {
         const fetchPastCourses = async () => {
             try {
                 const response = await fetch(`http://example.com/api/courses/${studentId}`, {
-                    method: 'GET', // Utilisez GET pour récupérer des données
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -28,10 +27,13 @@ const StudentPastCourses = ({ studentId }) => {
         fetchPastCourses();
     }, [studentId]);
 
+    // Filtrer les cours passés
+    const pastCourses = courses.filter(course => new Date(course.endDate) < new Date());
+
     return (
         <div>
             <ul>
-                {courses.map(course => (
+                {pastCourses.map(course => (
                     <a href={`/cours/${course.courseId}/1/`} className='courseA' key={course.courseId}>
                         <div className="coursesCase">
                             <div className='divImageCoursSuivanteHomePage'>
@@ -41,7 +43,7 @@ const StudentPastCourses = ({ studentId }) => {
                             </div>
                             <div className='timeCoursSuivantHomePage'>                        
                                 <h5>{course.title}</h5>
-                                <p>{new Date(course.startDate).toDateString()}</p> {/* Convertir en Date avant d'utiliser toDateString() */}
+                                <p>{new Date(course.startDate).toDateString()}</p>
                                 <p>{course.startTime}</p>
                             </div>
                             <div className='typeEtProfCoursSuivantHomePage'>
