@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../../elements/header';
+import URL_DB from '../../../const/const';
 
     
 //firstname, surname, email, password, connectionMethod, teacherId, photo, description
@@ -13,7 +14,7 @@ const ModifProf = ({ teacherId }) => {
     useEffect(() => {
         if (teacherId) {
             // Fetch existing course data
-            fetch(`http://example.com/api/courses/${teacherId}`)
+            fetch(URL_DB+`/${teacherId}`)
                 .then(response => response.json())
                 .then(data => {
                     setFirsname(data.firstname);

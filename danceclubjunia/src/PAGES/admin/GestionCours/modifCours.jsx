@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../../elements/header';
+import URL_DB from '../../../const/const';
 
 
 
@@ -25,7 +26,7 @@ const ModifCours = ({ courseId }) => {
     useEffect(() => {
         if (courseId) {
             // Fetch existing course data
-            fetch(`http://example.com/api/courses/${courseId}`)
+            fetch(URL_DB+`/${courseId}`)
                 .then(response => response.json())
                 .then(data => {
                     setImage(data.image);

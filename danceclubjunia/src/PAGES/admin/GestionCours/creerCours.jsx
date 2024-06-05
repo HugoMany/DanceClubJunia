@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../../elements/header';
+import URL_DB from '../../../const/const';
 
 function CreerCours() {
     const [image, setImage] = useState('');
@@ -68,7 +69,7 @@ function CreerCours() {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch('http://example.com/api/courses', {
+        fetch( URL_DB+'course', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

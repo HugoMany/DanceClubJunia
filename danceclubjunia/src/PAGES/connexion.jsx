@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/login.css';
-
+import {URL_DB} from '../const/const';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -33,7 +33,7 @@ function Connexion() {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch('http://example.com/api/courses', {
+        fetch(URL_DB+'/courses', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

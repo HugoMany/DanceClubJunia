@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
 import PastCoursesEleve from './pastCoursesEleve';
+import {URL_DB} from '../const/const';
 const Profil = () => {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -36,7 +37,7 @@ const Profil = () => {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch('http://example.com/api/courses', {
+        fetch(URL_DB+'/courses', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,12 +61,18 @@ const Profil = () => {
             {email}
             {password}
             
+            <h2>Vos informations</h2>
+            <p>Firstname: {firstname}</p>
+            <p>Surname: {surname}</p>
+            <p>Email: {email}</p>
+            <p>Password: {password}</p>
             <h2>Vos anciens cours</h2>
             
             <div>
             <PastCoursesEleve></PastCoursesEleve>
             </div>
 
+            {/* Add logic to display user data */}
         </div>
     );
 };

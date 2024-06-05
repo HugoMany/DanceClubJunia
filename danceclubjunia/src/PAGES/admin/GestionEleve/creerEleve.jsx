@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/login.css';
+import URL_DB from '../../../const/const';
 function CreerEleve() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -25,7 +26,7 @@ function CreerEleve() {
         console.log('Form Data:', json);
         
         // Add logic to save course data
-        fetch('http://example.com/api/inscription', {
+        fetch(URL_DB+'/inscription', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
