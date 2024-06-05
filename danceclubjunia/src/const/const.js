@@ -1,7 +1,7 @@
 
 // constants.js
 
-export const URL_DB = 'Some Value';
+export const URL_DB = 'http://90.110.227.143';
 
 
 
