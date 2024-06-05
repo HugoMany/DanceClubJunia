@@ -3,6 +3,7 @@ import Header from '../elements/header';
 import '../css/profil.css';
 import PastCoursesEleve from './pastCoursesEleve';
 import { URL_DB } from '../const/const';
+import Loading from '../elements/loading';
 
 const ID_CONST_STUDENT = 10;
 
@@ -50,15 +51,12 @@ const Profil = () => {
 
     }, []);
 if (loading) {
-        return <div>Loading...</div>;
+        return <Loading></Loading>;
       }
   return (
     <div className='Profil'>
       <Header title="Profil"></Header>
 
-                <div id="loading" style={{ display: 'none' }}>
-        <p>Loading...</p>
-    </div>
     
       <h2>Vos informations</h2>
       <p>Firstname: {userData?.student.firstname}</p>
