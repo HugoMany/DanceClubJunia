@@ -36,50 +36,13 @@ class StudentService {
           if (err) {
             return reject(err);
           }
-          if (result.length > 0) {
-            resolve(result);
-          } else {
-            reject(new Error('No courses found for the given student ID'));
-          }
+          
+          resolve(result);
         });
       });
   }
 
-  async addLink(studentID, courseID, link) {
-    return new Promise((resolve, reject) => {
-      // SQL pour vérifier si l'étudiant est inscrit au cours
-      const checkStudentSql = `
-        SELECT JSON_CONTAINS(studentsID, ?) AS isParticipant
-        FROM Courses
-        WHERE courseID = ?
-      `;
-
-      db.query(checkStudentSql, [studentID, courseID], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-
-        // Si l'étudiant est inscrit au cours
-        if (result.length > 0 && result[0].isParticipant) {
-          // SQL pour ajouter le lien à la colonne links
-          const updateLinkSql = `
-            UPDATE Courses
-            SET links = JSON_ARRAY_APPEND(links, '$', ?)
-            WHERE courseID = ?
-          `;
-
-          db.query(updateLinkSql, [link, courseID], (err, result) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(result);
-          });
-        } else {
-          resolve({ success: false, message: 'Student not enrolled in course' });
-        }
-      });
-    });
-  }
+  
 
   async buyPlace(studentID, type, number) {
     return new Promise((resolve, reject) => {
@@ -180,36 +143,7 @@ class StudentService {
     });
   }
 
-  async searchParticipatedCourses(studentID, startDate, tags) {
-    return new Promise((resolve, reject) => {
-      let sql = `
-        SELECT * FROM Courses
-        WHERE JSON_CONTAINS(studentsID, ?)
-      `;
-      const params = [studentID];
-
-      if (startDate) {
-        sql += ` AND DATE_FORMAT(startDate, '%Y-%m-%d') = ?`;
-        params.push(startDate);
-      }
-
-      if (tags && tags.length > 0) {
-        sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
-        params.push(...tags);
-      }
-
-      // Afficher la requête SQL avec les valeurs substituées
-      const formattedSql = db.format(sql, params);
-      console.log('searchParticipatedCourses | Executing SQL query:', formattedSql);
-
-      db.query(sql, params, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
-  }
+  
 
   
 }

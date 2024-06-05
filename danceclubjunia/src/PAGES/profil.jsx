@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
+import PastCoursesEleve from './pastCoursesEleve';
 import {URL_DB} from '../const/const';
 const Profil = () => {
     const [firstname, setFirstname] = useState('');
@@ -55,15 +56,21 @@ const Profil = () => {
     return (
         <div className='Profil'>
             <Header title="Profil"></Header>
+            {firstname}
+            {surname}
+            {email}
+            {password}
+            
             <h2>Vos informations</h2>
             <p>Firstname: {firstname}</p>
             <p>Surname: {surname}</p>
             <p>Email: {email}</p>
             <p>Password: {password}</p>
             <h2>Vos anciens cours</h2>
-            <a href='/cours/4/5'>Cours 4/5</a><br></br>
-            <a href='/cours/2/4'>Cours 2/4</a><br />
-            <a href='/cours/1/3'>cours 1/3</a><br />
+            
+            <div>
+            <PastCoursesEleve></PastCoursesEleve>
+            </div>
 
             {/* Add logic to display user data */}
         </div>

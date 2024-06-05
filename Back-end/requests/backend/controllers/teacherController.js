@@ -2,8 +2,10 @@ const teacherService = require('../services/teacherService');
 
 exports.getStudent = async (req, res) => {
     try {
-        const { studentID } = req.body;
+        const { studentID } = req.query;
   
+        console.log("newStudent | studentID : " + studentID); 
+
         // V�rifier si studentID est n�gatif ou nul
         if (!studentID) {
           res.json(false);
@@ -24,6 +26,8 @@ exports.newStudent = async (req, res) => {
     try {
         const { firstname, surname, email, password, connectionMethod, credit } = req.body;
       
+        console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit); 
+
         // Vérification que tous les champs sont remplis
         if (!firstname || !surname || !email || !password || !connectionMethod || credit === undefined) {
           return res.status(400).json({ error: 'Tous les champs doivent être remplis.' });
@@ -40,8 +44,6 @@ exports.newStudent = async (req, res) => {
           return res.status(400).json({ error: 'Email invalide.' });
         }
         
-        console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit); 
-
         const result = await teacherService.newStudent(firstname, surname, email, password, connectionMethod, credit);
 
         res.json(result[0]);
@@ -55,7 +57,9 @@ exports.newStudent = async (req, res) => {
 exports.modifyStudent = async (req, res) => {
     try {
         const { studentID, firstname, surname, email, password, connectionMethod, credit } = req.body;
-      
+
+        console.log("modifyStudent | studentID? firstname, surname, email, password, connectionMethod, credit : " + studentID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit);       
+
         if (!studentID) {
           return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
         }
@@ -119,14 +123,14 @@ exports.modifyStudent = async (req, res) => {
 exports.removeStudent = async (req, res) => {
     try {
         const { courseID, studentID } = req.body;
+
+        console.log("removeStudent | courseID, studentID : " + courseID + ", " + studentID);
       
         // Vérifier si les champs sont remplis
         if (!courseID || !studentID) {
           return res.status(400).json({ error: 'removeStudent | Les champs courseID et studentID doivent être fournis.' });
         }
       
-        console.log("removeStudent | courseID, studentID : " + courseID + ", " + studentID);
-
         await teacherService.removeStudent(courseID, studentID);
 
         res.json(true);
@@ -140,13 +144,13 @@ exports.removeStudent = async (req, res) => {
 exports.cancelCourse = async (req, res) => {
     try {
         const { courseID } = req.body;
+
+        console.log("cancelCourse | courseID : " + courseID);
       
         // Vérifier si les champs sont remplis
         if (!courseID) {
           return res.status(400).json({ error: 'cancelCourse | Le champ courseID doit être fourni.' });
         }
-      
-        console.log("cancelCourse | courseID : " + courseID);
 
         await teacherService.cancelCourse(courseID);
 

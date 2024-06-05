@@ -9,82 +9,57 @@ exports.addCredit = async (req, res) => {
 
         if (!Number.isInteger(credit) || credit <= 0 || studentID <= 0) {
             console.error('addCredit | error');
-            return res.status(400).json(false);
+            return res.status(400).json({ success: false, message: 'Invalid parameters' });
         }
 
         await studentService.addCredit(studentID, credit);
 
-        res.json(true);
+        return res.status(200).json({ success: true });
 
     } catch (error) {
-        console.error('addCredit | error:', error);
-        res.status(500).json(false);
+        res.status(500).json({ success: false, message: 'Error executing query' });
     }
 };
 
 exports.getSubscriptionEndDate = async (req, res) => {
     try {
-        const { studentID } = req.body;
+        const { studentID } = req.query;
 
         console.log("getSubscriptionEndDate | studentID : " + studentID);
 
         if (studentID <= 0) {
-            res.json(false);
+            res.status(400).json({ success: false, message: 'Invalid parameters' });
             return console.error('getSubscriptionEndDate | error: invalid studentID');
         }
 
         const subscriptionEndDate = await studentService.getSubscriptionEndDate(studentID);
-
-        res.json({ subscriptionEndDate });
+        
+        
+        res.json({success: true, subscriptionEndDate : subscriptionEndDate });
     } catch (error) {
-        console.error('getSubscriptionEndDate | error:', error);
-        res.status(500).send('Error executing query');
+        console.log('getSubscriptionEndDate | error:', error);
+        res.status(500).json({ success: false, message: 'Error executing query' });
     }
 };
 
 exports.getCourses = async (req, res) => {
     try {
-        const { studentID } = req.body;
+        const { studentID } = req.query;
 
         console.log("getCourses | studentID : " + studentID);
 
         if (studentID <= 0) {
-            res.json(false);
+            res.status(400).json({ success: false, message: 'Invalid parameters' });
             return console.error('getCourses | error: invalid studentID');
         }
 
         const courses = await studentService.getCourses(studentID);
         res.json({ success: true, courses });
     } catch (error) {
-        console.error('getSubscriptionEndDate | error:', error);
-        res.status(500).send('Error executing query');
-    }
-}
-
-exports.addLink = async (req, res) => {
-    const { studentID, courseID, link } = req.body;
-
-    console.log(`addLink | studentID, courseID, link: ${studentID}, ${courseID}, ${link}`);
-
-    if (!link) {
-        return res.status(400).json({ success: false, message: 'Link is required' });
-    }
-
-    if (studentID <= 0 || courseID <= 0) {
-        return res.status(400).json({ success: false, message: 'Invalid studentID or courseID' });
-    }
-
-    try {
-        const result = await studentService.addLink(studentID, courseID, link);
-        if (result.success === false) {
-            return res.status(400).json(result);
-        }
-        res.json({ success: true, message: 'Link added successfully' });
-    } catch (error) {
-        console.error('addLink | error:', error);
+        console.log('getSubscriptionEndDate | error:', error);
         res.status(500).json({ success: false, message: 'Error executing query' });
     }
-};
+}
 
 exports.buyPlace = async (req, res) => {
     const { studentID, type, number } = req.body;
@@ -96,7 +71,7 @@ exports.buyPlace = async (req, res) => {
     }
 
     if (studentID <= 0) {
-        return res.status(400).json({ success: false, message: 'Invalid studentID' });
+        return res.status(401).json({ success: false, message: 'Invalid studentID' });
     }
 
     try {
@@ -109,7 +84,7 @@ exports.buyPlace = async (req, res) => {
 };
 
 exports.getPaymentHistory = async (req, res) => {
-    const { studentID } = req.body;
+    const { studentID } = req.query;
 
     console.log(`getPaymentHistory | studentID: ${studentID}`);
 
@@ -130,20 +105,3 @@ exports.getPaymentHistory = async (req, res) => {
     }
 };
 
-exports.searchParticipatedCourses = async (req, res) => {
-    const { studentID, startDate, tags } = req.body;
-  
-    console.log(`searchParticipatedCourses | studentID: ${studentID}, startDate: ${startDate}, tags: ${tags}`);
-  
-    if (studentID <= 0) {
-      return res.status(400).json({ success: false, message: 'Invalid studentID' });
-    }
-  
-    try {
-      const courses = await studentService.searchParticipatedCourses(studentID, startDate, tags);
-      res.json({ success: true, courses });
-    } catch (error) {
-      console.error('searchParticipatedCourses | error:', error);
-      res.status(500).json({ success: false, message: 'Error executing query' });
-    }
-  };

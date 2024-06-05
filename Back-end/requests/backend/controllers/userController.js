@@ -1,16 +1,16 @@
 const userService = require('../services/userService');
 
 exports.generateResetToken = async (req, res) => {
-  const { userID } = req.body;
+  const { email } = req.body;
 
-  console.log(`generateResetToken | userID: ${userID}`);
+  console.log(`generateResetToken | email: ${email}`);
 
-  if (userID <= 0) {
-    return res.status(400).json({ success: false, message: 'Invalid userID' });
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email not set' });
   }
 
   try {
-    const token = await userService.generateResetToken(userID);
+    const token = await userService.generateResetToken(email);
     res.json({ success: true, message: 'Token generated and stored', token });
   } catch (error) {
     console.error('generateResetToken | error:', error);
@@ -33,5 +33,48 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     console.error('resetPassword | error:', error);
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.addLink = async (req, res) => {
+  const { userID, courseID, link } = req.body;
+
+  console.log(`addLink | userID, courseID, link: ${userID}, ${courseID}, ${link}`);
+
+  if (!link) {
+      return res.status(400).json({ success: false, message: 'Link is required' });
+  }
+
+  if (userID <= 0 || courseID <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid userID or courseID' });
+  }
+
+  try {
+      const result = await userService.addLink(userID, courseID, link);
+      if (result.success === false) {
+          return res.status(400).json(result);
+      }
+      res.json({ success: true, message: 'Link added successfully' });
+  } catch (error) {
+      console.error('addLink | error:', error);
+      res.status(500).json({ success: false, message: 'Error executing query' });
+  }
+};
+
+exports.searchCourses = async (req, res) => {
+  const { userID, startDate, tags } = req.query;
+
+  console.log(`searchCourses | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
+
+  if (userID <= 0) {
+    return res.status(400).json({ success: false, message: 'Invalid userID' });
+  }
+
+  try {
+    const courses = await userService.searchCourses(userID, startDate, tags);
+    res.json({ success: true, courses });
+  } catch (error) {
+    console.error('searchCourses | error:', error);
+    res.status(500).json({ success: false, message: 'Error executing query' });
   }
 };
