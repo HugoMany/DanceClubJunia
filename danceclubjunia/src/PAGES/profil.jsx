@@ -1,80 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
 import PastCoursesEleve from './pastCoursesEleve';
-import {URL_DB} from '../const/const';
+import { URL_DB } from '../const/const';
+
+const ID_CONST_STUDENT = 10;
 const Profil = () => {
-    const [firstname, setFirstname] = useState('');
-    const [surname, setSurname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [userData, setUserData] = useState(null);
 
-    const handleFirstname = (e) => {
-        setFirstname(e.target.value);
-    };
+  useEffect(() => {
+    fetch(URL_DB+'teacher/getStudent?studentID='+ID_CONST_STUDENT)
+      .then(response => response.json())
+      .then(data => setUserData(data))
+      .catch(error => console.error(error));
+  }, []);
 
-    const handleSurname = (e) => {
-        setSurname(e.target.value);
-    };
+  return (
+    <div className='Profil'>
+      <Header title="Profil"></Header>
 
-    const handleEmail = (e) => {
-        setEmail(e.target.value);
-    };
+      <h2>Vos informations</h2>
+      <p>Firstname: {userData?.firstname}</p>
+      <p>Surname: {userData?.surname}</p>
+      <p>Email: {userData?.email}</p>
+      <p>Password: {userData?.password}</p>
+      <h2>Vos anciens cours</h2>
 
-    const handlePassword = (e) => {
-        setPassword(e.target.value);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Ajoutez ici la logique pour mettre à jour les informations de l'utilisateur
-        const json = {
-            firstname,
-            surname,
-            email,
-            password
-        };
-        console.log('Form Data:', json);
-
-        // Add logic to save course data
-        fetch(URL_DB+'/courses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(json)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    };
-
-    return (
-        <div className='Profil'>
-            <Header title="Profil"></Header>
-            {firstname}
-            {surname}
-            {email}
-            {password}
-            
-            <h2>Vos informations</h2>
-            <p>Firstname: {firstname}</p>
-            <p>Surname: {surname}</p>
-            <p>Email: {email}</p>
-            <p>Password: {password}</p>
-            <h2>Vos anciens cours</h2>
-            
-            <div>
-            <PastCoursesEleve></PastCoursesEleve>
-            </div>
-
-            {/* Add logic to display user data */}
-        </div>
-    );
+      <div>
+        <PastCoursesEleve></PastCoursesEleve>
+      </div>
+    </div>
+  );
 };
 
 export default Profil;
