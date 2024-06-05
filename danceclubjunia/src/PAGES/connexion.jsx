@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from '../elements/header';
 import '../css/login.css';
 import {URL_DB} from '../const/const';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -15,7 +15,7 @@ import { Pagination } from 'swiper/modules';
 function Connexion() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [cookies, setCookies] = useCookies(['studentId']);
+    // const [cookies, setCookies] = useCookies(['studentId']);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -52,7 +52,7 @@ function Connexion() {
     };
     
 
-    cookies.set('studentId', '1');
+    // cookies.set('studentId', '1');
     
 
 
