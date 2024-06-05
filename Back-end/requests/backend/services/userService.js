@@ -27,8 +27,23 @@ class UserService {
         });
       };
 
+      const userExist = (email) => {
+        const sql = 'SELECT * FROM Users WHERE UserID = ?';
+        return new Promise((resolve, reject) => {
+          db.query(sql, [token, email], (err, result) => {
+            if (err) return reject(err);
+            console.log(result.length > 0);
+            resolve(result.length > 0);
+          });
+        });
+      };
+
       (async () => {
         try {
+          if(!userExist(email)){
+            return reject(new Error('User not found'));
+          }
+
           let isUnique = await checkTokenUnique(token);
           while (!isUnique) {
             token = generateToken();
