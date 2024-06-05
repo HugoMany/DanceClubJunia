@@ -112,7 +112,6 @@ const StudentPastCourses = ({ studentId }) => {
 
     return (
         <div>
-            <ul>
                 {courses.map(course => (
                         <a href={'/cours/' + course.courseId + '/1/'} className='courseA'>
                         <div class="coursesCase" key={course.courseId}>
@@ -132,7 +131,6 @@ const StudentPastCourses = ({ studentId }) => {
                         </div>
                         </a>
                     ))}
-            </ul>
         </div>
     );
 };
