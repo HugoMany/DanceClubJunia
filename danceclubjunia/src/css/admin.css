@@ -8,3 +8,8 @@
 .Admin button{
     background-color: white;
 }
+.DataAdmin{
+    height: 80vh;
+    width: 100%;
+    margin-top: 3vh;
+}

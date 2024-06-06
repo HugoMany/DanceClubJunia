@@ -19,11 +19,14 @@ import CoursDynamique from './PAGES/coursDynamique';
 import PlanningProf from './PAGES/planningProf';
 import PlanningEleve from './PAGES/planningEleve';
 import CoursesList from './PAGES/listCourse';
-import ConnexionEtInscriptionSlider from './PAGES/connexionEtInscriptionSlider';
+import ConnexionEtInscriptionSlider from './elements/connexionEtInscriptionSlider';
 import Recherche from './PAGES/recherche';
 
+import ReservationPage from './PAGES/reservationPage';
 import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
 import Loading from './elements/loading';
+
+import ModifCours from './PAGES/admin/GestionCours/modifCours';
 function App() {
   return (
     <div className="App">
@@ -46,11 +49,13 @@ function App() {
           <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
 
           <Route path="/recherche" element={<Recherche />} />
+          <Route path="/reservation" element={<ReservationPage />} />
           <Route path="/planningProf" element={<PlanningProf/>} />
           <Route path="/planningEleve" element={<PlanningEleve/>}/>
           <Route path="/listCourse" element={<CoursesList/>}/>
 
           <Route path='/load' element={<Loading></Loading>}/>
+
 
           <Route path="/creerEleve" element={<CreerEleve/>}/>
         </Routes>

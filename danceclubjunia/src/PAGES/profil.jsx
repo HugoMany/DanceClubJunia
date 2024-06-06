@@ -7,15 +7,6 @@ import Loading from '../elements/loading';
 
 const ID_CONST_STUDENT = 10;
 
-function showLoading() {
-  }
-  
-  function hideLoading() {
-  }
-
-// Start loading
-showLoading();
-
 
 
 
@@ -38,13 +29,12 @@ const Profil = () => {
                     setLoading(false);
 
                 } else {
-                    console.error('Erreur lors de la récupération des prof');
+                    console.error('Erreur lors de la récupération des info du compte');
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des prof', error);
+                console.error('Erreur lors de la récupération des info du compte', error);
             }
             finally {
-                hideLoading();
             }
         };
         const fetchPaymentHistory = async () => {
@@ -65,7 +55,6 @@ const Profil = () => {
                 console.error('Erreur lors de la récupération des prof', error);
             }
             finally {
-                hideLoading();
             }
         };
 
@@ -79,23 +68,21 @@ if (loading) {
         return <Loading></Loading>;
       }
   return (
-    <div className='Profil'>
+  
+  <div className='Profil'>
       <Header title="Profil"></Header>
 
 
+      <div className='infoProfil'>
       <h2>Vos informations</h2>
+
       <p>Firstname: {userData?.student.firstname}</p>
       <p>Surname: {userData?.student.surname}</p>
       <p>Email: {userData?.student.email}</p>
       <p>Credit: {userData?.student.credit}</p>
-    
-
+      </div>
     <h2>Historique d'achat</h2>
     
-    {/* <div>{userPaymentHistory?.payments[0].paymentID}</div>
-    <div>{userPaymentHistory?.payments[0].price}</div>
-    <div>{userPaymentHistory?.payments[0].type}</div>
-    <div>{userPaymentHistory?.payments[0].quantity}</div> */}
     <div className='paiementList'>
     {userPaymentHistory?.payments.map((payment, index) => (
         <div key={index}>
@@ -110,18 +97,6 @@ if (loading) {
 
     <div>
       <h2>Vos anciens cours</h2>
-      <div>
-        
-            {/* <p>Payment ID: {payment.paymentID}</p>
-            <p>User ID: {payment.userID}</p>
-            <p>Price: {payment.price}</p>
-            <p>Type: {payment.type}</p>
-            <p>Quantity: {payment.quantity}</p>
-            <p>Date: {payment.date}</p>
-            <p>Payment Type: {payment.paymentType}</p>
-          </div> */}
-
-      </div>
     </div>  
 
       <div>

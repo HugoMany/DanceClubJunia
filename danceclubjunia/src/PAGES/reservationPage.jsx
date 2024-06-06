@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Header from '../elements/header';
 
 function ReservationPage() {
   const [course, setCourse] = useState(null);
@@ -51,6 +52,7 @@ function ReservationPage() {
   // Afficher les détails du cours et le bouton de réservation
   return (
     <div>
+      <Header title="Reservation"></Header>
       {course && (
         <div>
           <h2>{course.title}</h2>
