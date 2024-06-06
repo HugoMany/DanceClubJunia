@@ -94,10 +94,6 @@ if (loading) {
       </div>
     <h2>Historique d'achat</h2>
     
-    {/* <div>{userPaymentHistory?.payments[0].paymentID}</div>
-    <div>{userPaymentHistory?.payments[0].price}</div>
-    <div>{userPaymentHistory?.payments[0].type}</div>
-    <div>{userPaymentHistory?.payments[0].quantity}</div> */}
     <div className='paiementList'>
     {userPaymentHistory?.payments.map((payment, index) => (
         <div key={index}>
