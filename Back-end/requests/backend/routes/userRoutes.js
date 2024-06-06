@@ -24,7 +24,8 @@ const userController = require('../controllers/userController');
  *             properties:
  *               email:
  *                 type: string
- *                 description: Email de l'utilisateur
+ *                 description: Email de l'utilisateur pour lequel générer le jeton de réinitialisation.
+ *                 example: john.doe@example.com
  *     responses:
  *       200:
  *         description: Jeton généré avec succès
@@ -37,12 +38,11 @@ const userController = require('../controllers/userController');
  *                   type: boolean
  *                 message:
  *                   type: string
- *                 token:
- *                   type: string
+ *                   example: Token generated and stored
  *       400:
- *         description: Entrée invalide
+ *         description: Email non renseigné
  *       500:
- *         description: Erreur du serveur
+ *         description: Erreur SQL
  */
 router.post('/generateResetToken', userController.generateResetToken);
 
@@ -61,11 +61,11 @@ router.post('/generateResetToken', userController.generateResetToken);
  *             properties:
  *               token:
  *                 type: string
- *                 description: Jeton de réinitialisation
+ *                 description: Jeton de réinitialisation du mot de passe.
  *                 example: "abc123"
  *               newPassword:
  *                 type: string
- *                 description: Nouveau mot de passe
+ *                 description: Nouveau mot de passe pour l'utilisateur.
  *                 example: "newpassword123"
  *     responses:
  *       200:
@@ -79,6 +79,7 @@ router.post('/generateResetToken', userController.generateResetToken);
  *                   type: boolean
  *                 message:
  *                   type: string
+ *                   example: "Mot de passe réinitialisé avec succès"
  *       400:
  *         description: Entrée invalide
  *       500:
@@ -101,15 +102,15 @@ router.post('/resetPassword', userController.resetPassword);
  *             properties:
  *               userID:
  *                 type: integer
- *                 description: ID de l'utilisateur
+ *                 description: ID de l'utilisateur auquel ajouter le lien.
  *                 example: 123
  *               courseID:
  *                 type: integer
- *                 description: ID du cours
+ *                 description: ID du cours auquel ajouter le lien.
  *                 example: 456
  *               link:
  *                 type: string
- *                 description: Lien à ajouter
+ *                 description: Lien à ajouter au cours pour l'utilisateur.
  *                 example: "http://example.com"
  *     responses:
  *       200:
@@ -123,6 +124,7 @@ router.post('/resetPassword', userController.resetPassword);
  *                   type: boolean
  *                 message:
  *                   type: string
+ *                   example: "Lien ajouté avec succès"
  *       400:
  *         description: Entrée invalide
  *       500:
@@ -134,7 +136,7 @@ router.patch('/addLink', userController.addLink);
  * @swagger
  * /api/user/searchCourses:
  *   get:
- *     summary: Rechercher les cours auxquels un utilisateur a participé
+ *     summary: Rechercher les cours auxquels un utilisateur a participe
  *     tags: [Users]
  *     parameters:
  *       - in: query
@@ -142,28 +144,26 @@ router.patch('/addLink', userController.addLink);
  *         required: true
  *         schema:
  *           type: integer
- *           description: ID de l'étudiant
- *           example: 123
+ *           description: ID de l'etudiant
+ *           example: 7
  *       - in: query
  *         name: startDate
  *         required: false
  *         schema:
  *           type: string
  *           format: date
- *           description: Date de début pour la recherche
+ *           description: Date de debut pour la recherche
  *           example: "2023-01-01"
  *       - in: query
  *         name: tags
  *         required: false
  *         schema:
- *           type: array
- *           items:
- *             type: string
+ *           type: string
  *           description: Tags pour filtrer les cours
- *           example: ["Math", "Science"]
+ *           example: "tag1,tag2"
  *     responses:
  *       200:
- *         description: Cours trouvés avec succès
+ *         description: Cours trouves avec succes
  *         content:
  *           application/json:
  *             schema:
@@ -189,7 +189,7 @@ router.patch('/addLink', userController.addLink);
  *                         type: string
  *                         description: Horaire du cours
  *       400:
- *         description: Entrée invalide
+ *         description: Entree invalide
  *       500:
  *         description: Erreur du serveur
  */

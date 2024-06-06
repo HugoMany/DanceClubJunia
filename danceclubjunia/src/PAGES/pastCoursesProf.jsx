@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-const TeacherPastCourses = ({ studentId }) => {
+const StudentPastCourses = ({ studentId }) => {
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
         const fetchPastCourses = async () => {
             try {
                 const response = await fetch(`http://example.com/api/courses/${studentId}`, {
-                    method: 'GET', // Utilisez GET pour récupérer des données
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -27,20 +27,23 @@ const TeacherPastCourses = ({ studentId }) => {
         fetchPastCourses();
     }, [studentId]);
 
+    // Filtrer les cours passés
+    const pastCourses = courses.filter(course => new Date(course.endDate) < new Date());
+
     return (
         <div>
-            <h2>Your Past Courses</h2>
+            <h2>Past Courses</h2>
             <ul>
-                {courses.map(course => (
+                {pastCourses.map(course => (
                     <li key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
                         <p>Type: {course.type}</p>
-                        <p>Start Date: {course.startDate.toDateString()}</p>
+                        <p>Start Date: {new Date(course.startDate).toDateString()}</p>
                         <p>Start Time: {course.startTime}</p>
                         <p>Location: {course.location}</p>
                         <p>Duration: {course.duration}</p>
-                        <p>Students: {course.students.join(', ')}</p>
+                        <p>Teachers: {course.teachers.join(', ')}</p>
                     </li>
                 ))}
             </ul>
@@ -48,8 +51,8 @@ const TeacherPastCourses = ({ studentId }) => {
     );
 };
 
-const PastCoursesProf = () => {
-    return <TeacherPastCourses teacherId="Teacher 1" />;
+const PastCoursesEleve = () => {
+    return <StudentPastCourses studentId="Student 3" />;
 };
 
-export default PastCoursesProf;
+export default PastCoursesEleve;

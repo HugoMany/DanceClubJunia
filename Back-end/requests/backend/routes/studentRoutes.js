@@ -107,15 +107,15 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     example: true
- *                   Course:
- *                     type: array
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *                     properties:
  *                       courseID:
  *                         type: integer
@@ -143,25 +143,28 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *                         example: 20
  *                       paymentType:
  *                         type: string
- *                         example: "ticket,subscription,card"
+ *                         example: "one-time"
+ *                       paymentOptions:
+ *                         type: string
+ *                         example: "{\"single\": 20}"
  *                       isEvening:
- *                         type: boolean
- *                         example: false
+ *                         type: integer
+ *                         example: 1
  *                       recurrence:
  *                         type: integer
  *                         example: 0
  *                       teachersID:
- *                         type: array
- *                         example: 2, 3
+ *                         type: string
+ *                         example: "[2, 3]"
  *                       links:
- *                         type: array
- *                         example: link3, link4
+ *                         type: string
+ *                         example: "[\"link3\", \"link4\", \"test\"]"
  *                       studentsID:
- *                         type: array
- *                         example: 7
+ *                         type: string
+ *                         example: "[7]"
  *                       tags:
- *                         type: array
- *                         example: tag3, tag4
+ *                         type: string
+ *                         example: "[\"tag3\", \"tag4\"]"
  *       400:
  *         description: Entree invalide
  *       500:
@@ -200,16 +203,14 @@ router.get('/getCourses', studentController.getCourses);
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     example: true
- *                   message:
- *                     type: string
- *                     example: "Place purchased successfully"
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Place purchased successfully"
  *       400:
  *         description: Nombre invalide
  *       401:
@@ -239,35 +240,45 @@ router.post('/buyPlace', studentController.buyPlace);
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     example: true
- *                   paymentID:
- *                     type: integer
- *                     description: ID du paiement
- *                   userID:
- *                     type: integer
- *                     description: ID de l'utilisateur
- *                   price:
- *                     type: number
- *                     description: Montant paye
- *                   type:
- *                     type: string
- *                     description: Type de paiement (ticket, carte, abonnement, credit)
- *                   quantity:
- *                     type: integer
- *                     description: Quantite achetee
- *                   date:
- *                     type: string
- *                     format: date
- *                     description: Date du paiement
- *                   paymentType:
- *                     type: string
- *                     description: Methode de paiement (en ligne, en especes)
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 payments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       paymentID:
+ *                         type: integer
+ *                         description: ID du paiement
+ *                         example: 4
+ *                       userID:
+ *                         type: integer
+ *                         description: ID de l'utilisateur
+ *                         example: 2
+ *                       price:
+ *                         type: number
+ *                         description: Montant paye
+ *                         example: 49.99
+ *                       type:
+ *                         type: string
+ *                         description: Type de paiement (ticket, carte, abonnement, credit)
+ *                         example: Course Fee
+ *                       quantity:
+ *                         type: integer
+ *                         description: Quantite achetee
+ *                         example: 1
+ *                       date:
+ *                         type: string
+ *                         format: date
+ *                         description: Date du paiement
+ *                         example: "2024-06-01T10:00:00.000Z"
+ *                       paymentType:
+ *                         type: string
+ *                         description: Methode de paiement (en ligne, en especes)
+ *                         example: Credit Card
  *       400:
  *         description: Entree invalide
  *       500:
