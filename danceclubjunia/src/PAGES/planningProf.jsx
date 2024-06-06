@@ -1,122 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// Define the Course class
-class Course {
-    constructor({
-        courseId,
-        image,
-        title,
-        type,
-        duration,
-        startDate,
-        startTime,
-        location,
-        maxParticipants,
-        paymentType,
-        price,
-        paymentOptions,
-        isEvening,
-        teachers,
-        links,
-        students,
-        tags
-    }) {
-        this.courseId = courseId;
-        this.image = image;
-        this.title = title;
-        this.type = type;
-        this.duration = duration;
-        this.startDate = new Date(startDate);
-        this.startTime = startTime;
-        this.location = location;
-        this.maxParticipants = maxParticipants;
-        this.paymentType = paymentType;
-        this.price = price;
-        this.paymentOptions = paymentOptions;
-        this.isEvening = isEvening;
-        this.teachers = teachers;
-        this.links = links;
-        this.students = students;
-        this.tags = tags;
-    }
-
-    addStudent(studentId) {
-        if (this.students.includes(studentId)) {
-            throw new Error('Student is already enrolled in this course.');
-        }
-        this.students.push(studentId);
-    }
-
-    removeStudent(studentId) {
-        this.students = this.students.filter(student => student !== studentId);
-    }
-}
-// Simulated backend data and functions
-let coursesData = [
-    new Course({
-        courseId: '1',
-        image: 'image1.jpg',
-        title: 'Salsa Dance',
-        type: 'Salsa',
-        duration: '2 hours',
-        startDate: '2024-05-30',
-        startTime: '18:00',
-        location: 'Studio A',
-        maxParticipants: 20,
-        paymentType: 'subscription',
-        price: null,
-        paymentOptions: [],
-        isEvening: false,
-        teachers: ['Teacher 1'],
-        links: [],
-        students: ['Student 1', 'Student 2'],
-        tags: []
-    }),
-    new Course({
-        courseId: '2',
-        image: 'image2.jpg',
-        title: 'Ballet Class',
-        type: 'Ballet',
-        duration: '1.5 hours',
-        startDate: '2024-06-01',
-        startTime: '17:00',
-        location: 'Studio B',
-        maxParticipants: 15,
-        paymentType: 'one-time',
-        price: 25,
-        paymentOptions: [],
-        isEvening: false,
-        teachers: ['Teacher 1'],
-        links: [],
-        students: ['Student 3', 'Student 4'],
-        tags: []
-    })
-];
-
-const getCoursesForTeacher = (teacherId) => {
-    return coursesData.filter(course => course.teachers.includes(teacherId));
-};
-
-const deleteCourse = (courseId) => {
-    coursesData = coursesData.filter(course => course.courseId !== courseId);
-};
-
-const addStudentToCourse = (courseId, studentId) => {
-    const course = coursesData.find(course => course.courseId === courseId);
-    if (course) {
-        try {
-            course.addStudent(studentId);
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-};
-
-const removeStudentFromCourse = (courseId, studentId) => {
-    const course = coursesData.find(course => course.courseId === courseId);
-    if (course) {
-        course.removeStudent(studentId);
-    }
-};
 
 // React component
 const TeacherCourses = ({ teacherId }) => {
@@ -124,67 +6,138 @@ const TeacherCourses = ({ teacherId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newStudentId, setNewStudentId] = useState('');
+    const [newTag, setNewTag] = useState('');
 
     useEffect(() => {
-        // Simulate fetching courses for the teacher
-        try {
-            const data = getCoursesForTeacher(teacherId);
-            const now = new Date();
-            const upcomingCourses = data.filter(course => course.startDate > now);
-            const sortedCourses = upcomingCourses.sort((a, b) => a.startDate - b.startDate);
-            setCourses(sortedCourses);
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-            setError(error);
-            setLoading(false);
-        }
+        const fetchCourses = async () => {
+            try {
+                const response = await fetch(`http://example.com/api/courses/${teacherId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const now = new Date();
+                    const upcomingCourses = data.filter(course => new Date(course.startDate) > now);
+                    const sortedCourses = upcomingCourses.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                    setCourses(sortedCourses);
+                } else {
+                    throw new Error('Error fetching courses');
+                }
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourses();
     }, [teacherId]);
 
-    const handleDelete = (courseId) => {
+    const handleDelete = async (courseId) => {
         try {
-            deleteCourse(courseId);
-            // Remove the deleted course from the state
-            setCourses(courses.filter(course => course.courseId !== courseId));
+            const response = await fetch(`http://example.com/api/courses/${courseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setCourses(courses.filter(course => course.courseId !== courseId));
+            } else {
+                throw new Error('Error deleting course');
+            }
         } catch (error) {
             console.error('Error deleting course:', error);
             setError(error);
         }
     };
 
-    const handleAddStudent = (courseId) => {
+    const handleAddStudent = async (courseId) => {
         try {
-            addStudentToCourse(courseId, newStudentId);
-            // Update the course list with the new student added
-            setCourses(courses.map(course => 
-                course.courseId === courseId 
-                ? { ...course, students: [...course.students, newStudentId] }
-                : course
-            ));
-            setNewStudentId('');
+            const response = await fetch(`http://example.com/api/courses/${courseId}/students`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ studentId: newStudentId })
+            });
+
+            if (response.ok) {
+                const updatedCourse = await response.json();
+                setCourses(courses.map(course =>
+                    course.courseId === courseId ?
+                        { ...course, students: updatedCourse.students } :
+                        course
+                ));
+                setNewStudentId('');
+            } else {
+                throw new Error('Error adding student');
+            }
         } catch (error) {
             console.error('Error adding student:', error);
             setError(error);
         }
     };
 
-    const handleRemoveStudent = (courseId, studentId) => {
+    const handleRemoveStudent = async (courseId, studentId) => {
         try {
-            removeStudentFromCourse(courseId, studentId);
-            // Update the course list with the student removed
-            setCourses(courses.map(course => 
-                course.courseId === courseId 
-                ? { ...course, students: course.students.filter(student => student !== studentId) }
-                : course
-            ));
+            const response = await fetch(`http://example.com/api/courses/${courseId}/students/${studentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const updatedCourse = await response.json();
+                setCourses(courses.map(course =>
+                    course.courseId === courseId ?
+                        { ...course, students: updatedCourse.students } :
+                        course
+                ));
+            } else {
+                throw new Error('Error removing student');
+            }
         } catch (error) {
             console.error('Error removing student:', error);
+            setError(error);
+        }
+    };
+    const handleAddTag = async (courseId) => {
+        try {
+            const response = await fetch(`http://example.com/api/courses/${courseId}/tags`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tag: newTag })
+            });
+
+            if (response.ok) {
+                const updatedCourse = await response.json();
+                setCourses(courses.map(course =>
+                    course.courseId === courseId ?
+                        { ...course, tags: updatedCourse.tags } :
+                        course
+                ));
+                setNewTag('');
+            } else {
+                throw new Error('Error adding tag');
+            }
+        } catch (error) {
+            console.error('Error adding tag:', error);
             setError(error);
         }
     };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading courses: {error.message}</div>;
-
     return (
         <div>
             <h2>Your Upcoming Courses</h2>
@@ -192,14 +145,7 @@ const TeacherCourses = ({ teacherId }) => {
                 {courses.map(course => (
                     <li key={course.courseId}>
                         <h3>{course.title}</h3>
-                        <img src={course.image} alt={course.title} />
-                        <p>Type: {course.type}</p>
-                        <p>Start Date: {course.startDate.toDateString()}</p>
-                        <p>Start Time: {course.startDate.toTimeString().slice(0, 5)}</p>
-                        <p>Location: {course.location}</p>
-                        <p>Duration: {course.duration}</p>
-                        <p>Students: {course.students.join(', ')}</p>
-                        <button onClick={() => handleDelete(course.courseId)}>Delete</button>
+                        {/* Autres détails du cours */}
                         <div>
                             <input
                                 type="text"
@@ -217,6 +163,18 @@ const TeacherCourses = ({ teacherId }) => {
                                 </li>
                             ))}
                         </ul>
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="New Tag"
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                            />
+                            <button onClick={() => handleAddTag(course.courseId)}>Add Tag</button>
+                        </div>
+                        <div>
+                            <button onClick={()=> handleDelete}>Delete Course</button>
+                        </div>
                     </li>
                 ))}
             </ul>

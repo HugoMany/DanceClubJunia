@@ -1,7 +1,10 @@
 import logo from "../img/logo.jpg"
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MenuDeroulant from "./menuDeroulant";
+import { IS_ADMIN, IS_CONNECT } from "../const/const";
 function Header({ title }) {
-    const isAdmin = false;
-    const isConnect = false ;
+
 
     return (
         <div>
@@ -9,17 +12,7 @@ function Header({ title }) {
             <div class="header">
                 <h1>Dance Club</h1>
             </div></a>
-            {isAdmin ? (
-                    <>
-                        {/* <h4>isAdmin</h4> */}
-                        <div className="AdminButton"><a href='/admin/' ><button class="styled-button">Admin</button></a></div>
-                    </>
-
-                ) : (
-                    <>
-                        {/* <h4>isNotAdmin</h4> */}
-                    </>
-                )}
+            
             <div class="footer">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
                 <div><a href='/'><button><span class="material-symbols-outlined">
@@ -28,27 +21,9 @@ function Header({ title }) {
 
                 <h1>{title}</h1>
                 <br/>       
-                
-                {isConnect ? (
-                    <>
-                        {/* <h4>isConnect</h4> */}
-                        <div>
-                            <a href='/profil/'><button><span class="material-symbols-outlined">
-                                person
-                            </span></button></a>
-                        </div>
-                    </>
+                <MenuDeroulant></MenuDeroulant>
 
-                ) : (
-                    <>
-                        {/* <h4>isNotConnect</h4> */}
-                        <div>
-                            <a href='/connexion/'><button><span class="material-symbols-outlined">
-                                login
-                            </span></button></a>
-                        </div>
-                    </>
-                )}
+                
             </div>
         </div>
     );

@@ -1,53 +1,80 @@
-// import React from 'react';
-// import Header from '../../../elements/header';
+import React from 'react';
+import Header from '../../../elements/header';
 
-// import Box from '@mui/material/Box';
-// import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useState, useEffect } from 'react';
+import { URL_DB } from '../../../const/const';
+import Loading from '../../../elements/loading';
 
+const AdminEleve = () => {
+  const [allUserData, setAllUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-// const columns: GridColDef<(typeof rows)[number]>[] = [
-//     { field: 'id', headerName: 'ID', width: 90 },
-//     {
-//       field: 'firstName',
-//       headerName: 'First name',
-//       width: 150,
-//       editable: true,
-//     },
-//     {
-//       field: 'lastName',
-//       headerName: 'Last name',
-//       width: 150,
-//       editable: true,
-//     },
-//     {
-//       field: 'age',
-//       headerName: 'Age',
-//       type: 'number',
-//       width: 110,
-//       editable: true,
-//     },
-//     {
-//       field: 'fullName',
-//       headerName: 'Full name',
-//       description: 'This column has a value getter and is not sortable.',
-//       sortable: false,
-//       width: 160,
-//       valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-//     },
-//   ];
+  useEffect(() => {
+    const fetchAllUser = async () => {
+        try {
+            const response = await fetch(URL_DB + 'admin/getAllStudents', {
+                method: 'GET',
+            });
 
-//   const rows = [
-//     { userId: 1, firstname:"Jon",lastName: 'Snow', subscriptionEndDate: '2023-12-31T00:00:00.000Z', credit: 14 },
-//     {userId: 1, firstname:"Jon",lastName: 'Snow', subscriptionEndDate: '2023-12-31T00:00:00.000Z', credit: 14 }
-//   ];
-// const AdminEleve = () => {
-//   return (
-//     <div>
-//         <Header title="Admin Eleve"></Header>
-//       <h1>Admin Eleve Page</h1>
-//       {/* Add your content here */}
-//     </div>
-//   );
-// };
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.students)
+                setAllUserData(data.students);
+                setLoading(false);
 
-// export default AdminEleve;
+            } else {
+                console.error('Erreur lors de la récupération des prof');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des prof', error);
+        }
+        finally {
+        }
+    };
+    
+
+    fetchAllUser();
+   
+    console.log(allUserData);
+    
+}, []);
+  if(loading){
+    return <div><Loading></Loading></div>
+  }
+  return (
+    
+    <div>
+{/* {allUserData} */}
+
+      
+      <Header title={"Gestion des élèves"}></Header>
+      
+       
+      <div className='DataAdmin'>
+
+        <DataGrid
+          rows={allUserData}
+          getRowId={(row) => row.userID}
+          columns={[
+            { field: 'userID', headerName: 'ID', width: 90 },
+            { field: 'firstname', headerName: 'Prenom', width: 150 },
+            { field: 'surname', headerName: 'Nom', width: 150 },
+            { field: 'email', headerName: 'Email', width: 150 },
+            { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
+            { field: 'credit', headerName: 'Credit', width: 150 },
+            { field: 'ticket', headerName: 'Ticket', width: 150 },
+            { field: 'photo', headerName: 'Photo', width: 150 },
+          ]}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+        </div>
+    </div>
+  );
+};
+
+export default AdminEleve;
+    

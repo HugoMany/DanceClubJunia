@@ -2,9 +2,22 @@ const db = require('../config/database');
 
 class StudentService {
   async addCredit(studentID, credit) {
+
+    //
+    //  Il faut ajouter une vérification du droit pour le faire (hello asso)
+    //
+
     return new Promise((resolve, reject) => {
       const sql = `UPDATE Users SET credit = credit + ? WHERE userID = ?`;
       db.query(sql, [credit, studentID], (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(result);
+      });
+
+      const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType) VALUES (?, ?, 'credit', ?, CURRENT_TIMESTAMP, 'online');"
+      db.query(paymentSql, [studentID, credit, credit], (err, result) => {
         if (err) {
           return reject(err);
         }
@@ -31,18 +44,18 @@ class StudentService {
 
   async getCourses(studentID) {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM Courses WHERE JSON_CONTAINS(studentsID, ?)";
-        db.query(sql, [studentID], (err, result) => {
-          if (err) {
-            return reject(err);
-          }
-          
-          resolve(result);
-        });
+      const sql = "SELECT * FROM Courses WHERE JSON_CONTAINS(studentsID, ?)";
+      db.query(sql, [studentID], (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(result);
       });
+    });
   }
 
-  
+
 
   async buyPlace(studentID, type, number) {
     return new Promise((resolve, reject) => {
@@ -61,20 +74,26 @@ class StudentService {
           return reject(err);
         }
 
+        if (result.length == 0) {
+          return reject(new Error('Place not found'));
+        }
+
         let price = result[0].price;
         if (type !== "card") {
           price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achetés
         }
 
-        if (!price) {
-          return reject(new Error('Place not found'));
-        }
+
 
         // Vérifier si l'utilisateur a suffisamment de crédits
         const getUserCreditQuery = 'SELECT credit FROM Users WHERE userID = ?';
         db.query(getUserCreditQuery, [studentID], (err, result) => {
           if (err) {
             return reject(err);
+          }
+
+          if (result.length == 0) {
+            return reject(new Error('No student with this ID'));
           }
 
           const userCredit = result[0].credit;
@@ -85,6 +104,16 @@ class StudentService {
               if (err) {
                 return reject(err);
               }
+
+
+              const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'online', ?);"
+              db.query(paymentSql, [studentID, price, type, number, studentID], (err, result) => {
+                if (err) {
+                  return reject(err);
+                }
+                resolve(result);
+              });
+
 
               let sql;
               switch (type) {
@@ -143,9 +172,9 @@ class StudentService {
     });
   }
 
-  
 
-  
+
+
 }
 
 module.exports = new StudentService();

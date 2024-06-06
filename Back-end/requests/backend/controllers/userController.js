@@ -11,7 +11,7 @@ exports.generateResetToken = async (req, res) => {
 
   try {
     const token = await userService.generateResetToken(email);
-    res.json({ success: true, message: 'Token generated and stored', token });
+    res.json({ success: true, message: 'Token generated and stored'});
   } catch (error) {
     console.error('generateResetToken | error:', error);
     res.status(500).json({ success: false, message: 'Error generating token' });

@@ -2,7 +2,9 @@
 // constants.js
 
 export const URL_DB = 'http://90.110.227.143/api/';
-
+export const IS_ADMIN = true;
+export const IS_CONNECT = true;
+export const IS_PROF = true;
 
 
 
