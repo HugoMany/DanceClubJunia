@@ -38,10 +38,10 @@ const Profil = () => {
                     setLoading(false);
 
                 } else {
-                    console.error('Erreur lors de la récupération des prof');
+                    console.error('Erreur lors de la récupération des info du compte');
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des prof', error);
+                console.error('Erreur lors de la récupération des info du compte', error);
             }
             finally {
                 hideLoading();
