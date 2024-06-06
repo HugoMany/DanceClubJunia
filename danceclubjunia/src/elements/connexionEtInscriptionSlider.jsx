@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../elements/header';
+import Header from './header';
 import '../css/login.css';
 
 // Import Swiper React components
@@ -10,8 +10,8 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 // import required modules
 import { Pagination } from 'swiper/modules';
-import Connexion from './connexion';
-import Inscription from './inscription';
+import Connexion from '../PAGES/connexion';
+import Inscription from '../PAGES/inscription';
 
 function ConnexionEtInscriptionSlider() {
     return (

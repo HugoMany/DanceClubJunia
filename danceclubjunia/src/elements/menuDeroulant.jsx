@@ -69,7 +69,7 @@ const MenuDeroulant = () => {
          {IS_CONNECT ? (
                     <>
                     <MenuItem onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>
-                    <MenuItem onClick={handleClose} component={Link} to="/profil">Logout</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to="/connexion">Logout</MenuItem>
 
                     </>
 

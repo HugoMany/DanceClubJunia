@@ -3,42 +3,75 @@ import Header from '../../../elements/header';
 
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
-
+import { useState, useEffect } from 'react';
+import { URL_DB } from '../../../const/const';
+import Loading from '../../../elements/loading';
 
 const AdminEleve = () => {
+  const [allUserData, setAllUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAllUser = async () => {
+        try {
+            const response = await fetch(URL_DB + 'admin/getAllStudents', {
+                method: 'GET',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.students)
+                setAllUserData(data.students);
+                setLoading(false);
+
+            } else {
+                console.error('Erreur lors de la récupération des prof');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des prof', error);
+        }
+        finally {
+        }
+    };
+    
+
+    fetchAllUser();
+   
+    console.log(allUserData);
+    
+}, []);
+  if(loading){
+    return <div><Loading></Loading></div>
+  }
   return (
+    
     <div>
+{/* {allUserData} */}
+
+      
       <Header title={"Gestion des élèves"}></Header>
-      <Box sx={{width: '100%' }}>
+      
+       
+      <div className='DataAdmin'>
+
         <DataGrid
-          rows={[
-            { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-            { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-            { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-            { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-            { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-            { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-            { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-            { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-            { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-          ]}
+          rows={allUserData}
+          getRowId={(row) => row.userID}
           columns={[
-            { field: 'id', headerName: 'ID', width: 90 },
-            { field: 'firstName', headerName: 'First name', width: 150 },
-            { field: 'lastName', headerName: 'Last name', width: 150 },
-            {
-              field: 'age',
-              headerName: 'Age',
-              type: 'number',
-              width: 110,
-            },
+            { field: 'userID', headerName: 'ID', width: 90 },
+            { field: 'firstname', headerName: 'Prenom', width: 150 },
+            { field: 'surname', headerName: 'Nom', width: 150 },
+            { field: 'email', headerName: 'Email', width: 150 },
+            { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
+            { field: 'credit', headerName: 'Credit', width: 150 },
+            { field: 'ticket', headerName: 'Ticket', width: 150 },
+            { field: 'photo', headerName: 'Photo', width: 150 },
           ]}
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
         />
-      </Box>
+        </div>
     </div>
   );
 };

@@ -7,15 +7,6 @@ import Loading from '../elements/loading';
 
 const ID_CONST_STUDENT = 10;
 
-function showLoading() {
-  }
-  
-  function hideLoading() {
-  }
-
-// Start loading
-showLoading();
-
 
 
 
@@ -44,7 +35,6 @@ const Profil = () => {
                 console.error('Erreur lors de la récupération des prof', error);
             }
             finally {
-                hideLoading();
             }
         };
         const fetchPaymentHistory = async () => {
@@ -65,7 +55,6 @@ const Profil = () => {
                 console.error('Erreur lors de la récupération des prof', error);
             }
             finally {
-                hideLoading();
             }
         };
 

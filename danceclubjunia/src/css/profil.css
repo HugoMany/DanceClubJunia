@@ -9,6 +9,9 @@
 .infoProfil p{
     margin: 5px ;
 }
-.infoProfil{
-    
+.infoProfil {
+    border: 0px solid white;
+    border-radius: 20px;
+    background: white;
+    padding: 20px 0px;
 }
