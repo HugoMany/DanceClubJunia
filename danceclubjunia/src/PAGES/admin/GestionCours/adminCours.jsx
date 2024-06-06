@@ -49,7 +49,7 @@ const AdminCours = () => {
       <div className='DataAdmin'>
 
         <DataGrid
-          // rows={allCoursesData}
+          // rows={allCoursesData[1]}
           
           getRowId={(row) => row.coursesID}
           columns={[
