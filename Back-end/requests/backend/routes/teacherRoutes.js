@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const teacherController = require('../controllers/teacherController');
+const { authorize } = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -15,6 +16,8 @@ const teacherController = require('../controllers/teacherController');
  *   get:
  *     summary: Recuperer un etudiant par son ID
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: studentID
@@ -63,12 +66,15 @@ const teacherController = require('../controllers/teacherController');
  *                       format: date
  *                       nullable: true
  *                       example: null
+ *                     photo:
+ *                       type: string
+ *                       example: "photo.png"
  *       400:
  *         description: Entree invalide
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getStudent', teacherController.getStudent);
+router.get('/getStudent', authorize(['teacher', 'admin']), teacherController.getStudent);
 
 /**
  * @swagger
@@ -76,6 +82,8 @@ router.get('/getStudent', teacherController.getStudent);
  *   post:
  *     summary: Creer un nouvel etudiant
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -108,6 +116,10 @@ router.get('/getStudent', teacherController.getStudent);
  *                 type: integer
  *                 description: Credit initial de l'etudiant.
  *                 example: 0
+ *               photo:
+ *                 type: string
+ *                 description: Photo de l'etudiant.
+ *                 example: "photo.png"
  *     responses:
  *       200:
  *         description: etudiant cree avec succes
@@ -148,12 +160,15 @@ router.get('/getStudent', teacherController.getStudent);
  *                       format: date
  *                       nullable: true
  *                       example: null
+ *                     photo:
+ *                       type: string
+ *                       example: "photo.png"
  *       400:
  *         description: Entree invalide
  *       500:
  *         description: Erreur SQL
  */
-router.post('/newStudent', teacherController.newStudent);
+router.post('/newStudent', authorize(['teacher', 'admin']), teacherController.newStudent);
 
 /**
  * @swagger
@@ -161,6 +176,8 @@ router.post('/newStudent', teacherController.newStudent);
  *   patch:
  *     summary: Modifier les informations d'un etudiant
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -197,6 +214,10 @@ router.post('/newStudent', teacherController.newStudent);
  *                 type: integer
  *                 description: Credit de l'etudiant.
  *                 example: 0
+ *               photo:
+ *                 type: string
+ *                 description: Photo de l'etudiant.
+ *                 example: "photo.png"
  *     responses:
  *       200:
  *         description: etudiant modifie avec succes
@@ -237,12 +258,15 @@ router.post('/newStudent', teacherController.newStudent);
  *                       format: date
  *                       nullable: true
  *                       example: null
+ *                     photo:
+ *                       type: string
+ *                       example: "photo.png"
  *       400:
  *         description: Entree invalide
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/modifyStudent', teacherController.modifyStudent);
+router.patch('/modifyStudent', authorize(['teacher', 'admin']), teacherController.modifyStudent);
 
 /**
  * @swagger
@@ -250,6 +274,8 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *   patch:
  *     summary: Retirer un etudiant d'un cours
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -281,7 +307,7 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/removeStudent', teacherController.removeStudent);
+router.patch('/removeStudent', authorize(['teacher', 'admin']), teacherController.removeStudent);
 
 /**
  * @swagger
@@ -289,6 +315,8 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *   patch:
  *     summary: Affecter un etudiant a un cours
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -324,7 +352,7 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/affectStudent', teacherController.affectStudent);
+router.patch('/affectStudent', authorize(['teacher', 'admin']), teacherController.affectStudent);
 
 /**
  * @swagger
@@ -332,6 +360,8 @@ router.patch('/affectStudent', teacherController.affectStudent);
  *   get:
  *     summary: Recherche des etudiants en fonction de leur prenom, nom de famille et/ou email.
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: firstname
@@ -398,7 +428,7 @@ router.patch('/affectStudent', teacherController.affectStudent);
  *       500:
  *         description: Erreur interne du serveur.
  */
-router.get('/searchStudent', teacherController.searchStudent);
+router.get('/searchStudent', authorize(['teacher', 'admin']), teacherController.searchStudent);
 
 /**
  * @swagger
@@ -406,6 +436,8 @@ router.get('/searchStudent', teacherController.searchStudent);
  *   delete:
  *     summary: Annuler un cours
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -439,9 +471,7 @@ router.get('/searchStudent', teacherController.searchStudent);
  *       500:
  *         description: Erreur SQL
  */
-router.delete('/cancelCourse', teacherController.cancelCourse);
-
-
+router.delete('/cancelCourse', authorize(['teacher', 'admin']), teacherController.cancelCourse);
 
 /**
  * @swagger
@@ -449,6 +479,8 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *   get:
  *     summary: Renvoie le nombre d'etudiants a qui le professeur a fait cours dans une periode donnee
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: teacherID
@@ -490,7 +522,7 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
+router.get('/getTeacherPlaces', authorize(['teacher', 'admin']), teacherController.getTeacherPlaces);
 
 /**
  * @swagger
@@ -498,6 +530,8 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *   patch:
  *     summary: Modifier les informations d'un cours
  *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -655,6 +689,6 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *       500:
  *         description: Erreur du serveur
  */
-router.patch('/modifyCourse', teacherController.modifyCourse);
+router.patch('/modifyCourse', authorize(['teacher', 'admin']), teacherController.modifyCourse);
 
 module.exports = router;

@@ -137,8 +137,16 @@ class StudentService {
                   break;
                 case 'subscription':
                   const days = number * 30; // Nombre de jours proportionnel au nombre de mois
-                  sql = 'UPDATE Users SET subscriptionEnd = DATE_ADD(subscriptionEnd, INTERVAL ? DAY) WHERE userID = ?';
-                  db.query(sql, [days, studentID], (err, result) => {
+
+                  const sql = `
+                    UPDATE Users 
+                    SET subscriptionEnd = CASE 
+                      WHEN subscriptionEnd IS NULL THEN DATE_ADD(CURDATE(), INTERVAL ? DAY)
+                      ELSE DATE_ADD(subscriptionEnd, INTERVAL ? DAY)
+                    END 
+                    WHERE userID = ?`;
+
+                  db.query(sql, [days, days, studentID], (err, result) => {
                     if (err) {
                       return reject(err);
                     }

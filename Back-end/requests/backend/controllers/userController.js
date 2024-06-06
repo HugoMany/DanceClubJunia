@@ -61,20 +61,38 @@ exports.addLink = async (req, res) => {
   }
 };
 
-exports.searchCourses = async (req, res) => {
+exports.searchCoursesStudent = async (req, res) => {
   const { userID, startDate, tags } = req.query;
 
-  console.log(`searchCourses | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
+  console.log(`searchCoursesStudent | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
 
   if (userID <= 0) {
     return res.status(400).json({ success: false, message: 'Invalid userID' });
   }
 
   try {
-    const courses = await userService.searchCourses(userID, startDate, tags);
+    const courses = await userService.searchCoursesStudent(userID, startDate, tags);
     res.json({ success: true, courses });
   } catch (error) {
-    console.error('searchCourses | error:', error);
+    console.error('searchCoursesStudent | error:', error);
     res.status(500).json({ success: false, message: 'Error executing query' });
+  }
+};
+
+exports.searchCourse = async (req, res) => {
+  const { courseID } = req.query;
+
+  console.log(`searchCourse | courseID: ${courseID}`);
+
+  if (courseID <= 0) {
+    return res.status(400).json({ success: false, message: 'Invalid courseID' });
+  }
+
+  try {
+    const courses = await userService.searchCourse(courseID);
+    res.json({ success: true, courses });
+  } catch (error) {
+    console.error('courseID | error:', error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
