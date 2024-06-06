@@ -1,7 +1,7 @@
 import logo from "../img/logo.jpg"
 function Header({ title }) {
-    const isAdmin = false;
-    const isConnect = false ;
+    const isAdmin = true;
+    const isConnect = true ;
 
     return (
         <div>

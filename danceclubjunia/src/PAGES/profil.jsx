@@ -79,17 +79,19 @@ if (loading) {
         return <Loading></Loading>;
       }
   return (
-    <div className='Profil'>
+  
+  <div className='Profil'>
       <Header title="Profil"></Header>
 
 
+      <div className='infoProfil'>
       <h2>Vos informations</h2>
+
       <p>Firstname: {userData?.student.firstname}</p>
       <p>Surname: {userData?.student.surname}</p>
       <p>Email: {userData?.student.email}</p>
       <p>Credit: {userData?.student.credit}</p>
-    
-
+      </div>
     <h2>Historique d'achat</h2>
     
     {/* <div>{userPaymentHistory?.payments[0].paymentID}</div>
@@ -110,18 +112,6 @@ if (loading) {
 
     <div>
       <h2>Vos anciens cours</h2>
-      <div>
-        
-            {/* <p>Payment ID: {payment.paymentID}</p>
-            <p>User ID: {payment.userID}</p>
-            <p>Price: {payment.price}</p>
-            <p>Type: {payment.type}</p>
-            <p>Quantity: {payment.quantity}</p>
-            <p>Date: {payment.date}</p>
-            <p>Payment Type: {payment.paymentType}</p>
-          </div> */}
-
-      </div>
     </div>  
 
       <div>
