@@ -31,6 +31,7 @@ import GetStudentID from './PAGES/getStudentID';
 import AjoutCredits from './PAGES/ajoutCredits';
 import Prof from './PAGES/prof';
 import Appel from './PAGES/appel';
+import CreerProf from './PAGES/admin/GestionProf/creerProf';
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
           <Route path="/prof" element={<Prof/>}/>
 
           <Route path="/appel" element={<Appel/>}/>
+          <Route path="/creerProf" element={<CreerProf/>}/>
         </Routes>
       </Router>
     </div>
