@@ -10,12 +10,14 @@ const PlanningProf = ({ teacherId }) => {
 
     useEffect(() => {
         const fetchCourses = async () => {
-            try {
-                const response = await fetch(`${URL}api/courses/${teacherId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+            try {const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/user/searchCoursesTeacher?userID=${teacherId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 });
 
                 if (response.ok) {
@@ -101,11 +103,19 @@ const PlanningProf = ({ teacherId }) => {
 
     const handleRemoveStudent = async (courseId, studentId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}/students/${studentId}`, {
-                method: 'DELETE',
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/teacher/addStudentToCourse`, {
+                method: 'PATCH', // Utilisation de la méthode PATCH
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    courseID: courseId,
+                    studentID: studentId
+                })
             });
 
             if (response.ok) {
@@ -125,14 +135,21 @@ const PlanningProf = ({ teacherId }) => {
     };
     const handleAddTag = async (courseId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}/tags`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            const response = await fetch(`${URL}api/teacher/modifyCourse`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                  'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ tag: newTag })
-            });
-
+                body: JSON.stringify({
+                    courseID:courseId,
+                   // Utilisation de userID ici
+                  tag: newTag,
+                })
+              });
+            
+              
             if (response.ok) {
                 const updatedCourse = await response.json();
                 setCourses(courses.map(course =>
