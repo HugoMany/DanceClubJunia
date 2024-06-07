@@ -64,8 +64,12 @@ const AdminProf = () => {
             { field: 'surname', headerName: 'Nom', width: 150 },
             { field: 'email', headerName: 'Email', width: 150 },
             { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
-            { field: 'photo', headerName: 'Photo', width: 150 },
+            { field: 'photo', headerName: 'Photo', width: 150 ,editable: true,}
           ]}
+          onCellEditStop={(params, event) => 
+            console.log("Case modifier")
+          }
+          
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
