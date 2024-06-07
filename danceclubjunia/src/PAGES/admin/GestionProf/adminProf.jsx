@@ -3,6 +3,7 @@ import Header from '../../../elements/header';
 import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import { DataGrid } from '@mui/x-data-grid';
+import Loading from '../../../elements/loading';
 
 const AdminProf = () => {
   const [allProfData, setAllProfData] = useState(null);
@@ -19,11 +20,11 @@ const AdminProf = () => {
                   'Authorization': `Bearer ${token}`,
               },
             });
-
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.students)
-                setAllProfData(data.students);
+                setAllProfData(data.teachers);
+                console.log(data.teachers)
+
                 setLoading(false);
 
             } else {
@@ -40,16 +41,22 @@ const AdminProf = () => {
 
     fetchAllProf();
    
-    console.log(allProfData);
+    // console.log(allProfData);
   }, []);
+  if(loading){
+    return <div><Loading></Loading></div>
+  }
   return (
+    
     <div>
         <Header title="Admin Prof"></Header>
       {/* <h1>Admin Prof Page</h1> */}
       <div className='DataAdmin'>
+      
+      {allProfData && (
 
         <DataGrid
-          // rows={allUserData}
+          rows={allProfData}
           getRowId={(row) => row.userID}
           columns={[
             { field: 'userID', headerName: 'ID', width: 90 },
@@ -57,15 +64,14 @@ const AdminProf = () => {
             { field: 'surname', headerName: 'Nom', width: 150 },
             { field: 'email', headerName: 'Email', width: 150 },
             { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
-            { field: 'credit', headerName: 'Credit', width: 150 },
-            { field: 'ticket', headerName: 'Ticket', width: 150 },
             { field: 'photo', headerName: 'Photo', width: 150 },
           ]}
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
-        />
+        />)}
         </div>
+      
     </div>
   );
 };
