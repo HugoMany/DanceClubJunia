@@ -22,7 +22,14 @@ const ModifCours = ({ idCours }) => {
     useEffect(() => {
         const fetchCours = async () => {
             try {
-                const response = await fetch(URL_DB+'user/searchCourse?courseID='+idCours);
+                const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            console.log(token)
+                const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
                 setCourseData(data);
                 setLoading(false);
@@ -35,13 +42,21 @@ const ModifCours = ({ idCours }) => {
         fetchCours();
     }, [idCours]);
 
+
+
     const handleSubmit = async (event) => {
+        console.log("ooooo")
         event.preventDefault();
         try {
-            const response = await fetch(URL_DB+`teacher/modifyCourse`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            console.log(token)
+            console.log(courseData)
+            const response = await fetch(URL_DB + `teacher/modifyCourse`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(courseData.courses[0]),
             });
@@ -58,6 +73,8 @@ const ModifCours = ({ idCours }) => {
         setCourseData({
             ...courseData,
             [event.target.name]: event.target.value,
+            teacherID: "123",
+            teachers: ["prof@example.com"]
         });
     };
 
@@ -67,7 +84,7 @@ const ModifCours = ({ idCours }) => {
 
     return (
         <div>
-           
+
             <form onSubmit={handleSubmit}>
                 <label>
                     Type de danse:
