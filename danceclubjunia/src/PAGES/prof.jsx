@@ -17,7 +17,7 @@ const Prof = ()=>{
 
 
         <div>
-            <PlanningProf></PlanningProf>
+            <PlanningProf teacherId="Teacher 1"></PlanningProf>
         </div>
         <div>
             <Appel></Appel>

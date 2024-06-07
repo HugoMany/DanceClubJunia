@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // React component
-const TeacherCourses = ({ teacherId }) => {
+const PlanningProf = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -182,9 +182,6 @@ const TeacherCourses = ({ teacherId }) => {
     );
 };
 
-// Usage example
-const PlanningProf = () => {
-    return <TeacherCourses teacherId="Teacher 1" />;
-};
+
 
 export default PlanningProf;
