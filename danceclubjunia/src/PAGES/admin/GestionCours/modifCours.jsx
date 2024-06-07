@@ -23,8 +23,8 @@ const ModifCours = ({ idCours }) => {
         const fetchCours = async () => {
             try {
                 const token = localStorage.getItem('token');
-            if (!token) return { valid: false };
-            console.log(token)
+                if (!token) return { valid: false };
+                console.log(token)
                 const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -42,23 +42,30 @@ const ModifCours = ({ idCours }) => {
         fetchCours();
     }, [idCours]);
 
-
-
     const handleSubmit = async (event) => {
         console.log("ooooo")
         event.preventDefault();
         try {
             const token = localStorage.getItem('token');
             if (!token) return { valid: false };
+
             console.log(token)
             console.log(courseData)
+            let courseDataModify = {
+                ...courseData.courses[0],
+                teacherID: "1234"
+            };
+
+            
+            console.log(courseDataModify)
+
             const response = await fetch(URL_DB + `teacher/modifyCourse`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(courseData.courses[0]),
+                body: JSON.stringify(courseDataModify),
             });
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du cours');
@@ -73,8 +80,6 @@ const ModifCours = ({ idCours }) => {
         setCourseData({
             ...courseData,
             [event.target.name]: event.target.value,
-            teacherID: "123",
-            teachers: ["prof@example.com"]
         });
     };
 

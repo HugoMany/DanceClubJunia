@@ -19,8 +19,10 @@ const Profil = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                //Recup TOKEN dans le local storage
                 const token = localStorage.getItem('token');
                 if (!token) return { valid: false };
+
                 const response = await fetch(URL_DB + 'teacher/getStudent?studentID=' + ID_CONST_STUDENT, {
                     method: 'GET',
                     headers: {
@@ -44,6 +46,7 @@ const Profil = () => {
         };
         const fetchPaymentHistory = async () => {
             try {
+                //Recup TOKEN dans le local storage
                 const token = localStorage.getItem('token');
                 if (!token) return { valid: false };
                 const response = await fetch(URL_DB + 'student/getPaymentHistory?studentID=2', {
