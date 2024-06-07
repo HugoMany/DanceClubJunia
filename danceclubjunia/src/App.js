@@ -27,7 +27,7 @@ import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
 import Loading from './elements/loading';
 
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
-import GetStudentID from './getStudentID';
+import GetStudentID from './PAGES/getStudentID';
 import AjoutCredits from './PAGES/ajoutCredits';
 function App() {
   return (
