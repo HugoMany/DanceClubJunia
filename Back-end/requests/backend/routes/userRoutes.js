@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const { authorize } = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -15,6 +16,8 @@ const userController = require('../controllers/userController');
  *   post:
  *     summary: Générer un jeton de réinitialisation pour un utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -44,7 +47,7 @@ const userController = require('../controllers/userController');
  *       500:
  *         description: Erreur SQL
  */
-router.post('/generateResetToken', userController.generateResetToken);
+router.post('/generateResetToken', authorize(['student', 'teacher', 'admin']), userController.generateResetToken);
 
 /**
  * @swagger
@@ -52,6 +55,8 @@ router.post('/generateResetToken', userController.generateResetToken);
  *   post:
  *     summary: Réinitialiser le mot de passe d'un utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -85,7 +90,7 @@ router.post('/generateResetToken', userController.generateResetToken);
  *       500:
  *         description: Erreur du serveur
  */
-router.post('/resetPassword', userController.resetPassword);
+router.post('/resetPassword', authorize(['student', 'teacher', 'admin']), userController.resetPassword);
 
 /**
  * @swagger
@@ -93,6 +98,8 @@ router.post('/resetPassword', userController.resetPassword);
  *   patch:
  *     summary: Ajouter un lien à un cours pour un utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -130,14 +137,16 @@ router.post('/resetPassword', userController.resetPassword);
  *       500:
  *         description: Erreur du serveur
  */
-router.patch('/addLink', userController.addLink);
+router.patch('/addLink', authorize(['student', 'teacher', 'admin']), userController.addLink);
 
 /**
  * @swagger
- * /api/user/searchCourses:
+ * /api/user/searchCoursesStudent:
  *   get:
  *     summary: Rechercher les cours auxquels un utilisateur a participe
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: studentID
@@ -191,8 +200,58 @@ router.patch('/addLink', userController.addLink);
  *       400:
  *         description: Entree invalide
  *       500:
- *         description: Erreur du serveur
+ *         description: Erreur SQL
  */
-router.get('/searchCourses', userController.searchCourses);
+router.get('/searchCoursesStudent', authorize(['student', 'teacher', 'admin']), userController.searchCoursesStudent);
+
+/**
+ * @swagger
+ * /api/user/searchCourse:
+ *   get:
+ *     summary: Rechercher un cours par son ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: courseID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: ID du cours
+ *           example: 3
+ *     responses:
+ *       200:
+ *         description: Cours trouves avec succes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       courseID:
+ *                         type: integer
+ *                         description: ID du cours
+ *                       courseName:
+ *                         type: string
+ *                         description: Nom du cours
+ *                       instructor:
+ *                         type: string
+ *                         description: Nom de l'instructeur
+ *                       schedule:
+ *                         type: string
+ *                         description: Horaire du cours
+ *       400:
+ *         description: Entree invalide
+ *       500:
+ *         description: Erreur SQL
+ */
+router.get('/searchCourse', authorize(['student', 'teacher', 'admin']), userController.searchCourse);
 
 module.exports = router;

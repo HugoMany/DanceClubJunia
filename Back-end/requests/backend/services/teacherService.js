@@ -4,7 +4,7 @@ class TeacherService {
   async getStudent(studentID) {
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd FROM Users 
+        SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
         WHERE userID = ? AND userType = 'student'
       `;
 
@@ -20,14 +20,14 @@ class TeacherService {
     });
   }
 
-  async newStudent(firstname, surname, email, password, connectionMethod, credit) {
+  async newStudent(firstname, surname, email, password, connectionMethod, credit, photo) {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, credit)
-        VALUES (?, ?, ?, ?, ?, 'student', ?)
+        INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, credit, photo)
+        VALUES (?, ?, ?, ?, ?, 'student', ?, ?)
       `;
 
-      db.query(sql, [firstname, surname, email, password, connectionMethod, credit], (err, result) => {
+      db.query(sql, [firstname, surname, email, password, connectionMethod, credit, photo], (err, result) => {
         if (err) {
           return reject(err);
         }
@@ -36,7 +36,7 @@ class TeacherService {
         const newUserID = result.insertId;
 
         // Sélectionner les informations complètes de l'utilisateur nouvellement inséré
-        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd FROM Users WHERE userID = ?';
+        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
         db.query(selectSql, [newUserID], (err, rows) => {
           if (err) {
             return reject(err);
@@ -64,7 +64,7 @@ class TeacherService {
 
         // Si la mise à jour a réussi, récupérer les informations mises à jour de l'utilisateur
         if (result.affectedRows > 0) {
-          const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd FROM Users WHERE userID = ?';
+          const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
           db.query(selectSql, [studentID], (err, rows) => {
             if (err) {
               return reject(err);
@@ -180,7 +180,7 @@ class TeacherService {
 
       const whereClause = conditions.join(' AND ');
       const sql = `
-            SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd 
+            SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo 
             FROM Users 
             WHERE ${whereClause}
         `;

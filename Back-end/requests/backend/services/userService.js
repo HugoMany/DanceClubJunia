@@ -201,7 +201,7 @@ class UserService {
     });
   }
 
-  async searchCourses(userID, startDate, tags) {
+  async searchCoursesStudent(userID, startDate, tags) {
     return new Promise((resolve, reject) => {
       let sql = `
         SELECT * FROM Courses
@@ -221,13 +221,31 @@ class UserService {
 
       // Afficher la requête SQL avec les valeurs substituées
       const formattedSql = db.format(sql, params);
-      console.log('searchCourses | Executing SQL query:', formattedSql);
+      console.log('searchCoursesStudent | Executing SQL query:', formattedSql);
 
       db.query(sql, params, (err, results) => {
         if (err) {
           return reject(err);
         }
         resolve(results);
+      });
+    });
+  }
+
+  async searchCourse(courseID) {
+    return new Promise((resolve, reject) => {
+      let sql = `
+        SELECT * FROM Courses
+        WHERE courseID = ?
+      `;
+      db.query(sql, [courseID], (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        if (result.length == 0) {
+          return reject(new Error('Course not found'));
+        }
+        resolve(result);
       });
     });
   }

@@ -51,8 +51,8 @@ const StudentPastCourses = ({ studentId }) => {
     );
 };
 
-const PastCoursesEleve = () => {
+const PastCoursesProf = () => {
     return <StudentPastCourses studentId="Student 3" />;
 };
 
-export default PastCoursesEleve;
+export default PastCoursesProf;

@@ -1,16 +1,30 @@
 const express = require('express');
-const path = require('path');
-const cors = require('cors'); // Import the cors middleware
+const cookieParser = require('cookie-parser');
+const { swaggerUi, swaggerSpec } = require('./config/swaggerConfig');
+const cors = require('cors'); 
+const authRoutes = require('./routes/authRoutes');
+
+const port = 3000;
+const app = express();
 const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-// const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const guestRoutes = require('./routes/guestRoutes');
 const adminTeacherRoutes = require('./routes/adminTeacherRoutes');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUI = require('swagger-ui-express');
 
-const app = express();
-const port = 3000;
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api/student', studentRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/teacher', teacherRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/guest', guestRoutes);
+app.use('/api/adminTeacher', adminTeacherRoutes);
+app.use('/api/auth', authRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // CORS configuration
 const corsOptions = {
@@ -20,34 +34,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions)); 
-app.use(express.json());
-
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'DanceClubJunia',
-      version: '0.1'
-    },
-    servers: [
-      {
-        url: 'http://90.110.227.143'
-      }
-    ]
-  },
-  apis: [
-    path.join(__dirname, './routes/*.js')
-  ]
-};
-
-const swaggerSpec = swaggerJSDoc(options);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-
-app.use('/api/student', studentRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/teacher', teacherRoutes);
-// app.use('/api/auth', authRoutes);
-app.use('/api/adminTeacher', adminTeacherRoutes);
 
 // app.use(express.static(path.join(__dirname, '../frontend/build')));
 

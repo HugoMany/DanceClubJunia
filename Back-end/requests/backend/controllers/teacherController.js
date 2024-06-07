@@ -24,12 +24,12 @@ exports.getStudent = async (req, res) => {
 
 exports.newStudent = async (req, res) => {
     try {
-        const { firstname, surname, email, password, connectionMethod, credit } = req.body;
+        const { firstname, surname, email, password, connectionMethod, credit, photo } = req.body;
       
-        console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit); 
+        console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo); 
 
         // Vérification que tous les champs sont remplis
-        if (!firstname || !surname || !email || !password || !connectionMethod || credit === undefined) {
+        if (!firstname || !surname || !email || !password || !connectionMethod || !credit || !photo === undefined) {
           return res.status(400).json({ error: 'Tous les champs doivent être remplis.' });
         }
       
@@ -44,7 +44,7 @@ exports.newStudent = async (req, res) => {
           return res.status(400).json({ error: 'Email invalide.' });
         }
         
-        const result = await teacherService.newStudent(firstname, surname, email, password, connectionMethod, credit);
+        const result = await teacherService.newStudent(firstname, surname, email, password, connectionMethod, credit, photo);
 
         res.json({success: true, student : result[0] });
 
@@ -56,9 +56,9 @@ exports.newStudent = async (req, res) => {
 
 exports.modifyStudent = async (req, res) => {
     try {
-        const { studentID, firstname, surname, email, password, connectionMethod, credit } = req.body;
+        const { studentID, firstname, surname, email, password, connectionMethod, credit, photo } = req.body;
 
-        console.log("modifyStudent | studentID? firstname, surname, email, password, connectionMethod, credit : " + studentID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit);       
+        console.log("modifyStudent | studentID? firstname, surname, email, password, connectionMethod, credit : " + studentID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);       
 
         if (!studentID) {
           return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
@@ -102,6 +102,11 @@ exports.modifyStudent = async (req, res) => {
           }
           fieldsToUpdate.push('credit = ?');
           values.push(credit);
+        }
+      
+        if (photo) {
+          fieldsToUpdate.push('photo = ?');
+          values.push(photo);
         }
       
         if (fieldsToUpdate.length === 0) {

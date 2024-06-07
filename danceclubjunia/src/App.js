@@ -27,6 +27,8 @@ import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
 import Loading from './elements/loading';
 
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
+import GetStudentID from './getStudentID';
+import AjoutCredits from './PAGES/ajoutCredits';
 function App() {
   return (
     <div className="App">
@@ -58,6 +60,8 @@ function App() {
 
 
           <Route path="/creerEleve" element={<CreerEleve/>}/>
+          <Route path="/getStudentID" element={<GetStudentID/>}/>
+          <Route path="/ajoutCredits" element={<AjoutCredits/>}/>
         </Routes>
       </Router>
     </div>

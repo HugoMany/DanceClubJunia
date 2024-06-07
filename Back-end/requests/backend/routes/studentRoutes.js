@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const studentController = require('../controllers/studentController');
+const { authorize } = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -15,6 +16,8 @@ const studentController = require('../controllers/studentController');
  *   post:
  *     summary: Ajouter des credits au compte d'un etudiant
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -48,7 +51,7 @@ const studentController = require('../controllers/studentController');
  *       500:
  *         description: Erreur SQL
  */
-router.post('/addCredit', studentController.addCredit);
+router.post('/addCredit', authorize(['student', 'teacher', 'admin']), studentController.addCredit);
 
 /**
  * @swagger
@@ -56,6 +59,8 @@ router.post('/addCredit', studentController.addCredit);
  *   get:
  *     summary: Obtenir la date de fin d'abonnement d'un etudiant
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: studentID
@@ -85,7 +90,7 @@ router.post('/addCredit', studentController.addCredit);
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
+router.get('/getSubscriptionEndDate', authorize(['student', 'teacher', 'admin']), studentController.getSubscriptionEndDate);
 
 /**
  * @swagger
@@ -93,6 +98,8 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *   get:
  *     summary: Obtenir la liste des cours d'un etudiant
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: studentID
@@ -170,7 +177,7 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getCourses', studentController.getCourses);
+router.get('/getCourses', authorize(['student', 'teacher', 'admin']), studentController.getCourses);
 
 /**
  * @swagger
@@ -178,6 +185,8 @@ router.get('/getCourses', studentController.getCourses);
  *   post:
  *     summary: Acheter un ou plusieurs tickets, cartes ou mois d'abonnement pour un etudiant
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -218,7 +227,7 @@ router.get('/getCourses', studentController.getCourses);
  *       500:
  *         description: Erreur SQL
  */
-router.post('/buyPlace', studentController.buyPlace);
+router.post('/buyPlace', authorize(['student', 'teacher', 'admin']), studentController.buyPlace);
 
 /**
  * @swagger
@@ -226,6 +235,8 @@ router.post('/buyPlace', studentController.buyPlace);
  *   get:
  *     summary: Obtenir l'historique des paiements d'un etudiant
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: studentID
@@ -284,6 +295,6 @@ router.post('/buyPlace', studentController.buyPlace);
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getPaymentHistory', studentController.getPaymentHistory);
+router.get('/getPaymentHistory', authorize(['student', 'teacher', 'admin']), studentController.getPaymentHistory);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminTeacherController = require('../controllers/adminTeacherController');
+const { authorize } = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -15,6 +16,8 @@ const adminTeacherController = require('../controllers/adminTeacherController');
  *   post:
  *     summary: Ajouter un ou plusieurs tickets, cartes ou mois d'abonnement pour un etudiant
  *     tags: [AdminTeacher]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -61,7 +64,7 @@ const adminTeacherController = require('../controllers/adminTeacherController');
  *       500:
  *         description: Erreur SQL
  */
-router.post('/addPlaceStudent', adminTeacherController.addPlaceStudent);
+router.post('/addPlaceStudent', authorize(['teacher', 'admin']), adminTeacherController.addPlaceStudent);
 
 /**
  * @swagger
@@ -69,6 +72,8 @@ router.post('/addPlaceStudent', adminTeacherController.addPlaceStudent);
  *   patch:
  *     summary: Retirer un lien d'un cours
  *     tags: [AdminTeacher]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -112,6 +117,8 @@ router.patch('/removeLink', adminTeacherController.removeLink);
  *   post:
  *     summary: Ajoute un tag à un cours
  *     tags: [AdminTeacher]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -155,6 +162,8 @@ router.post('/addTag', adminTeacherController.addTag);
  *   patch:
  *     summary: Retirer un tag d'un cours
  *     tags: [AdminTeacher]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
