@@ -26,12 +26,9 @@ import ReservationPage from './PAGES/reservationPage';
 import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
 import Loading from './elements/loading';
 
-<<<<<<< Updated upstream
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
-=======
-import GetStudentID from './PAGES/getStudentID';
-import AjoutCredits from './PAGES/addCreditForm'
->>>>>>> Stashed changes
+import GetStudentID from './getStudentID';
+import AjoutCredits from './PAGES/ajoutCredits';
 function App() {
   return (
     <div className="App">
