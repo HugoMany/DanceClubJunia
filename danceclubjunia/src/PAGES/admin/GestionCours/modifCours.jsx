@@ -53,7 +53,8 @@ const ModifCours = ({ idCours }) => {
             console.log(courseData)
             let courseDataModify = {
                 ...courseData.courses[0],
-                teacherID: "1234"
+                teacherID: "1",
+                type:"rock" // A modifier
             };
 
             
@@ -77,10 +78,9 @@ const ModifCours = ({ idCours }) => {
     };
 
     const handleChange = (event) => {
-        setCourseData({
-            ...courseData,
-            [event.target.name]: event.target.value,
-        });
+        setCourseData(prevState => ({
+            ...prevState,
+        }));
     };
 
     if (loading) {
@@ -93,7 +93,7 @@ const ModifCours = ({ idCours }) => {
             <form onSubmit={handleSubmit}>
                 <label>
                     Type de danse:
-                    <input type="text" name="type" value={courseData.type} onChange={handleChange} />
+                    <input type="text" name="type" placeholder={courseData.type} onChange={handleChange} />
                 </label>
                 {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
                 <button type="submit">Mettre à jour</button>

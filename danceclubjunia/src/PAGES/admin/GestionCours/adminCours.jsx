@@ -85,7 +85,7 @@ const AdminCours = () => {
         />)}
         </div>
         <Header title="Admin Cours"></Header>
-      <h1>Admin Cours</h1>
+      {/* <h1>Admin Cours</h1> */}
       <ModifCours idCours={3}></ModifCours>
 
     </div>
