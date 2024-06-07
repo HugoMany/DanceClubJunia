@@ -16,7 +16,8 @@ const AdminCours = () => {
     const fetchAllCourses = async () => {
         try {
             const response = await fetch(URL_DB + 'guest/getAllCourses', {
-                method: 'GET',
+              method: 'GET',
+              mode: 'no-cors',
             });
 
             if (response.ok) {
