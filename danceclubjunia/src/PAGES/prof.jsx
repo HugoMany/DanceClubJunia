@@ -1,4 +1,4 @@
-import PlanningProf from './PAGES/planningProf';
+import PlanningProf from '../PAGES/planningProf';
 import Header from '../elements/header';
 import Appel from './appel';
 import GetStudentID from './getStudentID';
@@ -17,7 +17,7 @@ const Prof = ()=>{
 
 
         <div>
-            <PlanningProf></PlanningProf>
+            <PlanningProf teacherId="Teacher 1"></PlanningProf>
         </div>
         <div>
             <Appel></Appel>

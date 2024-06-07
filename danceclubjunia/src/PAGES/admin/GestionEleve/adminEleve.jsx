@@ -14,8 +14,13 @@ const AdminEleve = () => {
   useEffect(() => {
     const fetchAllUser = async () => {
         try {
+          const token = localStorage.getItem('token');
+          if (!token) return { valid: false };
             const response = await fetch(URL_DB + 'admin/getAllStudents', {
                 method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+              },
             });
 
             if (response.ok) {
