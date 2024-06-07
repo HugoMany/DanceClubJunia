@@ -37,10 +37,16 @@ function Connexion() {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+            window.location.href = '/';
+            return data;
         })
         .catch(error => {
             console.error('Error:', error);
         });
+        
     };
 
     return (
