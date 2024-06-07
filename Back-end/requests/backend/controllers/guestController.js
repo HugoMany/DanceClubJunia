@@ -4,6 +4,7 @@ const guestService = require('../services/guestService');
 
 exports.getAllCourses = async (req, res) => {
     try {
+        console.log(`getAllCourses`);
         const courses = await guestService.getAllCourses();
         res.json({ success: true, courses: courses });
     } catch (error) {

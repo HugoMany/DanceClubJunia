@@ -31,7 +31,15 @@ const corsOptions = {
   origin: '*', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
 };
+
+app.options('/api/guest/login', function (req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.end();
+});
 
 app.use(cors(corsOptions)); 
 
