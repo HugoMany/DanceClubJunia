@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const StudentCourses = ({ studentId }) => {
+const PlanningEleve = ({ studentId }) => {
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
@@ -51,8 +51,8 @@ const StudentCourses = ({ studentId }) => {
     );
 };
 
-const PlanningEleve = () => {
-    return <StudentCourses studentId="Student 3" />;
-};
+// exemple
+//     return <PlanningEleve studentId="Student 3" />;
+//
 
 export default PlanningEleve;
