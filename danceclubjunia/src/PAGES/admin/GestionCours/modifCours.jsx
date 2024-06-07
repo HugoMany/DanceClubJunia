@@ -38,12 +38,12 @@ const ModifCours = ({ idCours }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch(`teacher/modifyCourse`, {
+            const response = await fetch(URL_DB+`teacher/modifyCourse`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(courseData),
+                body: JSON.stringify(courseData.courses[0]),
             });
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du cours');
@@ -67,7 +67,7 @@ const ModifCours = ({ idCours }) => {
 
     return (
         <div>
-            <h1>Modifier un cours</h1>
+           
             <form onSubmit={handleSubmit}>
                 <label>
                     Type de danse:
