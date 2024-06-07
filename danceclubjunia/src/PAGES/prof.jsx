@@ -2,7 +2,7 @@ import PlanningProf from './PAGES/planningProf';
 import Header from '../elements/header';
 import Appel from './appel';
 import GetStudentID from './getStudentID';
-import AddCreditForm from './addCreditForm';
+import AjoutCredits from './ajoutCredits';
 import React, { useState } from 'react';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
@@ -12,7 +12,7 @@ const Prof = ()=>{
         <Header title="Profil"></Header>
         <div>
             <GetStudentID setUserID={setUserID} />
-            {userID && <AddCreditForm userID={userID} />}
+            {userID && <AjoutCredits userID={userID} />}
         </div>
 
 
