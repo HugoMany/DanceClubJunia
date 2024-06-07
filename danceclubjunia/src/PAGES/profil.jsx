@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
-import PastCoursesEleve from './pastCoursesEleve';
+import PastCoursesEleve from './studentPastCourses';
 import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
+import StudentPastCourses from './studentPastCourses';
 
 const ID_CONST_STUDENT = 10;
 
@@ -94,6 +95,7 @@ if (loading) {
       <p>Email: {userData?.student.email}</p>
       <p>Credit: {userData?.student.credit}</p>
       </div>
+      <div className='infoProfil'>
     <h2>Historique d'achat</h2>
     
     <div className='paiementList'>
@@ -106,15 +108,16 @@ if (loading) {
             <br></br>
         </div>
     ))}
+    </div>
 </div>
 
-    <div>
+    <div >
       <h2>Vos anciens cours</h2>
+      <div className='studentPastCourses'>
+      <StudentPastCourses studentId={10}></StudentPastCourses>
+      </div>
     </div>  
 
-      <div>
-        <PastCoursesEleve></PastCoursesEleve>
-      </div>
     </div>
   );
 };

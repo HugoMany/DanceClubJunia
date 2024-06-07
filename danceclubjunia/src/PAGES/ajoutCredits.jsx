@@ -7,11 +7,12 @@ const AjoutCredits = ({ userID }) => {
 
   const addCredit = async () => {
     try {
+      const token = localStorage.getItem('token');
+        if (!token) return { valid: false };
       const response = await fetch(ADD_CREDIT_API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json'
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           studentID: userID, // Utilisation de userID ici
