@@ -13,6 +13,16 @@ const adminRoutes = require('./routes/adminRoutes');
 const guestRoutes = require('./routes/guestRoutes');
 const adminTeacherRoutes = require('./routes/adminTeacherRoutes');
 
+// CORS configuration
+const corsOptions = {
+  origin: '*', 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+};
+
+app.use(cors(corsOptions)); 
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -26,22 +36,7 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// CORS configuration
-const corsOptions = {
-  origin: '*', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type,Authorization',
-  credentials: true
-};
 
-app.options('/api/guest/login', function (req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  res.end();
-});
-
-app.use(cors(corsOptions)); 
 
 // app.use(express.static(path.join(__dirname, '../frontend/build')));
 
