@@ -7,9 +7,8 @@ const Appel = () => {
     const { courseId} = useParams();
 
   const [data,setData] = useState([]);
-
     useEffect(() => {
-        fetch( URL_DB+`/courses/${courseId}`, {
+        fetch( URL_DB+`user/searchCourse?courseID=${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
