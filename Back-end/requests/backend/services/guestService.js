@@ -49,6 +49,10 @@ class GuestService {
           return reject(new Error('Email already in use'));
         }
 
+        if(!photo){
+          photo = "";
+        }
+
         const sql = `
           INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, credit, tickets, photo)
           VALUES (?, ?, ?, ?, ?, 'student', 0, 0, ?)
@@ -137,7 +141,7 @@ class GuestService {
     });
   }
 
-  async getContacts() {
+  async getContactsTeachers() {
     return new Promise((resolve, reject) => {
         const sql = `
             SELECT email

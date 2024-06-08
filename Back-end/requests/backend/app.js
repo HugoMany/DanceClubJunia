@@ -11,7 +11,6 @@ const userRoutes = require('./routes/userRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const guestRoutes = require('./routes/guestRoutes');
-const adminTeacherRoutes = require('./routes/adminTeacherRoutes');
 
 // CORS configuration
 const corsOptions = {
@@ -31,11 +30,9 @@ app.use('/api/user', userRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/guest', guestRoutes);
-app.use('/api/adminTeacher', adminTeacherRoutes);
 app.use('/api/auth', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 
 
 // app.use(express.static(path.join(__dirname, '../frontend/build')));

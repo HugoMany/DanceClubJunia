@@ -232,6 +232,37 @@ class UserService {
     });
   }
 
+  async searchCoursesTeacher(userID, startDate, tags) {
+    return new Promise((resolve, reject) => {
+      let sql = `
+        SELECT * FROM Courses
+        WHERE JSON_CONTAINS(teachersID, ?)
+      `;
+      const params = [userID];
+
+      if (startDate) {
+        sql += ` AND DATE_FORMAT(startDate, '%Y-%m-%d') = ?`;
+        params.push(startDate);
+      }
+
+      if (tags && tags.length > 0) {
+        sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
+        params.push(...tags);
+      }
+
+      // Afficher la requête SQL avec les valeurs substituées
+      const formattedSql = db.format(sql, params);
+      console.log('searchCoursesTeacher | Executing SQL query:', formattedSql);
+
+      db.query(sql, params, (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+  }
+
   async searchCourse(courseID) {
     return new Promise((resolve, reject) => {
       let sql = `
@@ -249,6 +280,44 @@ class UserService {
       });
     });
   }
+
+  async getContactsStudents() {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT email
+            FROM Users
+            WHERE userType = 'student'
+        `;
+    
+        db.query(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                const contacts = rows.map(row => row.email);
+                resolve(contacts);
+            }
+        });
+    });
+}
+
+async getProfile(userID) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
+      WHERE userID = ?
+    `;
+
+    db.query(sql, [userID], (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      if (result.length === 0) {
+        return reject(new Error('No user found with the given ID'));
+      }
+      resolve(result);
+    });
+  });
+}
 
 }
 

@@ -340,7 +340,7 @@ router.get('/getCardPrices', guestController.getCardPrices);
 
 /**
  * @swagger
- * /api/guest/getContacts:
+ * /api/guest/getContactsTeachers:
  *   get:
  *     summary: Recupere tous les emails des professeurs.
  *     tags: [Guest]
@@ -366,7 +366,7 @@ router.get('/getCardPrices', guestController.getCardPrices);
  *         description: Erreur du serveur.
  */
 
-router.get('/getContacts', guestController.getContacts);
+router.get('/getContactsTeachers', guestController.getContactsTeachers);
 
 
 
