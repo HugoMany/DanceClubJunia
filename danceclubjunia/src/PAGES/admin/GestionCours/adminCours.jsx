@@ -15,9 +15,15 @@ const AdminCours = () => {
   useEffect(() => {
     const fetchAllCourses = async () => {
         try {
+          //Recup TOKEN dans le local storage
+          const token = localStorage.getItem('token');
+          if (!token) return { valid: false };
+
             const response = await fetch(URL_DB + 'guest/getAllCourses', {
               method: 'GET',
-              mode: 'no-cors',
+              headers: {
+                        'Authorization': `Bearer ${token}`,
+              },
             });
 
             if (response.ok) {
@@ -48,13 +54,14 @@ const AdminCours = () => {
       
        
       <div className='DataAdmin'>
+      {allCoursesData && (
 
         <DataGrid
-          // rows={allCoursesData[1]}
+          rows={allCoursesData}
           
-          getRowId={(row) => row.coursesID}
+          getRowId={(row) => row.courseID}
           columns={[
-            { field: 'coursesID', headerName: 'ID', width: 90 },
+            { field: 'courseID', headerName: 'ID', width: 90 },
             { field: 'image', headerName: 'Prenom', width: 150 },
             { field: 'title ', headerName: 'Nom', width: 150 },
             { field: 'type', headerName: 'Email', width: 150 },
@@ -70,14 +77,15 @@ const AdminCours = () => {
             { field: 'links', headerName: 'Ticket', width: 150 },
             { field: 'studentsID', headerName: 'Ticket', width: 150 },
             { field: 'tags', headerName: 'Photo', width: 150 },
+            
           ]}
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
-        />
+        />)}
         </div>
         <Header title="Admin Cours"></Header>
-      <h1>Admin Cours</h1>
+      {/* <h1>Admin Cours</h1> */}
       <ModifCours idCours={3}></ModifCours>
 
     </div>

@@ -22,7 +22,14 @@ const ModifCours = ({ idCours }) => {
     useEffect(() => {
         const fetchCours = async () => {
             try {
-                const response = await fetch(URL_DB+'user/searchCourse?courseID='+idCours);
+                const token = localStorage.getItem('token');
+                if (!token) return { valid: false };
+                console.log(token)
+                const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
                 setCourseData(data);
                 setLoading(false);
@@ -36,14 +43,30 @@ const ModifCours = ({ idCours }) => {
     }, [idCours]);
 
     const handleSubmit = async (event) => {
+        console.log("ooooo")
         event.preventDefault();
         try {
-            const response = await fetch(URL_DB+`teacher/modifyCourse`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+
+            console.log(token)
+            console.log(courseData)
+            let courseDataModify = {
+                ...courseData.courses[0],
+                teacherID: "1",
+                type:"rock" // A modifier
+            };
+
+            
+            console.log(courseDataModify)
+
+            const response = await fetch(URL_DB + `teacher/modifyCourse`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(courseData.courses[0]),
+                body: JSON.stringify(courseDataModify),
             });
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du cours');
@@ -55,10 +78,9 @@ const ModifCours = ({ idCours }) => {
     };
 
     const handleChange = (event) => {
-        setCourseData({
-            ...courseData,
-            [event.target.name]: event.target.value,
-        });
+        setCourseData(prevState => ({
+            ...prevState,
+        }));
     };
 
     if (loading) {
@@ -67,11 +89,11 @@ const ModifCours = ({ idCours }) => {
 
     return (
         <div>
-           
+
             <form onSubmit={handleSubmit}>
                 <label>
                     Type de danse:
-                    <input type="text" name="type" value={courseData.type} onChange={handleChange} />
+                    <input type="text" name="type" placeholder={courseData.type} onChange={handleChange} />
                 </label>
                 {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
                 <button type="submit">Mettre à jour</button>
