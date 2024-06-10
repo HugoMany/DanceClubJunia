@@ -10,18 +10,18 @@ class StudentService {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE Users SET credit = credit + ? WHERE userID = ?`;
       db.query(sql, [credit, studentID], (err, result) => {
-        if (err) {
-          return reject(err);
+        if (err || result.affectedRows == 0) {
+          reject(new Error("Erreur lors de l'ajout du credit."));
         }
-        resolve(result);
-      });
 
-      const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType) VALUES (?, ?, 'credit', ?, CURRENT_TIMESTAMP, 'online');"
-      db.query(paymentSql, [studentID, credit, credit], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result);
+        const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType) VALUES (?, ?, 'credit', ?, CURRENT_TIMESTAMP, 'online');"
+        db.query(paymentSql, [studentID, credit, credit], (err, result) => {
+          if (err || result.affectedRows == 0) {
+            reject(new Error("Erreur lors de l'enregistrement du paiement."));
+          }
+          
+          resolve(result);
+        });
       });
     });
   }
@@ -31,12 +31,12 @@ class StudentService {
       const sql = "SELECT subscriptionEnd FROM Users WHERE userID = ?";
       db.query(sql, [studentID], (err, result) => {
         if (err) {
-          return reject(err);
+          reject(new Error("Erreur lors de la récupération de la date de fin de l'abonnement."));
         }
         if (result.length > 0) {
           resolve(result[0].subscriptionEnd);
         } else {
-          reject(new Error('No subscription end date found for the given student ID'));
+          reject(new Error("Pas de date de fin d'abonnement."));
         }
       });
     });
@@ -47,7 +47,7 @@ class StudentService {
       const sql = "SELECT * FROM Courses WHERE JSON_CONTAINS(studentsID, ?)";
       db.query(sql, [studentID], (err, result) => {
         if (err) {
-          return reject(err);
+          reject(new Error("Erreur lors de la récupération des cours."));
         }
 
         resolve(result);
@@ -70,12 +70,8 @@ class StudentService {
 
       // Récupération du prix
       db.query(priceQuery, [type, number], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-
-        if (result.length == 0) {
-          return reject(new Error('Place not found'));
+        if (err || result.length == 0) {
+          return reject(new Error('Erreur lors de la récupération du prix.'));
         }
 
         let price = result[0].price;
@@ -89,11 +85,11 @@ class StudentService {
         const getUserCreditQuery = 'SELECT credit FROM Users WHERE userID = ?';
         db.query(getUserCreditQuery, [studentID], (err, result) => {
           if (err) {
-            return reject(err);
+            return reject(new Error("Erreur lors de la vérification des crédits."));
           }
 
           if (result.length == 0) {
-            return reject(new Error('No student with this ID'));
+            return reject(new Error('Pas d\'utilisateur avec cet ID'));
           }
 
           const userCredit = result[0].credit;
@@ -101,15 +97,15 @@ class StudentService {
           if (userCredit >= price) {
             // Soustraire le prix du ticket du crédit de l'utilisateur
             db.query(updateUserCreditQuery, [price, studentID], (err, result) => {
-              if (err) {
-                return reject(err);
+              if (err || result.length == 0) {
+                return reject(new Error('Erreur lors de la mise à jour du crédit de l\'utilisateur.'));
               }
 
 
               const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'online', ?);"
               db.query(paymentSql, [studentID, price, type, number, studentID], (err, result) => {
-                if (err) {
-                  return reject(err);
+                if (err || result.affectedRows == 0) {
+                  return reject(new Error("Erreur lors de l'enregistrement du paiement."));
                 }
                 resolve(result);
               });
@@ -120,8 +116,8 @@ class StudentService {
                 case 'ticket':
                   sql = 'UPDATE Users SET tickets = tickets + ? WHERE userID = ?';
                   db.query(sql, [number, studentID], (err, result) => {
-                    if (err) {
-                      return reject(err);
+                    if (err || result.affectedRows == 0) {
+                      return reject(new Error("Erreur lors de l'ajout du ticket à l'élève."));
                     }
                     resolve(result);
                   });
@@ -129,8 +125,8 @@ class StudentService {
                 case 'card':
                   sql = 'INSERT INTO Cards (userID, number, maxNumber) VALUES (?, 0, ?)';
                   db.query(sql, [studentID, number], (err, result) => {
-                    if (err) {
-                      return reject(err);
+                    if (err || result.affectedRows == 0) {
+                      return reject(new Error("Erreur lors de l'ajout de la carte à l'élève."));
                     }
                     resolve(result);
                   });
@@ -147,8 +143,8 @@ class StudentService {
                     WHERE userID = ?`;
 
                   db.query(sql, [days, days, studentID], (err, result) => {
-                    if (err) {
-                      return reject(err);
+                    if (err || result.affectedRows == 0) {
+                      return reject(new Error("Erreur lors de l'ajout de temps d'abonnement."));
                     }
                     resolve(result);
                   });
@@ -156,7 +152,7 @@ class StudentService {
               }
             });
           } else {
-            reject(new Error('Insufficient credit'));
+            return reject(new Error('Crédit insuffisant.'));
           }
         });
       });
@@ -172,17 +168,13 @@ class StudentService {
         ORDER BY date DESC
       `;
       db.query(sql, [studentID], (err, results) => {
-        if (err) {
-          return reject(err);
+        if (err || result.length == 0) {
+          return reject(new Error("Erreur lors de la récupération des paiements."));
         }
         resolve(results);
       });
     });
   }
-
-
-
-
 }
 
 module.exports = new StudentService();
