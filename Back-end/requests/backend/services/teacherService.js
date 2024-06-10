@@ -10,10 +10,10 @@ class TeacherService {
 
       db.query(sql, [studentID], (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération de l'élève."));
         }
         if (result.length === 0) {
-          return reject(new Error('No student found with the given ID'));
+          return reject(new Error("Aucun élève trouvé avec cet ID."));
         }
         resolve(result);
       });
@@ -29,7 +29,7 @@ class TeacherService {
 
       db.query(sql, [firstname, surname, email, password, connectionMethod, credit, photo], (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la création de l'élève."));
         }
 
         // Récupérer l'ID de l'utilisateur nouvellement inséré
@@ -39,10 +39,12 @@ class TeacherService {
         const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
         db.query(selectSql, [newUserID], (err, rows) => {
           if (err) {
-            return reject(err);
+            return reject(new Error("Erreur lors de la récupération de l'élève."));
+          }
+          if (rows.length == 0) {
+            return reject(new Error("L'utilisateur n'existe pas"));
           }
 
-          // Renvoi de la ligne nouvellement insérée
           resolve(rows);
         });
       });
@@ -59,121 +61,70 @@ class TeacherService {
 
       db.query(sql, values, (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la modification de l'élève."));
         }
-
-        // Si la mise à jour a réussi, récupérer les informations mises à jour de l'utilisateur
-        if (result.affectedRows > 0) {
-          const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
-          db.query(selectSql, [studentID], (err, rows) => {
-            if (err) {
-              return reject(err);
-            }
-
-            // Renvoi de la ligne mise à jour
-            resolve(rows);
-          });
-        } else {
-          return reject(err);
+        if (result.affectedRows == 0) {
+          return reject(new Error("Il n'existe pas d'élève avec cet ID."));
         }
-      });
-    });
-  }
+        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
+        db.query(selectSql, [studentID], (err, rows) => {
+          if (err) {
+            return reject(new Error("Erreur lors de la récupération de l'élève."));
+          }
 
-  async removeStudent(userID, courseID, studentID) {
-    return new Promise((resolve, reject) => {
-        // Vérification du userType de l'utilisateur
-        const checkUserTypeSql = `
-            SELECT userType
-            FROM Users
-            WHERE userID = ?
-        `;
-
-        db.query(checkUserTypeSql, [userID], (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
-
-            if (rows.length === 0) {
-                return reject(new Error('Utilisateur non trouvé.'));
-            }
-
-            const userType = rows[0].userType;
-
-            // Si l'utilisateur est un enseignant, vérifier qu'il est dans teachersID du cours
-            if (userType === 'teacher') {
-                const checkTeacherSql = `
-                    SELECT COUNT(*) AS count
-                    FROM Courses
-                    WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))
-                `;
-
-                db.query(checkTeacherSql, [courseID, JSON.stringify(userID)], (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-
-                    if (result[0].count === 0) {
-                        return reject(new Error("Vous n'êtes pas autorisé à retirer des étudiants de ce cours."));
-                    }
-
-                    // Retirer l'étudiant après la vérification
-                    this.executeRemoveStudent(courseID, studentID)
-                        .then(resolve)
-                        .catch(reject);
-                });
-            } else {
-                // Si l'utilisateur est un admin, retirer directement l'étudiant
-                this.executeRemoveStudent(courseID, studentID)
-                    .then(resolve)
-                    .catch(reject);
-            }
+          resolve(rows);
         });
+      });
     });
   }
 
-  executeRemoveStudent(courseID, studentID) {
-      return new Promise((resolve, reject) => {
-          const selectSql = 'SELECT studentsID FROM Courses WHERE courseID = ?';
-          db.query(selectSql, [courseID], (err, rows) => {
-              if (err) {
-                  return reject(err);
-              }
+  async removeStudent(courseID, studentID) {
+    return new Promise((resolve, reject) => {
+      const selectSql = 'SELECT studentsID FROM Courses WHERE courseID = ?';
+      db.query(selectSql, [courseID], (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération de l'élève."));
+        }
+        if (rows.length == 0) {
+          return reject(new Error("L'élève n'existe pas."));
+        }
 
-              let studentsID = [];
-              if (rows.length > 0) {
-                  studentsID = JSON.parse(rows[0].studentsID);
-              }
+        let studentsID = [];
+        if (rows.length > 0) {
+          studentsID = JSON.parse(rows[0].studentsID);
+        }
 
-              // Retirer l'étudiant de la liste
-              const index = studentsID.indexOf(parseInt(studentID));
+        // Retirer l'étudiant de la liste
+        const index = studentsID.indexOf(parseInt(studentID));
+        if (index == -1) {
+          return reject(new Error("Erreur lors de la récupération de l'élève."));
+        }
 
-              if (index !== -1) {
-                  studentsID.splice(index, 1);
+        studentsID.splice(index, 1);
 
-                  // Mettre à jour la liste des étudiants dans la base de données
-                  const updateSql = 'UPDATE Courses SET studentsID = ? WHERE courseID = ?';
-                  const updatedStudentsID = JSON.stringify(studentsID);
-                  db.query(updateSql, [updatedStudentsID, courseID], (err, result) => {
-                      if (err) {
-                          return reject(err);
-                      }
-                      resolve(result);
-                  });
-              } else {
-                  return reject(new Error('Etudiant non trouvé dans ce cours.'));
-              }
-          });
+        // Mettre à jour la liste des étudiants dans la base de données
+        const updateSql = 'UPDATE Courses SET studentsID = ? WHERE courseID = ?';
+        const updatedStudentsID = JSON.stringify(studentsID);
+        db.query(updateSql, [updatedStudentsID, courseID], (err, result) => {
+          if (err || result.affectedRows == 0) {
+            return reject(new Error("Erreur lors de la modification du cours."));
+          }
+
+          resolve(result);
+        });
       });
+    });
   }
-
 
   async affectStudent(teacherID, studentID, courseID) {
     return new Promise((resolve, reject) => {
       const selectSql = 'SELECT studentsID, teachersID FROM Courses WHERE courseID = ?';
       db.query(selectSql, [courseID], (err, rows) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération des élèves et des professeurs."));
+        }
+        if (rows.length == 0) {
+          return reject(new Error("Le cours n'existe pas."));
         }
 
         let studentsID = [];
@@ -185,12 +136,12 @@ class TeacherService {
 
         // Vérifier si le teacherID est dans la liste des teachersID
         if (!teachersID.includes(parseInt(teacherID))) {
-          return reject(new Error('Le professeur n\'est pas autorisé à modifier ce cours'));
+          return reject(new Error('Le professeur n\'est pas autorisé à modifier ce cours.'));
         }
 
         // Vérifier si l'étudiant est déjà dans la liste
         if (studentsID.includes(parseInt(studentID))) {
-          return reject(err);
+          return reject(new Error("L'élève est déjà dans le cours."));
         }
 
         // Ajouter l'étudiant à la liste
@@ -201,7 +152,7 @@ class TeacherService {
         const updatedStudentsID = JSON.stringify(studentsID);
         db.query(updateSql, [updatedStudentsID, courseID], (err, result) => {
           if (err) {
-            return reject(err);
+            return reject(new Error("Erreur lors de la modification du cours."));
           }
           resolve(result);
         });
@@ -240,10 +191,10 @@ class TeacherService {
 
       db.query(sql, values, (err, results) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération des élèves."));
         }
         if (results.length === 0) {
-          return resolve(false);
+          return reject(new Error("Aucun élève trouvé."));
         }
         resolve(results);
       });
@@ -255,10 +206,10 @@ class TeacherService {
       const selectSql = 'DELETE FROM Courses WHERE startDate > CURRENT_DATE AND courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON));';
       db.query(selectSql, [courseID, teacherID], (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error('Erreur lors de la suppression.'));
         }
         if (result.affectedRows === 0) {
-          return reject(new Error('No courses found or course already started'));
+          return reject(new Error("Le cours n'existe pas."));
         }
         resolve(result);
       });
@@ -270,10 +221,9 @@ class TeacherService {
       const selectSql = 'SELECT SUM(JSON_LENGTH(studentsID)) AS teacherPlaces FROM Courses WHERE JSON_CONTAINS(teachersID, ?) AND startDate BETWEEN ? AND ?';
       db.query(selectSql, [teacherID, startDate, endDate], (err, rows) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération du nombre d'élèves."));
         }
         const teacherPlaces = rows[0].teacherPlaces > 0 ? rows[0].teacherPlaces : 0;
-        console.log("getTeacherPlaces : ", teacherPlaces);
         resolve(teacherPlaces);
       });
     });
@@ -281,92 +231,72 @@ class TeacherService {
 
   async modifyCourse(teacherID, courseID, values, fieldsToUpdate, teachers, students, links, tags) {
     return new Promise((resolve, reject) => {
-      // Vérifier si le teacherID fait partie des teachersID du cours
       const verifyTeacherSql = 'SELECT COUNT(*) AS count FROM Courses WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))';
       db.query(verifyTeacherSql, [courseID, teacherID], (err, rows) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("La récupération du nombre de cours du professeur a échoué."));
         }
 
-        const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
-        db.query(checkUserTypeSql, [teacherID], (err, result) => {
-          if (err) {
-            return reject(err);
-          }
-          if(result.length == 0) {
-            return reject(new Error("L'utilisateur n'existe pas"));
-          }
+        // Vérifier si le teacherID est autorisé à modifier ce cours
+        if (rows[0].count === 0) {
+          return reject(new Error("Le professeur n'est pas autorisé à modifier ce cours."));
+        }
 
-          // Si c'est un admin ou un teacher valide
-          if (rows[0].count > 0 || result[0].userType == "admin") {
-            // Obtenez les IDs des étudiants et des professeurs à partir des adresses e-mail fournies
-            Promise.all([
-              this.getUserIDsByEmails(students),
-              this.getUserIDsByEmails(teachers)
-            ])
-              .then(([studentIDs, teacherIDs]) => {
-                // Ajouter les studentIDs et teacherIDs aux valeurs de la requête
-                if (studentIDs) {
-                  fieldsToUpdate.push("studentsID = ?");
-                  values.push(JSON.stringify(studentIDs));
+        // Obtenez les IDs des étudiants et des professeurs à partir des adresses e-mail fournies
+        Promise.all([
+          this.getUserIDsByEmails(students),
+          this.getUserIDsByEmails(teachers)
+        ])
+          .then(([studentIDs, teacherIDs]) => {
+            // Ajouter les studentIDs et teacherIDs aux valeurs de la requête
+            if (studentIDs) {
+              fieldsToUpdate.push("studentsID = ?");
+              values.push(JSON.stringify(studentIDs));
+            }
+            if (teacherIDs) {
+              fieldsToUpdate.push("teachersID = ?");
+              values.push(JSON.stringify(teacherIDs));
+            }
+
+            // Convertir les listes links et tags en chaînes JSON
+            if (links && links.length > 0) {
+              fieldsToUpdate.push("links = ?");
+              values.push(JSON.stringify(links));
+            }
+            if (tags && tags.length > 0) {
+              const tagArray = tags.split(',').map(tag => tag.trim());
+              fieldsToUpdate.push("tags = ?");
+              values.push(JSON.stringify(tagArray));
+            }
+
+            // Mettre à jour le cours
+            const sql = `
+                    UPDATE Courses
+                    SET ${fieldsToUpdate.join(', ')}
+                    WHERE courseID = ?
+                `;
+
+            const queryValues = [...values, courseID];
+            db.query(sql, queryValues, (err, result) => {
+              if (err) {
+                return reject(new Error("La modification du cours a échoué."));
+              }
+              // Si la mise à jour a réussi, récupérer les informations mises à jour du cours
+              if (result.affectedRows == 0) {
+                return reject(new Error("Le cours n'existe pas."));
+              }
+              const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
+              db.query(selectSql, [courseID], (err, rows) => {
+                if (err) {
+                  return reject(new Error("La récupération du cours a échoué."));
                 }
-                if (teacherIDs) {
-                  fieldsToUpdate.push("teachersID = ?");
-                  values.push(JSON.stringify(teacherIDs));
-                }
-
-                // Convertir les listes links et tags en chaînes JSON
-                if (links && links.length > 0) {
-                  fieldsToUpdate.push("links = ?");
-                  values.push(JSON.stringify(links));
-                }
-                if (tags && tags.length > 0) {
-                  const tagArray = tags.split(',').map(tag => tag.trim());
-                  fieldsToUpdate.push("tags = ?");
-                  values.push(JSON.stringify(tagArray));
-                }
-
-                // Mettre à jour le cours
-                const sql = `
-                  UPDATE Courses
-                  SET ${fieldsToUpdate.join(', ')}
-                  WHERE courseID = ?
-              `;
-
-                const queryValues = [...values, courseID];
-                db.query(sql, queryValues, (err, result) => {
-                  if (err) {
-                    return reject(err);
-                  }
-                  console.log("modifyCourse result : ", result);
-                  // Si la mise à jour a réussi, récupérer les informations mises à jour du cours
-                  if (result.affectedRows > 0) {
-                    const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
-                    db.query(selectSql, [courseID], (err, rows) => {
-                      if (err) {
-                        return reject(err);
-                      }
-
-                      // Renvoyer la ligne mise à jour
-                      resolve(rows[0]);
-                    });
-                  } else {
-                    return reject(new Error('La mise à jour du cours a échoué.'));
-                  }
-                });
-              })
-              .catch(reject);
-          }
-          else {
-            return reject(new Error('Vous n\'êtes pas autorisé à modifier ce cours.'));
-          }
-        });
-
-
-
-
-
-      });
+                // Renvoyer la ligne mise à jour
+                resolve(rows[0]);
+              });
+            });
+          });
+      })
+        .catch(reject);
     });
   }
 
@@ -379,7 +309,7 @@ class TeacherService {
       const selectSql = 'SELECT userID FROM Users WHERE email IN (?)';
       db.query(selectSql, [emails], (err, rows) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération des ID avec les emails fournis"));
         }
 
         // Extraire les IDs des résultats
@@ -392,361 +322,376 @@ class TeacherService {
 
   async getStudentsInCourse(userID, courseID) {
     return new Promise((resolve, reject) => {
-        // Vérification du rôle de l'utilisateur
-        const checkUserTypeSql = `
+      // Vérification du rôle de l'utilisateur
+      const checkUserTypeSql = `
             SELECT userType
             FROM Users
             WHERE userID = ?
         `;
 
-        db.query(checkUserTypeSql, [userID], (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
+      db.query(checkUserTypeSql, [userID], (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération des types d'utilisateurs."));
+        }
 
-            if (rows.length === 0) {
-                return reject(new Error('Utilisateur non trouvé.'));
-            }
+        if (rows.length === 0) {
+          return reject(new Error("Aucun utilisateur trouvé."));
+        }
 
-            const userType = rows[0].userType;
+        const userType = rows[0].userType;
 
-            // Si l'utilisateur est un enseignant, vérifier qu'il est dans teachersID du cours
-            if (userType === 'teacher') {
-                const checkTeacherSql = `
+        // Si l'utilisateur est un enseignant, vérifier qu'il est dans teachersID du cours
+        if (userType === 'teacher') {
+          const checkTeacherSql = `
                     SELECT COUNT(*) AS count
                     FROM Courses
                     WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))
                 `;
 
-                db.query(checkTeacherSql, [courseID, JSON.stringify(userID)], (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-
-                    if (result[0].count === 0) {
-                        return reject(new Error('Vous n\'êtes pas autorisé à accéder à cette information.'));
-                    }
-
-                    // Récupérer les étudiants après la vérification
-                    this.fetchStudents(courseID)
-                        .then(resolve)
-                        .catch(reject);
-                });
-            } else if (userType === 'admin') {
-                // Si l'utilisateur est un admin, récupérer directement les étudiants
-                this.fetchStudents(courseID)
-                    .then(resolve)
-                    .catch(reject);
+          db.query(checkTeacherSql, [courseID, JSON.stringify(userID)], (err, result) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification de la présence du professeur dans le cours."));
             }
-            else {
-              return reject(err);
+
+            if (result[0].count === 0) {
+              return reject(new Error("Le professeur n'est pas dans le cours ou le cours n'existe pas."));
             }
-        });
+
+            // Récupérer les étudiants après la vérification
+            this.fetchStudents(courseID)
+              .then(resolve)
+              .catch(reject);
+          });
+        } else if (userType === 'admin') {
+          // Si l'utilisateur est un admin, récupérer directement les étudiants
+          this.fetchStudents(courseID)
+            .then(resolve)
+            .catch(reject);
+        }
+        else {
+          return reject(new Error("L'utilisateur n'est pas un professeur ou un administrateur."));
+        }
+      });
     });
-}
+  }
 
-fetchStudents(courseID) {
+  fetchStudents(courseID) {
     return new Promise((resolve, reject) => {
-        const sql = `
+      const sql = `
             SELECT studentsID
             FROM Courses
             WHERE courseID = ?
         `;
 
-        db.query(sql, [courseID], (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
+      db.query(sql, [courseID], (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération du cours."));
+        }
 
-            if (rows.length === 0) {
-                return reject(new Error('Cours non trouvé.'));
-            }
+        if (rows.length === 0) {
+          return reject(new Error("Cours non trouvé."));
+        }
 
-            const studentsID = JSON.parse(rows[0].studentsID);
+        const studentsID = JSON.parse(rows[0].studentsID);
 
-            if (studentsID.length === 0) {
-                return resolve([]);
-            }
+        if (studentsID.length === 0) {
+          return resolve([]);
+        }
 
-            const getStudentsSql = `
+        const getStudentsSql = `
                 SELECT userID, firstname, surname, email, connectionMethod, photo, description
                 FROM Users
                 WHERE userID IN (?)
             `;
 
-            db.query(getStudentsSql, [studentsID], (err, students) => {
-                if (err) {
-                    return reject(err);
-                }
+        db.query(getStudentsSql, [studentsID], (err, students) => {
+          if (err) {
+            return reject(new Error("Erreur lors de la récupération de l'utilisateur."));
+          }
+          if (result.length == 0) {
+            return reject(new Error("L'utilisateur n'a pas été trouvé."));
+          }
 
-                resolve(students);
-            });
+          resolve(students);
         });
-    });
-}
-
-async addPlaceStudent(userID, studentID, type, number) {
-  return new Promise((resolve, reject) => {
-    let priceQuery;
-    if (type === "card") {
-      priceQuery = 'SELECT price FROM Places WHERE type = ? AND number = ?';
-    } else {
-      priceQuery = 'SELECT price FROM Places WHERE type = ?';
-    }
-
-    // Récupération du prix
-    db.query(priceQuery, [type, number], (err, result) => {
-      if (err) {
-        return reject(err);
-      }
-
-      if (result.length == 0) {
-        return reject(new Error('Place not found'));
-      }
-
-      let price = result[0].price;
-      if (type !== "card") {
-        price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achetés
-      }
-
-      let sql;
-      switch (type) {
-        case 'ticket':
-          sql = 'UPDATE Users SET tickets = tickets + ? WHERE userID = ?';
-          db.query(sql, [number, studentID], (err, result) => {
-            if (err) {
-              return reject(err);
-            }
-            if (result.affectedRows === 0) {
-              return reject(new Error('StudentID does not exist'));
-            }
-            resolve(result);
-          });
-          break;
-        case 'card':
-          sql = 'INSERT INTO Cards (userID, number, maxNumber) VALUES (?, 0, ?)';
-          db.query(sql, [studentID, number], (err, result) => {
-            if (err) {
-              return reject(err);
-            }
-            if (result.affectedRows === 0) {
-              return reject(new Error('User does not exist'));
-            }
-            resolve(result);
-          });
-          break;
-        case 'subscription':
-          const days = number * 30; // Nombre de jours proportionnel au nombre de mois
-          sql = 'UPDATE Users SET subscriptionEnd = DATE_ADD(subscriptionEnd, INTERVAL ? DAY) WHERE userID = ?';
-          db.query(sql, [days, studentID], (err, result) => {
-            if (err) {
-              return reject(err);
-            }
-            if (result.affectedRows === 0) {
-              return reject(new Error('User does not exist'));
-            }
-            resolve(result);
-          });
-          break;
-      }
-
-      const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'cash', ?);"
-      db.query(paymentSql, [studentID, price, type, number, userID], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result);
       });
     });
-  });
-}
+  }
 
-async removeLink(courseID, userID, link) {
-  return new Promise((resolve, reject) => {
+  async addPlaceStudent(userID, studentID, type, number) {
+    return new Promise((resolve, reject) => {
+      let priceQuery;
+      if (type === "card") {
+        priceQuery = 'SELECT price FROM Places WHERE type = ? AND number = ?';
+      } else {
+        priceQuery = 'SELECT price FROM Places WHERE type = ?';
+      }
+
+      // Récupération du prix
+      db.query(priceQuery, [type, number], (err, result) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération des prix."));
+        }
+
+        if (result.length == 0) {
+          return reject(new Error("Le prix n'a pas été trouvé."));
+        }
+
+        let price = result[0].price;
+        if (type !== "card") {
+          price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achetés
+        }
+
+        let sql;
+        switch (type) {
+          case 'ticket':
+            sql = 'UPDATE Users SET tickets = tickets + ? WHERE userID = ?';
+            db.query(sql, [number, studentID], (err, result) => {
+              if (err) {
+                return reject(new Error("Erreur lors de l'ajout de ticket(s) à l'utilisateur."));
+              }
+              if (result.affectedRows === 0) {
+                return reject(new Error("L'utilisateur n'existe pas."));
+              }
+              resolve(result);
+            });
+            break;
+          case 'card':
+            sql = 'INSERT INTO Cards (userID, number, maxNumber) VALUES (?, 0, ?)';
+            db.query(sql, [studentID, number], (err, result) => {
+              if (err) {
+                return reject(new Error("Erreur lors de l'ajout de la carte à l'utilisateur."));
+              }
+              if (result.affectedRows === 0) {
+                return reject(new Error("L'utilisateur n'existe pas."));
+              }
+              resolve(result);
+            });
+            break;
+          case 'subscription':
+            const days = number * 30; // Nombre de jours proportionnel au nombre de mois
+            sql = 'UPDATE Users SET subscriptionEnd = DATE_ADD(subscriptionEnd, INTERVAL ? DAY) WHERE userID = ?';
+            db.query(sql, [days, studentID], (err, result) => {
+              if (err) {
+                return reject(new Error("Erreur lors de la modification de la date de fin de l'abonnement de l'utilisateur."));
+              }
+              if (result.affectedRows === 0) {
+                return reject(new Error("L'utilisateur n'existe pas."));
+              }
+              resolve(result);
+            });
+            break;
+        }
+
+        const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'cash', ?);"
+        db.query(paymentSql, [studentID, price, type, number, userID], (err, result) => {
+          if (err) {
+            return reject(new Error("Erreur lors de l'enregistrement du paiement."));
+          }
+          resolve(result);
+        });
+      });
+    });
+  }
+
+  async removeLink(courseID, userID, link) {
+    return new Promise((resolve, reject) => {
       const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
       db.query(checkUserTypeSql, [userID], (err, result) => {
-          if (err) {
-              return reject(err);
-          }
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération de l'utilisateur."));
+        }
 
-          if(result.length == 0) {
-              return reject(new Error("This userID doesn't exist"));
-          }
+        if (result.length == 0) {
+          return reject(new Error("L'utilisateur n'existe pas."));
+        }
 
-          userID = userID.toString();
-          
+        userID = userID.toString();
 
-          // Si c'est un étudiant
-          if (result.length > 0 && result[0].userType == "student") {
-              return reject(new Error('User is a student'));
-          } 
-          // On vérifie si c'est un professeur
-          else if (result.length > 0 && result[0].userType == "teacher") {
-              // SQL pour vérifier si le professeur est inscrit au cours
-              const checkTeacherSql = `
+
+        // Si c'est un étudiant
+        if (result.length > 0 && result[0].userType == "student") {
+          return reject(new Error("L'utilisateur est un élève."));
+        }
+        // On vérifie si c'est un professeur
+        else if (result.length > 0 && result[0].userType == "teacher") {
+          // SQL pour vérifier si le professeur est inscrit au cours
+          const checkTeacherSql = `
               SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant
               FROM Courses
               WHERE courseID = ?
               `;
-              db.query(checkTeacherSql, [userID, courseID], (err, result) => {
-                  if (err) {
-                      return reject(err);
-                  }
-                  // Si le professeur n'est pas inscrit au cours
-                  if (result.length === 0 || result[0].isParticipant === 0) {
-
-                      return reject(new Error("Erreur : teacher or course doesn't exist"));
-                  }
-                  // Continuer le processus de suppression du lien
-                  proceedWithLinkRemoval();
-
-                  
-              });
-          } 
-          else if (result.length > 0 && result[0].userType == "admin") {
-              proceedWithLinkRemoval();
-
-          } 
-          else {
-              return reject(new Error("UserID invalid or course doesn't exist"));
-          }
-
-          
-
-          function proceedWithLinkRemoval() {
-              const selectSql = "SELECT links FROM Courses WHERE courseID = ? AND JSON_CONTAINS(links, ?, '$')";
-              db.query(selectSql, [courseID, `"${link}"`], (err, rows) => {
-                  if (err) {
-                      return reject(err);
-                  }
-                  if (rows.length === 0) {
-                      return reject(new Error('Invalid parameters or link not found'));
-                  }
-
-                  let links = [];
-                  if (rows.length > 0) {
-                      links = JSON.parse(rows[0].links);
-                  }
-
-                  // Retirer le lien de la liste
-                  const index = links.indexOf(link);
-
-                  if (index !== -1) {
-                      links.splice(index, 1);
-
-                      // Mettre à jour la liste des liens dans la base de données
-                      const updateSql = 'UPDATE Courses SET links = ? WHERE courseID = ?';
-                      const updatedLinks = JSON.stringify(links);
-                      db.query(updateSql, [updatedLinks, courseID], (err, result) => {
-                          if (err) {
-                              return reject(err);
-                          }
-                          if(result.affectedRows == 0) {
-                              return reject(new Error("This course doesn't exist"));
-                          }
+          db.query(checkTeacherSql, [userID, courseID], (err, result) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification de la présence du professeur dans le cours."));
+            }
+            // Si le professeur n'est pas inscrit au cours
+            if (result.length === 0 || result[0].isParticipant === 0) {
+              return reject(new Error("Le professeur ou le cours n'existe pas."));
+            }
+            // Continuer le processus de suppression du lien
+            proceedWithLinkRemoval();
 
 
-                          resolve({ success: true, result });
-                      });
-                  } else {
-                      return reject(new Error('Link not found in the course'));
-                  }
-              });
-          }
-      });
-  });
-}
-
-async addTag(userID, courseID, tag) {
-return new Promise(async (resolve, reject) => {
-    const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
-    const selectTagsSql = "SELECT tags FROM Courses WHERE courseID = ?";
-    const updateTagSql = "UPDATE Courses SET tags = JSON_ARRAY_APPEND(tags, '$', ?) WHERE courseID = ?";
-
-    db.query(checkUserTypeSql, [userID], (err, result) => {
-        userID = userID.toString();
-        if (err) {
-            return reject(err);
+          });
         }
+        else if (result.length > 0 && result[0].userType == "admin") {
+          proceedWithLinkRemoval();
 
-        if (result.length > 0 && result[0].userType == "student") {
-            return reject(new Error("Students are not allowed to add tags to courses."));
-        } else if (result.length > 0 && result[0].userType == "teacher") {
-            const checkTeacherSql = "SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant FROM Courses WHERE courseID = ?";
-            db.query(checkTeacherSql, [userID, courseID], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                if (result.length > 0 && result[0].isParticipant) {
-                    db.query(selectTagsSql, [courseID], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-
-                        const tags = JSON.parse(result[0].tags);
-                        if (tags.includes(tag)) {
-                            return resolve({ success: false, message: "Tag already exists for this course." });
-                        } else {
-                            db.query(updateTagSql, [tag, courseID], (err, result) => {
-                                if (err) {
-                                    return reject(err);
-                                }
-                                resolve(result);
-                            });
-                        }
-                    });
-                } else {
-                    return resolve({ success: false, message: "Teacher not enrolled in course" });
-                }
-            });
-        } else if (result.length > 0 && result[0].userType == "admin") { // Si l'utilisateur est un admin
-            db.query(selectTagsSql, [courseID], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                const tags = JSON.parse(result[0].tags);
-                if (tags.includes(tag)) {
-                    return resolve({ success: false, message: "Tag already exists for this course." });
-                } else {
-                    db.query(updateTagSql, [tag, courseID], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        resolve(result);
-                    });
-                }
-            });
         }
         else {
-          return reject(err);
+          return reject(new Error("userID ou userType invalide."));
         }
+
+
+
+        function proceedWithLinkRemoval() {
+          const selectSql = "SELECT links FROM Courses WHERE courseID = ? AND JSON_CONTAINS(links, ?, '$')";
+          db.query(selectSql, [courseID, `"${link}"`], (err, rows) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la récupération des liens du cours."));
+            }
+            if (rows.length === 0) {
+              return reject(new Error("Ce cours n'existe pas."));
+            }
+
+            let links = [];
+            if (rows.length > 0) {
+              links = JSON.parse(rows[0].links);
+            }
+
+            // Retirer le lien de la liste
+            const index = links.indexOf(link);
+
+            if (index !== -1) {
+              links.splice(index, 1);
+
+              // Mettre à jour la liste des liens dans la base de données
+              const updateSql = 'UPDATE Courses SET links = ? WHERE courseID = ?';
+              const updatedLinks = JSON.stringify(links);
+              db.query(updateSql, [updatedLinks, courseID], (err, result) => {
+                if (err) {
+                  return reject(new Error("Erreur lors de la modification du cours."));
+                }
+                if (result.affectedRows == 0) {
+                  return reject(new Error("Ce cours n'existe pas."));
+                }
+
+
+                resolve({ success: true, result });
+              });
+            } else {
+              return reject(new Error("Le lien n'est pas contenu dans le cours."));
+            }
+          });
+        }
+      });
     });
-});
-}
+  }
 
-async removeTag(courseID, userID, tag) {
-return new Promise((resolve, reject) => {
-  const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
-  db.query(checkUserTypeSql, [userID], (err, result) => {
-      if (err) {
-          return reject(err);
-      }
+  async addTag(userID, courseID, tag) {
+    return new Promise(async (resolve, reject) => {
+      const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
+      const selectTagsSql = "SELECT tags FROM Courses WHERE courseID = ?";
+      const updateTagSql = "UPDATE Courses SET tags = JSON_ARRAY_APPEND(tags, '$', ?) WHERE courseID = ?";
 
-      if(result.length == 0) {
-          return reject(new Error("This userID doesn't exist"));
-      }
+      db.query(checkUserTypeSql, [userID], (err, result) => {
+        userID = userID.toString();
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération du type de l'utilisateur."));
+        }
 
-      userID = userID.toString();
-      
+        if (result.length == 0) {
+          return reject(new Error("L'utilisateur n'existe pas"));
+        } 
 
-      // Si c'est un étudiant
-      if (result.length > 0 && result[0].userType == "student") {
-          return reject(new Error('User is a student'));
-      } 
-      // On vérifie si c'est un professeur
-      else if (result.length > 0 && result[0].userType == "teacher") {
+        if (result[0].userType == "student") {
+          return reject(new Error("Les élèves ne peuvent pas ajouter de tags aux cours."));
+        }
+        else if (result.length > 0 && result[0].userType == "teacher") {
+          const checkTeacherSql = "SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant FROM Courses WHERE courseID = ?";
+          db.query(checkTeacherSql, [userID, courseID], (err, result) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification de la présence du professeur dans le cours."));
+            }
+
+            if (result.length == 0) {
+              return reject(new Error("Le cours n'existe pas."));
+            } 
+
+            if (!result[0].isParticipant) {
+              return reject(new Error("Le professeur n'est pas dans le cours."));
+            }
+            db.query(selectTagsSql, [courseID], (err, result) => {
+              if (err) {
+                return reject(new Error("Erreur lors de la récupération des tags du cours."));
+              }
+
+              if (result.length == 0) {
+                return reject(new Error("Le cours n'existe pas."));
+              } 
+
+              const tags = JSON.parse(result[0].tags);
+              if (tags.includes(tag)) {
+                return reject(new Error("Le cours a déjà ce tag."));
+              }
+              else {
+                db.query(updateTagSql, [tag, courseID], (err, result) => {
+                  if (err) {
+                    return reject(new Error("Erreur lors de l'ajout du tag."));
+                  }
+                  resolve(result);
+                });
+              }
+            });
+          });
+        } else if (result.length > 0 && result[0].userType == "admin") { // Si l'utilisateur est un admin
+          db.query(selectTagsSql, [courseID], (err, result) => {
+            if (err) {
+              return reject(new Error("Le lien n'est pas contenu dans le cours."));
+            }
+
+            const tags = JSON.parse(result[0].tags);
+            if (tags.includes(tag)) {
+              return resolve({ success: false, message: "Tag already exists for this course." });
+            } else {
+              db.query(updateTagSql, [tag, courseID], (err, result) => {
+                if (err) {
+                  return reject(new Error("Le lien n'est pas contenu dans le cours."));
+                }
+                resolve(result);
+              });
+            }
+          });
+        }
+        else {
+          return reject(new Error("Le lien n'est pas contenu dans le cours."));
+        }
+      });
+    });
+  }
+
+  async removeTag(courseID, userID, tag) {
+    return new Promise((resolve, reject) => {
+      const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
+      db.query(checkUserTypeSql, [userID], (err, result) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération du type de l'utilisateur."));
+        }
+
+        if (result.length == 0) {
+          return reject(new Error("L'utilisateur n'existe pas"));
+        }
+
+        userID = userID.toString();
+
+
+        // Si c'est un étudiant
+        if (result[0].userType == "student") {
+          return reject(new Error('Les élèves ne peuvent pas ajouter de tags aux cours.'));
+        }
+        // On vérifie si c'est un professeur
+        else if (result[0].userType == "teacher") {
           // SQL pour vérifier si le professeur est inscrit au cours
           const checkTeacherSql = `
           SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant
@@ -754,77 +699,74 @@ return new Promise((resolve, reject) => {
           WHERE courseID = ?
           `;
           db.query(checkTeacherSql, [userID, courseID], (err, result) => {
-              if (err) {
-                  return reject(err);
-              }
-              // Si le professeur n'est pas inscrit au cours
-              if (result.length === 0 || result[0].isParticipant === 0) {
-                  return reject(new Error("Erreur : teacher or course doesn't exist"));
-              }
-              // Continuer le processus de suppression du lien
-              proceedWithTagRemoval();
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification de la présence du professeur dans le cours."));
+            }
+            
+            if (result.length == 0) {
+              return reject(new Error("Le cours n'existe pas."));
+            } 
 
-              
+            if (!result[0].isParticipant) {
+              return reject(new Error("Le professeur n'est pas dans le cours."));
+            }
+            // Continuer le processus de suppression du lien
+            proceedWithTagRemoval();
+
+
           });
-      } 
-      else if (result.length > 0 && result[0].userType == "admin") {
+        }
+        else if (result[0].userType == "admin") {
           proceedWithTagRemoval();
 
-      } 
-      else {
-          return reject(new Error("UserID invalid or course doesn't exist"));
-      }
+        }
+        else {
+          return reject(new Error("UserType invalide."));
+        }
 
-      
 
-      function proceedWithTagRemoval() {
+
+        function proceedWithTagRemoval() {
           const selectSql = "SELECT tags FROM Courses WHERE courseID = ? AND JSON_CONTAINS(tags, ?, '$')";
           db.query(selectSql, [courseID, `"${tag}"`], (err, rows) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la récupération des tags du cours."));
+            }
+            if (rows.length === 0) {
+              return reject(new Error("Le cours n'existe pas."));
+            }
+
+            let tags = [];
+            if (rows.length > 0) {
+              tags = JSON.parse(rows[0].tags);
+            }
+
+            // Retirer le lien de la liste
+            const index = tags.indexOf(tag);
+
+            if (index == -1){
+              return reject(new Error("Le cours n'a pas ce tag."));
+            }
+            tags.splice(index, 1);
+
+            // Mettre à jour la liste des liens dans la base de données
+            const updateSql = 'UPDATE Courses SET tags = ? WHERE courseID = ?';
+            const updatedTags = JSON.stringify(tags);
+            db.query(updateSql, [updatedTags, courseID], (err, result) => {
               if (err) {
-                  return reject(err);
+                return reject(new Error("Erreur lors de la suppression du tag."));
               }
-              if (rows.length === 0) {
-                  return reject(new Error('Invalid parameters or tag not found'));
+              if (result.affectedRows == 0) {
+                return reject(new Error("Le cours n'existe pas."));
               }
-
-              let tags = [];
-              if (rows.length > 0) {
-                tags = JSON.parse(rows[0].tags);
-              }
-
-              // Retirer le lien de la liste
-              const index = tags.indexOf(tag);
-
-              if (index !== -1) {
-                tags.splice(index, 1);
-
-                  // Mettre à jour la liste des liens dans la base de données
-                  const updateSql = 'UPDATE Courses SET tags = ? WHERE courseID = ?';
-                  const updatedTags = JSON.stringify(tags);
-                  db.query(updateSql, [updatedTags, courseID], (err, result) => {
-                      if (err) {
-                          return reject(err);
-                      }
-                      if(result.affectedRows == 0) {
-                          return reject(new Error("This course doesn't exist"));
-                      }
-
-
-                      resolve({ success: true, result });
-                  });
-              } else {
-                  return reject(new Error('Tag not found in the course'));
-              }
+              
+              resolve({ success: true, result });
+              });
           });
-      }
-  });
-});
+        }
+      });
+    });
+  }
 }
-
-
-}
-
-
-
 
 module.exports = new TeacherService();

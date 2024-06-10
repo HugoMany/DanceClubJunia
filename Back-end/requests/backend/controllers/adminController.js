@@ -283,6 +283,9 @@ exports.createTeacher = async (req, res) => {
         if (!emailRegex.test(email)) {
           return res.status(401).json({ error: 'Email invalide.' });
         }
+        if (password.length <= 8) {
+            return res.status(402).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
+        }
 
         const result = await adminService.createTeacher(firstname, surname, email, password, connectionMethod, photo, description);
 

@@ -12,7 +12,7 @@ class GuestService {
           return reject(err);
         }
         if (result.length === 0) {
-          return reject(new Error('No courses found'));
+          return reject(new Error('Il n\'y a pas de cours.'));
         }
         resolve(result);
       });
@@ -28,7 +28,7 @@ class GuestService {
         }
 
         if (result.length === 0) {
-          return reject(new Error('Email or password incorrect'));
+          return reject(new Error('Identifiants invalides.'));
         }
 
         resolve(result);
@@ -42,15 +42,11 @@ class GuestService {
       const checkEmailSql = "SELECT userID FROM Users WHERE email = ?";
       db.query(checkEmailSql, [email], (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la vérification de l'existence de l'email."));
         }
 
         if (result.length > 0) {
-          return reject(new Error('Email already in use'));
-        }
-
-        if(!photo){
-          photo = "";
+          return reject(new Error('Email déjà utilisé.'));
         }
 
         const sql = `
@@ -59,8 +55,8 @@ class GuestService {
         `;
 
         db.query(sql, [firstname, surname, email, password, connectionMethod, photo], (err, result) => {
-          if (err) {
-            return reject(err);
+          if (err || result.affectedRows == 0) {
+            return reject(new Error("Erreur lors de la création du compte."));
           }
           const studentID = result.insertId;
           resolve(studentID);
@@ -68,36 +64,40 @@ class GuestService {
       });
     });
   }
-  
+
   async getCoursesByPeriod(startDate, endDate) {
     return new Promise((resolve, reject) => {
-        const sql = `
+      const sql = `
             SELECT *
             FROM Courses
             WHERE startDate >= ? AND startDate <= ?
         `;
-    
-        db.query(sql, [startDate, endDate], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
+
+      db.query(sql, [startDate, endDate], (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération des cours."));
+        }
+        else if (result.length == 0) {
+          return reject(new Error("Il n'y a pas de cours pour cette période."));
+        }
+        else {
+          resolve(rows);
+        }
+      });
     });
   }
-  
+
   async getTicketPrice() {
     return new Promise((resolve, reject) => {
       const sql = "SELECT price FROM Places WHERE type = 'ticket'";
 
       db.query(sql, (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération du prix du ticket."));
         }
 
         if (result.length === 0) {
-          return reject(new Error('No ticket price found'));
+          return reject(new Error("Le prix du ticket n'a pas été trouvé."));
         }
 
         resolve(result[0].price);
@@ -111,11 +111,11 @@ class GuestService {
 
       db.query(sql, (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération du prix de l'abonnement."));
         }
 
         if (result.length === 0) {
-          return reject(new Error('No subscription price found'));
+          return reject(new Error("Le prix de l'abonnement n'a pas été trouvé."));
         }
 
         resolve(result[0].price);
@@ -129,11 +129,11 @@ class GuestService {
 
       db.query(sql, (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la récupération du prix des cartes."));
         }
 
         if (result.length === 0) {
-          return reject(new Error('No card prices found'));
+          return reject(new Error("Le prix des cartes n'a pas été trouvé"));
         }
 
         resolve(result);
@@ -141,26 +141,27 @@ class GuestService {
     });
   }
 
-  async getContactsTeachers() {
+  async getContacts() {
     return new Promise((resolve, reject) => {
-        const sql = `
+      const sql = `
             SELECT email
             FROM Users
             WHERE userType = 'teacher'
         `;
-    
-        db.query(sql, (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                const contacts = rows.map(row => row.email);
-                resolve(contacts);
-            }
-        });
+
+      db.query(sql, (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération des contacts."));
+        }
+        if (result.length === 0) {
+          return reject(new Error("Il n'y a pas de professeur."));
+        }
+
+        const contacts = rows.map(row => row.email);
+        resolve(contacts);
+      });
     });
-}
-
-
+  }
 }
 
 
