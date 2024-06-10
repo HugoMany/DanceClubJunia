@@ -4,6 +4,7 @@ const guestService = require('../services/guestService');
 
 exports.getAllCourses = async (req, res) => {
     try {
+        console.log(`getAllCourses`);
         const courses = await guestService.getAllCourses();
         res.json({ success: true, courses: courses });
     } catch (error) {
@@ -43,7 +44,7 @@ exports.login = async (req, res) => {
 exports.registerStudent = async (req, res) => {
     const { firstname, surname, email, password, connectionMethod, photo } = req.body;
 
-    console.log(`registerStudent | firstname, surname, email: ${firstname}, ${surname}, ${email}`);
+    console.log(`registerStudent | firstname, surname, email, connectionMethod, photo: ${firstname}, ${surname}, ${email}, ${connectionMethod}, ${photo}`);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -111,9 +112,9 @@ exports.getCardPrices = async (req, res) => {
     }
 };
 
-exports.getContacts = async (req, res) => {
+exports.getContactsTeachers = async (req, res) => {
     try {
-        const contacts = await guestService.getContacts();
+        const contacts = await guestService.getContactsTeachers();
         res.json({ success: true, contacts: contacts });
     } catch (error) {
         console.error('getContacts | error:', error);

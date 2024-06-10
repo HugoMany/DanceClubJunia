@@ -1,0 +1,8 @@
+.appelDate {
+    background-color: white;
+    margin: 5vh;
+    overflow-y: scroll;
+    border: 0px solid;
+    border-radius: 20px;
+    padding: 20px;
+  }

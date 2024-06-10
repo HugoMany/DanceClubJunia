@@ -143,13 +143,13 @@ router.patch('/addLink', authorize(['student', 'teacher', 'admin']), userControl
  * @swagger
  * /api/user/searchCoursesStudent:
  *   get:
- *     summary: Rechercher les cours auxquels un utilisateur a participe
+ *     summary: Rechercher les cours auxquels un etudiant a participe
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: studentID
+ *         name: userID
  *         required: true
  *         schema:
  *           type: integer
@@ -206,6 +206,71 @@ router.get('/searchCoursesStudent', authorize(['student', 'teacher', 'admin']), 
 
 /**
  * @swagger
+ * /api/user/searchCoursesTeacher:
+ *   get:
+ *     summary: Rechercher les cours auxquels un professeur a participe
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: ID du professeur
+ *           example: 7
+ *       - in: query
+ *         name: startDate
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *           description: Date de debut pour la recherche
+ *           example: "2023-01-01"
+ *       - in: query
+ *         name: tags
+ *         required: false
+ *         schema:
+ *           type: string
+ *           description: Tags pour filtrer les cours
+ *           example: "tag1,tag2"
+ *     responses:
+ *       200:
+ *         description: Cours trouves avec succes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       courseID:
+ *                         type: integer
+ *                         description: ID du cours
+ *                       courseName:
+ *                         type: string
+ *                         description: Nom du cours
+ *                       instructor:
+ *                         type: string
+ *                         description: Nom de l'instructeur
+ *                       schedule:
+ *                         type: string
+ *                         description: Horaire du cours
+ *       400:
+ *         description: Entree invalide
+ *       500:
+ *         description: Erreur SQL
+ */
+router.get('/searchCoursesTeacher', authorize(['student', 'teacher', 'admin']), userController.searchCoursesTeacher);
+
+/**
+ * @swagger
  * /api/user/searchCourse:
  *   get:
  *     summary: Rechercher un cours par son ID
@@ -253,5 +318,101 @@ router.get('/searchCoursesStudent', authorize(['student', 'teacher', 'admin']), 
  *         description: Erreur SQL
  */
 router.get('/searchCourse', authorize(['student', 'teacher', 'admin']), userController.searchCourse);
+
+/**
+ * @swagger
+ * /api/user/getContactsStudents:
+ *   get:
+ *     summary: Recupere tous les emails des eleves.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste d'emails des eleves recuperee avec succes.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 contacts:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "john.doe@example.com"
+ *       500:
+ *         description: Erreur du serveur.
+ */
+
+router.get('/getContactsStudents', authorize(['student', 'teacher', 'admin']), userController.getContactsStudents);
+
+/**
+ * @swagger
+ * /api/user/getProfile:
+ *   get:
+ *     summary: Recuperer ses propres informations
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: ID de l'utilisateur
+ *           example: 6
+ *     responses:
+ *       200:
+ *         description: Profil recupere avec succes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     userID:
+ *                       type: integer
+ *                       example: 6
+ *                     firstname:
+ *                       type: string
+ *                       example: "Lucas"
+ *                     surname:
+ *                       type: string
+ *                       example: "Vano"
+ *                     email:
+ *                       type: string
+ *                       example: "lucas.vano@example.com"
+ *                     connectionMethod:
+ *                       type: string
+ *                       example: "email"
+ *                     credit:
+ *                       type: integer
+ *                       example: 0
+ *                     tickets:
+ *                       type: integer
+ *                       example: 2
+ *                     subscriptionEnd:
+ *                       type: string
+ *                       format: date
+ *                       nullable: true
+ *                       example: null
+ *                     photo:
+ *                       type: string
+ *                       example: "photo.png"
+ *       400:
+ *         description: Entree invalide
+ *       500:
+ *         description: Erreur SQL
+ */
+router.get('/getProfile', authorize(['student', 'teacher', 'admin']), userController.getProfile);
 
 module.exports = router;

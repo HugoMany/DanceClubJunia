@@ -2,7 +2,7 @@ const adminService = require('../services/adminService');
 
 exports.getAllStudents = async (req, res) => {
     try {
-        console.log(`getAllStudents`);
+        console.log("getAllStudents");
 
         const students = await adminService.getAllStudents();
         res.json({ success: true, students: students });
@@ -16,6 +16,7 @@ exports.getAllTeachers = async (req, res) => {
     try {
         console.log(`getAllTeachers`);
 
+        console.log("getAllTeachers");
         const teachers = await adminService.getAllTeachers();
         res.json({ success: true, teachers: teachers });
     } catch (error) {
@@ -28,6 +29,7 @@ exports.getAllAdmins = async (req, res) => {
     try {
         console.log(`getAllAdmins`);
 
+        console.log("getAllAdmins");
         const admins = await adminService.getAllAdmins();
         res.json({ success: true, admins: admins });
     } catch (error) {
@@ -40,6 +42,7 @@ exports.getAllUsers = async (req, res) => {
     try {
         console.log(`getAllUsers`);
 
+        console.log("getAllUsers");
         const users = await adminService.getAllUsers();
         res.json({ success: true, users: users });
     } catch (error) {

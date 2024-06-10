@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-
-// React component
-const TeacherCourses = ({ teacherId }) => {
+import GetStudentID from './getStudentID';
+const URL = 'http://90.110.227.143/'
+const PlanningProf = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newStudentId, setNewStudentId] = useState('');
+    const [studentId, setStudentId] = useState('');
     const [newTag, setNewTag] = useState('');
 
     useEffect(() => {
         const fetchCourses = async () => {
-            try {
-                const response = await fetch(`http://example.com/api/courses/${teacherId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+            try {const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/user/searchCoursesTeacher?userID=${teacherId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 });
 
                 if (response.ok) {
@@ -40,11 +42,18 @@ const TeacherCourses = ({ teacherId }) => {
 
     const handleDelete = async (courseId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/teacher/cancelCourse`, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  teacherID: teacherId, // Utilisation de userID ici
+                  courseID: courseId
+                })
             });
 
             if (response.ok) {
@@ -58,16 +67,24 @@ const TeacherCourses = ({ teacherId }) => {
         }
     };
 
-    const handleAddStudent = async (courseId) => {
+    const handleAddStudent = async (courseId, studentId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}/students`, {
-                method: 'POST',
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/teacher/addStudentToCourse`, {
+                method: 'PATCH', // Utilisation de la méthode PATCH
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ studentId: newStudentId })
+                body: JSON.stringify({
+                    teacherID: teacherId,
+                    courseID: courseId,
+                    studentID: studentId
+                })
             });
-
+    
             if (response.ok) {
                 const updatedCourse = await response.json();
                 setCourses(courses.map(course =>
@@ -75,7 +92,6 @@ const TeacherCourses = ({ teacherId }) => {
                         { ...course, students: updatedCourse.students } :
                         course
                 ));
-                setNewStudentId('');
             } else {
                 throw new Error('Error adding student');
             }
@@ -87,11 +103,19 @@ const TeacherCourses = ({ teacherId }) => {
 
     const handleRemoveStudent = async (courseId, studentId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}/students/${studentId}`, {
-                method: 'DELETE',
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/teacher/addStudentToCourse`, {
+                method: 'PATCH', // Utilisation de la méthode PATCH
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    courseID: courseId,
+                    studentID: studentId
+                })
             });
 
             if (response.ok) {
@@ -111,14 +135,21 @@ const TeacherCourses = ({ teacherId }) => {
     };
     const handleAddTag = async (courseId) => {
         try {
-            const response = await fetch(`http://example.com/api/courses/${courseId}/tags`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            const response = await fetch(`${URL}api/teacher/modifyCourse`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                  'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ tag: newTag })
-            });
-
+                body: JSON.stringify({
+                    courseID:courseId,
+                   // Utilisation de userID ici
+                  tag: newTag,
+                })
+              });
+            
+              
             if (response.ok) {
                 const updatedCourse = await response.json();
                 setCourses(courses.map(course =>
@@ -147,13 +178,8 @@ const TeacherCourses = ({ teacherId }) => {
                         <h3>{course.title}</h3>
                         {/* Autres détails du cours */}
                         <div>
-                            <input
-                                type="text"
-                                placeholder="New Student ID"
-                                value={newStudentId}
-                                onChange={(e) => setNewStudentId(e.target.value)}
-                            />
-                            <button onClick={() => handleAddStudent(course.courseId)}>Add Student</button>
+                            <GetStudentID setUserID={setStudentId} /> {/* Utilisez setStudentId au lieu de StudentId */}
+                            <button onClick={() => handleAddStudent(course.courseId, studentId)}>Add Student</button> {/* Utilisez studentId au lieu de student */}
                         </div>
                         <ul>
                             {course.students.map(student => (
@@ -182,9 +208,6 @@ const TeacherCourses = ({ teacherId }) => {
     );
 };
 
-// Usage example
-const PlanningProf = () => {
-    return <TeacherCourses teacherId="Teacher 1" />;
-};
+
 
 export default PlanningProf;

@@ -8,25 +8,24 @@ function Inscription() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [connectionMethod, setConnectionMethod] = useState('');
-    const credit = 0;
+    const [photo, setPhoto] = useState('');
 
     
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Ajoutez ici la logique pour traiter les données d'inscription
         const json = {
             firstname,
             surname,
             email,
             password,
+            photo,
             connectionMethod,
-            credit
         };
         console.log('Form Data:', json);
         
         // Add logic to save course data
-        fetch(URL_DB+'/inscription', {
+        fetch(URL_DB+'guest/registerStudent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,6 +94,16 @@ function Inscription() {
                         id="connectionMethod"
                         value={connectionMethod}
                         onChange={(e) => setConnectionMethod(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="photo"></label>
+                    <input
+                        placeholder='Photo'
+                        type="file"
+                        id="photo"
+                        value={photo}
+                        onChange={(e) => setPhoto(e.target.value)}
                     />
                 </div>
                 <button className='connexionLogin' type="submit">S'inscrire</button>

@@ -27,6 +27,12 @@ import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
 import Loading from './elements/loading';
 
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
+import GetStudentID from './PAGES/getStudentID';
+import AjoutCredits from './PAGES/ajoutCredits';
+import Prof from './PAGES/prof';
+import Appel from './PAGES/appel';
+import CreerProf from './PAGES/admin/GestionProf/creerProf';
+
 function App() {
   return (
     <div className="App">
@@ -58,6 +64,12 @@ function App() {
 
 
           <Route path="/creerEleve" element={<CreerEleve/>}/>
+          <Route path="/getStudentID" element={<GetStudentID/>}/>
+          <Route path="/ajoutCredits" element={<AjoutCredits/>}/>
+          <Route path="/prof" element={<Prof/>}/>
+
+          <Route path="/appel" element={<Appel/>}/>
+          <Route path="/creerProf" element={<CreerProf/>}/>
         </Routes>
       </Router>
     </div>

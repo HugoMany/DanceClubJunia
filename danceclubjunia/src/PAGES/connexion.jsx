@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import '../css/login.css';
 import { URL_DB } from '../const/const';
-import Cookies from 'cookie-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -28,7 +27,7 @@ function Connexion() {
 
         console.log('Form Data:', json);
 
-        fetch(URL_DB + 'student', {
+        fetch(URL_DB + 'guest/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -38,16 +37,16 @@ function Connexion() {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            if (data.studentId) {
-                // Stocker studentId dans un cookie
-                //Cookies.set('studentId', data.studentId, { expires: 7 }); // Le cookie expire dans 7 jours
-                Cookies.set('studentId', '1', { expires: 7 });
-                console.log(Cookies.get("studentId"));
+            if (data.token) {
+                localStorage.setItem('token', data.token);
             }
+            window.location.href = '/';
+            return data;
         })
         .catch(error => {
             console.error('Error:', error);
         });
+        
     };
 
     return (
