@@ -81,7 +81,7 @@ class AdminService {
             const checkCourseSql = 'SELECT COUNT(*) AS count FROM Courses WHERE courseID = ?';
             db.query(checkCourseSql, [courseID], (err, rows) => {
                 if (err) {
-                    return reject(err);
+                    return reject(new Error("Erreur lors de la vérification de l'existence du cours."));
                 }
     
                 // Vérifier si le cours existe
@@ -89,19 +89,14 @@ class AdminService {
                     return reject(new Error("Le cours spécifié n'existe pas."));
                 }
     
-                // Si le cours existe, procéder à sa suppression
+                // Procéder à sa suppression
                 const sql = 'DELETE FROM Courses WHERE courseID = ?';
                 db.query(sql, [courseID], (err, result) => {
-                    if (err) {
-                        return reject(err);
+                    if (err || result.affectedRows > 0) {
+                        return reject(new Error("Erreur lors de la suppression du cours."));
                     }
-    
-                    // Vérifier si la suppression a réussi
-                    if (result.affectedRows > 0) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
+                    resolve(true);
+                    
                 });
             });
         });
@@ -109,31 +104,24 @@ class AdminService {
 
     async createCard(place, price) {
         return new Promise((resolve, reject) => {
-            // Vérifier si une carte de N places existe déjà
             const checkExistingCardSql = 'SELECT COUNT(*) AS count FROM Places WHERE type = ? AND number = ?';
             db.query(checkExistingCardSql, ['card', place], (err, rows) => {
                 if (err) {
-                    return reject(err);
+                    return reject(new Error("Erreur lors de la vérification de l'existence de la carte."));
                 }
     
                 // Vérifier si une carte de N places existe déjà
                 if (rows[0].count > 0) {
-                    return reject(new Error('Une carte de ' + place + ' places existe déjà.'));
+                    return reject(new Error('La carte existe déjà.'));
                 }
     
-                // Insérer la nouvelle carte de N places si aucune carte de N places n'existe déjà
                 const insertCardSql = `INSERT INTO Places (type, price, number) VALUES ('card', ?, ?)`;
                 db.query(insertCardSql, [price, place], (err, result) => {
-                    if (err) {
-                        return reject(err);
+                    if (err || result.affectedRows == 0) {
+                        return reject(new Error("Erreur lors de l'insertion de la carte dans la base de données."));
                     }
-    
-                    // Vérifier si l'insertion a réussi
-                    if (result.affectedRows > 0) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
+
+                    resolve(true);
                 });
             });
         });
@@ -141,11 +129,10 @@ class AdminService {
     
     async deleteCard(place) {
         return new Promise((resolve, reject) => {
-            // Requête pour vérifier si la carte existe
             const checkCardSql = 'SELECT COUNT(*) AS count FROM Places WHERE type = ? AND number = ?';
             db.query(checkCardSql, ['card', place], (err, rows) => {
                 if (err) {
-                    return reject(err);
+                    return reject(new Error("Erreur lors de la vérification de l'existence de la carte."));
                 }
     
                 // Vérifier si la carte existe
@@ -153,19 +140,14 @@ class AdminService {
                     return reject(new Error('La carte spécifiée n\'existe pas.'));
                 }
     
-                // Si la carte existe, procéder à sa suppression
+                // Procéder à sa suppression
                 const deleteSql = 'DELETE FROM Places WHERE type = ? AND number = ?';
                 db.query(deleteSql, ['card', place], (err, result) => {
-                    if (err) {
-                        return reject(err);
+                    if (err || result.affectedRows == 0) {
+                        return reject(new Error("Erreur lors de la suppression de la carte."));
                     }
-    
-                    // Vérifier si la suppression a réussi
-                    if (result.affectedRows > 0) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
+                    
+                    resolve(true);
                 });
             });
         });
@@ -178,7 +160,6 @@ class AdminService {
             if (/^card\d+$/.test(type)) {
                 // Extraire le nombre d'utilisations de la carte (N) depuis le type
                 number = parseInt(type.substring(4));
-                // Vérifier si le nombre d'utilisations est un entier valide
                 if (isNaN(number)) {
                     return reject(new Error("Nombre d'utilisations de la carte non valide."));
                 }
@@ -186,40 +167,30 @@ class AdminService {
                 const checkCardSql = `SELECT COUNT(*) AS count FROM Places WHERE type = 'card' AND number = ?`;
                 db.query(checkCardSql, [number], (err, rows) => {
                     if (err) {
-                        return reject(err);
+                        return reject(new Error("Erreur lors de la vérification de l'existence da la carte."));
                     }
                     if (rows[0].count === 0) {
                         return reject(new Error("La carte avec le nombre d'utilisations spécifié n'existe pas."));
                     }
-                    // Construire la requête SQL pour mettre à jour le prix de la carte
+                    // Mettre à jour le prix de la carte
                     const updateCardSql = `UPDATE Places SET price = ? WHERE type = 'card' AND number = ?`;
-                    // Exécuter la requête avec les paramètres de prix et de nombre d'utilisations
                     db.query(updateCardSql, [price, number], (err, result) => {
-                        if (err) {
-                            return reject(err);
+                        if (err || result.affectedRows == 0) {
+                            return reject(new Error("Erreur lors de la modification de la carte."));
                         }
-                        // Vérifier si la mise à jour a affecté au moins une ligne
-                        if (result.affectedRows > 0) {
-                            resolve(true);
-                        } else {
-                            resolve(false);
-                        }
+
+                        resolve(true);
                     });
                 });
-            } else if (type === 'ticket' || type === 'subscription') {
-                // Construire la requête SQL pour mettre à jour le prix du ticket ou de l'abonnement
+            } // Ticket ou subscription
+            else if (type === 'ticket' || type === 'subscription') {
                 const updateSql = `UPDATE Places SET price = ? WHERE type = ?`;
-                // Exécuter la requête avec les paramètres de prix et de type
                 db.query(updateSql, [price, type], (err, result) => {
-                    if (err) {
-                        return reject(err);
+                    if (err || result.affectedRows == 0) {
+                        return reject(new Error("Erreur lors de la modification du prix."));
                     }
-                    // Vérifier si la mise à jour a affecté au moins une ligne
-                    if (result.affectedRows > 0) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
+                    
+                    resolve(true);
                 });
             } else {
                 return reject(new Error("Le type de place n'est pas valide."));
@@ -243,26 +214,22 @@ class AdminService {
                 this.getUserIDsByEmails(students)
             ])
                 .then(([teacherIDs, studentIDs]) => {
-                    // Requête SQL pour créer le cours
                     const sql = `
                         INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     `;
     
-                    // Exécution de la requête avec les paramètres fournis
                     db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray)], (err, result) => {
                         if (err) {
-                            return reject(err);
+                            return reject(new Error("Erreur lors de la création du cours."));
                         }
     
-                        // Récupérer la ligne ajoutée dans la table Courses
                         const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
                         db.query(selectSql, [result.insertId], (err, rows) => {
-                            if (err) {
-                                return reject(err);
+                            if (err || !rows[0]) {
+                                return reject(new Error("Erreur lors de la récupération du cours."));
                             }
     
-                            // Renvoyer la ligne ajoutée
                             resolve(rows[0]);
                         });
                     });
@@ -280,7 +247,10 @@ class AdminService {
             const selectSql = 'SELECT userID FROM Users WHERE email IN (?)';
             db.query(selectSql, [emails], (err, rows) => {
                 if (err) {
-                    return reject(err);
+                    return reject(new Error("Erreur lors de la récupération des ID."));
+                }
+                if(rows.count == 0) {
+                    return reject(new Error("Les emails n'appartiennent à aucun utilisateur."));
                 }
     
                 // Extraire les IDs des résultats
@@ -293,60 +263,55 @@ class AdminService {
     
     async createTeacher(firstname, surname, email, password, connectionMethod, photo, description) {
         return new Promise((resolve, reject) => {
-            // Requête SQL pour créer le professeur
             const sql = `
                 INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
                 VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
             `;
     
-            // Exécution de la requête avec les paramètres fournis
             db.query(sql, [firstname, surname, email, password, connectionMethod, photo, description], (err, result) => {
-                if (err) {
-                    return reject(err);
+                if (err || result.affectedRows == 0) {
+                    return reject(new Error("Erreur lors de la création du professeur."));
                 }
     
                 // Vérification de l'insertion réussie
                 if (result.affectedRows > 0) {
-                    // Récupérer les informations du professeur ajouté
                     const selectSql = 'SELECT * FROM Users WHERE userID = ?';
                     db.query(selectSql, [result.insertId], (err, rows) => {
                         if (err) {
-                            return reject(err);
+                            return reject(new Error("Erreur lors de la récupération du professeur."));
                         }
                         resolve(rows[0]);
                     });
-                } else {
-                    resolve(false);
                 }
             });
         });
     }
     
     async getPayments(startDate = null, endDate = null) {
-    return new Promise((resolve, reject) => {
-      let sql = "SELECT * FROM Payments";
-      const params = [];
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM Payments";
+            const params = [];
 
-      if (startDate && endDate) {
-        sql += " WHERE date BETWEEN ? AND ?";
-        params.push(startDate, endDate);
-      } else if (startDate) {
-        sql += " WHERE date >= ?";
-        params.push(startDate);
-      } else if (endDate) {
-        sql += " WHERE date <= ?";
-        params.push(endDate);
-      }
+            if (startDate && endDate) {
+                sql += " WHERE date BETWEEN ? AND ?";
+                params.push(startDate, endDate);
+            } else if (startDate) {
+                sql += " WHERE date >= ?";
+                params.push(startDate);
+            } else if (endDate) {
+                sql += " WHERE date <= ?";
+                params.push(endDate);
+            }
 
-      db.query(sql, params, (err, result) => {
-        if (err) {
-          return reject(err);
-        }
+            db.query(sql, params, (err, result) => {
+                if (err) {
+                    return reject(new Error("Erreur lors de la récupération des paiements."));
+                }
 
-        resolve(result);
-      });
-    });
-  }
+                resolve(result);
+            });
+        });
+    }
 }
 
 module.exports = new AdminService();

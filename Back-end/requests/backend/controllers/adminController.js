@@ -2,6 +2,8 @@ const adminService = require('../services/adminService');
 
 exports.getAllStudents = async (req, res) => {
     try {
+        console.log(`getAllStudents`);
+
         const students = await adminService.getAllStudents();
         res.json({ success: true, students: students });
     } catch (error) {
@@ -12,6 +14,8 @@ exports.getAllStudents = async (req, res) => {
 
 exports.getAllTeachers = async (req, res) => {
     try {
+        console.log(`getAllTeachers`);
+
         const teachers = await adminService.getAllTeachers();
         res.json({ success: true, teachers: teachers });
     } catch (error) {
@@ -22,6 +26,8 @@ exports.getAllTeachers = async (req, res) => {
 
 exports.getAllAdmins = async (req, res) => {
     try {
+        console.log(`getAllAdmins`);
+
         const admins = await adminService.getAllAdmins();
         res.json({ success: true, admins: admins });
     } catch (error) {
@@ -32,6 +38,8 @@ exports.getAllAdmins = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
+        console.log(`getAllUsers`);
+
         const users = await adminService.getAllUsers();
         res.json({ success: true, users: users });
     } catch (error) {
@@ -49,16 +57,32 @@ exports.deleteCourse = async (req, res) => {
         if (!courseID) {
             return res.status(400).json({ error: 'ID du cours manquant.' });
         }
+        if (!Number.isInteger(courseID)) {
+            return res.status(401).json({ error: 'L\'ID du cours n\'est pas un entier.' });
+        }
 
         const result = await adminService.deleteCourse(courseID);
 
         if (result) {
             res.json({ success: true });
-        } else {
-            res.status(400).json({ success: false, message: 'La suppression du cours a échoué.' });
         }
     } catch (error) {
         console.error('deleteCourse | error:', error);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence du cours.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Le cours spécifié n'existe pas.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression du cours.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        };
+
         res.status(500).json(false);
     }
 };
@@ -69,13 +93,19 @@ exports.createCard = async (req, res) => {
 
         console.log(`createCard | place, price : ${place}, ${price}`);
 
-        // Vérifier que les champs place et price sont fournis et sont des entiers positifs
+
+        if (!place) {
+            return res.status(400).json({ error: 'Nombre de places manquant.' });
+        }
+        if (!price) {
+            return res.status(401).json({ error: 'Prix manquant.' });
+        }
         if (!Number.isInteger(place) || place <= 0) {
-            return res.status(400).json({ error: 'Le champ place doit être un entier positif.' });
+            return res.status(402).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
         if (!Number.isInteger(price) || price <= 0) {
-            return res.status(400).json({ error: 'Le champ price doit être un entier positif.' });
+            return res.status(403).json({ error: 'Le champ price doit être un entier positif.' });
         }
 
         await adminService.createCard(place, price);
@@ -83,7 +113,20 @@ exports.createCard = async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error('createCard | error:', error);
-        res.status(500).json(false);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence de la carte.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "La carte existe déjà.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de l'insertion de la carte dans la base de données.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
 };
 
@@ -93,9 +136,11 @@ exports.deleteCard = async (req, res) => {
 
         console.log(`deleteCard | place : ${place}`);
 
-        // Vérifier que le champ place est fourni et est un entier positif
+        if (!place) {
+            return res.status(400).json({ error: 'Nombre de places manquant.' });
+        }
         if (!Number.isInteger(place) || place <= 0) {
-            return res.status(400).json({ error: 'Le champ place doit être un entier positif.' });
+            return res.status(401).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
         await adminService.deleteCard(place);
@@ -103,7 +148,20 @@ exports.deleteCard = async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error('deleteCard | error:', error);
-        res.status(500).json(false);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence de la carte.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case 'La carte spécifiée n\'existe pas.':
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression de la carte.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
 };
 
@@ -113,24 +171,17 @@ exports.modifyPlacePrice = async (req, res) => {
 
         console.log(`modifyPlacePrice | type, price : ${type}, ${price}`);
 
-        // Vérification des paramètres d'entrée
         if (!type || !price) {
             return res.status(400).json({ error: 'Les paramètres type et price sont requis.' });
         }
-
-        // Vérification du type de place
         if (type !== 'ticket' && type !== 'subscription' && !type.startsWith('card')) {
-            return res.status(400).json({ error: 'Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".' });
+            return res.status(401).json({ error: 'Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".' });
         }
-
-        // Vérification de la validité de cardN
         if (type.startsWith('card') && !/card\d+/.test(type)) {
-            return res.status(400).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
+            return res.status(402).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
         }
-
-        // Vérification du prix
         if (!Number.isInteger(price) || price <= 0) {
-            return res.status(400).json({ error: 'Le prix doit être un entier positif.' });
+            return res.status(403).json({ error: 'Le prix doit être un entier positif.' });
         }
 
         await adminService.modifyPlacePrice(type, price);
@@ -138,7 +189,29 @@ exports.modifyPlacePrice = async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error('modifyPlacePrice | error:', error);
-        res.status(500).json(false);
+
+        switch (error.message) {
+            case "Nombre d'utilisations de la carte non valide.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la vérification de l'existence da la carte.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "La carte avec le nombre d'utilisations spécifié n'existe pas.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification de la carte.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du prix.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            case "Le type de place n'est pas valide.":
+                res.status(506).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
 };
 
@@ -148,43 +221,49 @@ exports.createCourse = async (req, res) => {
 
         console.log(`createCourse | image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags : ${image}, ${title}, ${type}, ${duration}, ${startDate}, ${startTime}, ${location}, ${maxParticipants}, ${paymentType}, ${isEvening}, ${recurrence}, ${teachers}, ${links}, ${students}, ${tags}`);
 
-        // Vérifier si les champs obligatoires sont présents
         if (!image || !title || !type || !duration || !startDate || !startTime || !location || !maxParticipants || !paymentType || !teachers || !Array.isArray(teachers)) {
             return res.status(400).json({ error: 'Certains champs obligatoires sont manquants ou invalides.' });
         }
-
-        // Vérifier si les champs numériques sont valides
         if (isNaN(duration) || isNaN(maxParticipants) || isNaN(isEvening) || (recurrence && isNaN(recurrence))) {
-            return res.status(400).json({ error: 'Certains champs numériques sont invalides.' });
+            return res.status(401).json({ error: 'Certains champs numériques sont invalides.' });
         }
-
-        // Vérifier si la date est au format YYYY-MM-DD
         if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
-            return res.status(400).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
+            return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
         }
-
-        // Vérifier si l'heure est au format HH:mm
         if (!/^\d{2}:\d{2}$/.test(startTime)) {
-            return res.status(400).json({ error: "L'heure de début du cours doit être au format HH:mm." });
+            return res.status(403).json({ error: "L'heure de début du cours doit être au format HH:mm." });
         }
-
-        // Combiner startDate et startTime
         const startDateTime = new Date(`${startDate} ${startTime}`);
-
-        // Vérifier si la date et l'heure sont valides
         if (isNaN(startDateTime.getTime())) {
-            return res.status(400).json({ error: 'La date ou l\'heure de début du cours est invalide.' });
+            return res.status(404).json({ error: 'La date ou l\'heure de début du cours est invalide.' });
         }
 
-        // Appeler le service pour créer un cours
         const createdCourse = await adminService.createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags);
 
-        // Envoyer la réponse avec le cours créé
         res.json({ success: true, course: createdCourse });
 
     } catch (error) {
         console.error('createCourse | error:', error);
-        res.status(500).json({ error: 'Une erreur est survenue lors de la création du cours.' });
+
+        switch (error.message) {
+            case "Impossible de spécifier des enseignants pour un cours en soirée.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la création du cours.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du cours.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération des ID.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Les emails n'appartiennent à aucun utilisateur.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
 };
 
@@ -192,9 +271,14 @@ exports.createTeacher = async (req, res) => {
     try {
         const { firstname, surname, email, password, connectionMethod, photo, description } = req.body;
 
-        // Vérifier si tous les champs requis sont fournis
+        console.log(`createTeacher | firstname, surname, email, connectionMethod, photo, description : ${firstname}, ${surname}, ${email}, ${connectionMethod}, ${photo}, ${description}`);
+        
         if (!firstname || !surname || !email || !password || !connectionMethod) {
             return res.status(400).json({ error: 'Tous les champs sont obligatoires.' });
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          return res.status(401).json({ error: 'Email invalide.' });
         }
 
         const result = await adminService.createTeacher(firstname, surname, email, password, connectionMethod, photo, description);
@@ -202,24 +286,50 @@ exports.createTeacher = async (req, res) => {
         if (result) {
             // Supprimer le mot de passe de la réponse
             delete result.password;
-            res.status(201).json({ success: true, teacher: result });
+            res.status(200).json({ success: true, teacher: result });
         } else {
             res.status(500).json({ error: 'Impossible de créer le professeur.' });
         }
     } catch (error) {
         console.error('createTeacher | error:', error);
-        res.status(500).json({ error: 'Une erreur est survenue lors de la création du professeur.' });
+        
+        switch (error.message) {
+            case "Erreur lors de la création du professeur.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du professeur.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
+
     }
 };
 
 exports.getPayments = async (req, res) => {
-    const { startDate, endDate } = req.query;
-
     try {
+        const { startDate, endDate } = req.query;
+
+        console.log(`getPayments | startDate, endDate : ${startDate}, ${endDate}`);
+
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: 'Les paramètres startDate et endDate sont requis.' });
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+            return res.status(401).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
+        }
         const payments = await adminService.getPayments(startDate, endDate);
         res.json({ success: true, payments });
     } catch (error) {
         console.error('getPayments | error:', error);
-        res.status(500).json({ success: false, message: error.message });
+
+        switch (error.message) {
+            case "Erreur lors de la récupération des paiements.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
 };
