@@ -6,15 +6,35 @@ exports.generateResetToken = async (req, res) => {
   console.log(`generateResetToken | email: ${email}`);
 
   if (!email) {
-    return res.status(400).json({ success: false, message: 'Email not set' });
+    return res.status(400).json({ success: false, message: "Email manquant." });
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(401).json({ error: 'Email invalide.' });
   }
 
   try {
     const token = await userService.generateResetToken(email);
-    res.json({ success: true, message: 'Token generated and stored'});
+    res.status(200).json({ success: true, message: "Token généré et stocké." });
   } catch (error) {
     console.error('generateResetToken | error:', error);
-    res.status(500).json({ success: false, message: 'Error generating token' });
+
+    switch (error.message) {
+      case "Erreur lors de la vérification de l'existence du token.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de l'insertion du token dans la base de données.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la vérification de l'existence de l'utilisateur.":
+        res.status(503).json({ success: false, message: error.message });
+        break;
+      case "L'utilisateur n'existe pas.":
+        res.status(504).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
@@ -24,15 +44,37 @@ exports.resetPassword = async (req, res) => {
   console.log(`resetPassword | token: ${token}, newPassword: ${newPassword}`);
 
   if (!token || !newPassword) {
-    return res.status(400).json({ success: false, message: 'Token and newPassword are required' });
+    return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
+  }
+  if (newPassword.lengh < 8) {
+    return res.status(400).json({ success: false, message: 'Le mot de passe est trop court.' });
   }
 
   try {
     await userService.resetPassword(token, newPassword);
-    res.json({ success: true, message: 'Password updated successfully' });
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
   } catch (error) {
     console.error('resetPassword | error:', error);
-    res.status(500).json({ success: false, message: error.message });
+
+    switch (error.message) {
+      case "Token expiré.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Token introuvable.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la modification du mot de passe.":
+        res.status(503).json({ success: false, message: error.message });
+        break;
+      case "Le token n'existe pas.":
+        res.status(504).json({ success: false, message: error.message });
+        break;
+      case "Token invalide.":
+        res.status(505).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
@@ -41,23 +83,50 @@ exports.addLink = async (req, res) => {
 
   console.log(`addLink | userID, courseID, link: ${userID}, ${courseID}, ${link}`);
 
-  if (!link) {
-      return res.status(400).json({ success: false, message: 'Link is required' });
+  if (!courseID || !userID || !link) {
+    return res.status(400).json({ error: 'Le champs courseID, userID et link doivent être fourni.' });
   }
-
-  if (userID <= 0 || courseID <= 0) {
-      return res.status(400).json({ success: false, message: 'Invalid userID or courseID' });
+  if (!Number.isInteger(userID) || userID <= 0) {
+    return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
+  }
+  if (!Number.isInteger(courseID) || courseID <= 0) {
+    return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
   try {
-      const result = await userService.addLink(userID, courseID, link);
-      if (result.success === false) {
-          return res.status(400).json(result);
-      }
-      res.json({ success: true, message: 'Link added successfully' });
+    const result = await userService.addLink(userID, courseID, link);
+    if (result.success === false) {
+      return res.status(400).json(result);
+    }
+    res.status(200).json({ success: true, message: 'Link added successfully' });
   } catch (error) {
-      console.error('addLink | error:', error);
-      res.status(500).json({ success: false, message: 'Error executing query' });
+    console.error('addLink | error:', error);
+
+    switch (error.message) {
+      case "Erreur lors de la vérification du type de l'utilisateur.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la vérification de la présence de de l'élève dans le cours.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      case "Le cours n'existe pas.":
+        res.status(503).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de l'ajout du lien.":
+        res.status(504).json({ success: false, message: error.message });
+        break;
+      case "L'élève n'est pas dans le cours.":
+        res.status(505).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la vérification de la présence de de l'élève dans le cours.":
+        res.status(506).json({ success: false, message: error.message });
+        break;
+      case "Le professeur n'est pas dans le cours.":
+        res.status(507).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
@@ -66,16 +135,29 @@ exports.searchCoursesStudent = async (req, res) => {
 
   console.log(`searchCoursesStudent | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
 
-  if (userID <= 0) {
-    return res.status(400).json({ success: false, message: 'Invalid userID' });
+  if (!tags || !userID || !startDate) {
+    return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
+  }
+  if (!Number.isInteger(userID) || userID <= 0) {
+    return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+    return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
   }
 
   try {
     const courses = await userService.searchCoursesStudent(userID, startDate, tags);
-    res.json({ success: true, courses });
+    res.status(200).json({ success: true, courses });
   } catch (error) {
     console.error('searchCoursesStudent | error:', error);
-    res.status(500).json({ success: false, message: 'Error executing query' });
+
+    switch (error.message) {
+      case "Erreur lors de la recherche de cours.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
@@ -84,16 +166,31 @@ exports.searchCoursesTeacher = async (req, res) => {
 
   console.log(`searchCoursesTeacher | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
 
-  if (userID <= 0) {
-    return res.status(400).json({ success: false, message: 'Invalid userID' });
+  if (!tags || !userID || !startDate) {
+    return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
-
+  if (!Number.isInteger(userID) || userID <= 0) {
+    return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+    return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
+  }
   try {
     const courses = await userService.searchCoursesTeacher(userID, startDate, tags);
-    res.json({ success: true, courses });
+    res.status(200).json({ success: true, courses });
   } catch (error) {
     console.error('searchCoursesTeacher | error:', error);
-    res.status(500).json({ success: false, message: 'Error executing query' });
+
+    switch (error.message) {
+      case "Erreur lors de la recherche de cours.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Le cours n'a pas été trouvé":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
@@ -102,47 +199,79 @@ exports.searchCourse = async (req, res) => {
 
   console.log(`searchCourse | courseID: ${courseID}`);
 
-  if (courseID <= 0) {
-    return res.status(400).json({ success: false, message: 'Invalid courseID' });
+  if (courseID) {
+    return res.status(400).json({ error: 'Le champ courseID doit être fourni.' });
+  }
+  if (!Number.isInteger(userID) || userID <= 0) {
+    return res.status(401).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
   try {
     const courses = await userService.searchCourse(courseID);
-    res.json({ success: true, courses });
+    res.status(200).json({ success: true, courses });
   } catch (error) {
     console.error('courseID | error:', error);
-    res.status(500).json({ success: false, message: error.message });
+
+    switch (error.message) {
+      case "Erreur lors de la recherche de cours.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Le cours n'a pas été trouvé":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
   }
 };
 
 exports.getContactsStudents = async (req, res) => {
-    try {
-        const contacts = await userService.getContactsStudents();
-        res.json({ success: true, contacts: contacts });
-    } catch (error) {
-        console.error('getContactsStudents | error:', error);
-        res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des contacts.' });
+  try {
+    const contacts = await userService.getContactsStudents();
+    res.status(200).json({ success: true, contacts: contacts });
+  } catch (error) {
+    console.error('getContactsStudents | error:', error);
+
+    switch (error.message) {
+      case "Erreur lors de la récupération des contacts.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
     }
+  }
 };
 
 exports.getProfile = async (req, res) => {
-    try {
-        const { userID } = req.query;
-  
-        console.log("getProfile | userID : " + userID); 
+  try {
+    const { userID } = req.query;
 
-        // V�rifier si userID est n�gatif ou nul
-        if (!userID) {
-          res.json(false);
-          return console.error('getProfile | error: empty field');
-        }    
+    console.log("getProfile | userID : " + userID);
 
-        const result = await userService.getProfile(userID);
-
-        return res.status(200).json({success: true, student : result[0] });
-
-    } catch (error) {
-        console.error('getProfile | error:', error);
-        res.status(500).json(false);
+    
+    if (!userID) {
+      return res.status(200).json(false);
     }
+    if (!Number.isInteger(userID) || userID <= 0) {
+      return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
+    }
+
+    const result = await userService.getProfile(userID);
+
+    return res.status(200).json({ success: true, student: result[0] });
+
+  } catch (error) {
+    console.error('getProfile | error:', error);
+
+    switch (error.message) {
+      case "Erreur lors de la récupération du profil.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "L'utilisateur n'existe pas.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
+  }
 };

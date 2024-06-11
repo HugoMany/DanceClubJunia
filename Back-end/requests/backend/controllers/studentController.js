@@ -13,7 +13,7 @@ exports.addCredit = async (req, res) => {
         if (!credit) {
             return res.status(401).json({ success: false, message: 'Champ credit manquant.' });
         }
-        if (!Number.isInteger(credit) || credit <= 0 || ) {
+        if (!Number.isInteger(credit) || credit <= 0) {
             return res.status(402).json({ success: false, message: 'Le champ credit doit être un entier positif.' });
         }
         if (!Number.isInteger(studentID) || studentID <= 0) {

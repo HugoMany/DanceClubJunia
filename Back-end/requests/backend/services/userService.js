@@ -11,7 +11,7 @@ class UserService {
         return new Promise((resolve, reject) => {
           const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
           db.query(sql, [token], (err, result) => {
-            if (err) return reject(err);
+            if (err) return reject(new Error("Erreur lors de la vérification de l'existence du token."));
             resolve(result.length === 0);
           });
         });
@@ -21,7 +21,7 @@ class UserService {
         const sql = 'INSERT INTO ResetPassword (token, email, date) VALUES (?, ?, NOW())';
         return new Promise((resolve, reject) => {
           db.query(sql, [token, email], (err, result) => {
-            if (err) return reject(err);
+            if (err || result.affectedRows == 0) return reject(new Error("Erreur lors de l'insertion du token dans la base de données."));
             resolve(result);
           });
         });
@@ -31,29 +31,24 @@ class UserService {
         const sql = 'SELECT * FROM Users WHERE UserID = ?';
         return new Promise((resolve, reject) => {
           db.query(sql, [token, email], (err, result) => {
-            if (err) return reject(err);
-            console.log(result.length > 0);
+            if (err) return reject(new Error("Erreur lors de la vérification de l'existence de l'utilisateur."));
             resolve(result.length > 0);
           });
         });
       };
 
       (async () => {
-        try {
-          if(!userExist(email)){
-            return reject(new Error('User not found'));
-          }
-
-          let isUnique = await checkTokenUnique(token);
-          while (!isUnique) {
-            token = generateToken();
-            isUnique = await checkTokenUnique(token);
-          }
-          await insertToken(email, token);
-          resolve(token);
-        } catch (error) {
-          reject(error);
+        if (!userExist(email)) {
+          return reject(new Error("L'utilisateur n'existe pas."));
         }
+
+        let isUnique = await checkTokenUnique(token);
+        while (!isUnique) {
+          token = generateToken();
+          isUnique = await checkTokenUnique(token);
+        }
+        await insertToken(email, token);
+        resolve(token);
       })();
     });
   }
@@ -64,7 +59,8 @@ class UserService {
         return new Promise((resolve, reject) => {
           const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
           db.query(sql, [token], (err, result) => {
-            if (err) return reject(err);
+            if (err) return reject(new Error('Token expiré.'));
+            if (result.length == 0) return reject(new Error('Token introuvable.'));
             resolve(result[0]);
           });
         });
@@ -74,7 +70,7 @@ class UserService {
         const sql = 'UPDATE Users SET password = ? WHERE userID = ?';
         return new Promise((resolve, reject) => {
           db.query(sql, [newPassword, userID], (err, result) => {
-            if (err) return reject(err);
+            if (err || resolve.affectedRows == 0) return reject(new Error("Erreur lors de la modification du mot de passe."));
             resolve(result);
           });
         });
@@ -84,49 +80,45 @@ class UserService {
         const sql = 'DELETE FROM ResetPassword WHERE token = ?';
         return new Promise((resolve, reject) => {
           db.query(sql, [token], (err, result) => {
-            if (err) return reject(err);
+            if (err || result.affectedRows == 0) return reject(new Error("Le token n'existe pas."));
             resolve(result);
           });
         });
       };
 
       (async () => {
-        try {
-          const tokenInfo = await getTokenInfo(token);
-          if (!tokenInfo) {
-            return reject(new Error('Invalid token'));
-          }
-
-          const tokenDate = new Date(tokenInfo.date);
-          const currentDate = new Date();
-          const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
-
-          if (diffMinutes > 5) {
-            return reject(new Error('Token expired'));
-          }
-
-          await updatePassword(tokenInfo.userID, newPassword);
-          await deleteToken(token);
-          resolve();
-        } catch (error) {
-          reject(error);
+        const tokenInfo = await getTokenInfo(token);
+        if (!tokenInfo) {
+          return reject(new Error('Token invalide.'));
         }
+
+        const tokenDate = new Date(tokenInfo.date);
+        const currentDate = new Date();
+        const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
+
+        if (diffMinutes > 5) {
+          return reject(new Error('Token expiré.'));
+        }
+
+        await updatePassword(tokenInfo.userID, newPassword);
+        await deleteToken(token);
+        resolve();
       })();
     });
   }
 
   async addLink(userID, courseID, link) {
-    return new Promise(async (resolve, reject) =>  {
+    return new Promise(async (resolve, reject) => {
 
       const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
 
       db.query(checkUserTypeSql, [userID], (err, result) => {
         userID = userID.toString();
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la vérification du type de l'utilisateur."));
         }
+        if(result.length == 0) return reject(new Error("L'utilisateur n'existe pas."));
 
-        // Si c'est un étudiant
         if (result.length > 0 && result[0].userType == "student") {
           // SQL pour vérifier si l'étudiant est inscrit au cours
           const checkStudentSql = `
@@ -137,28 +129,28 @@ class UserService {
 
           db.query(checkStudentSql, [userID, courseID], (err, result) => {
             if (err) {
-              return reject(err);
+              return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
             }
+            if(result.length == 0) return reject(new Error("Le cours n'existe pas."));
 
             // Si l'étudiant est inscrit au cours
-            if (result.length > 0 && result[0].isParticipant) {
-              // SQL pour ajouter le lien à la colonne links
+            if (result[0].isParticipant) {
               const updateLinkSql = `
                 UPDATE Courses
                 SET links = JSON_ARRAY_APPEND(links, '$', ?)
                 WHERE courseID = ?
               `;
 
-                db.query(updateLinkSql, [link, courseID], (err, result) => {
-                  if (err) {
-                    return reject(err);
-                  }
-                  resolve(result);
-                });
-              
+              db.query(updateLinkSql, [link, courseID], (err, result) => {
+                if (err || result.affectedRows == 0) {
+                  return reject(new Error("Erreur lors de l'ajout du lien."));
+                }
+                resolve(result);
+              });
+
             }
             else {
-              return resolve({ success: false, message: 'Student not enrolled in course' });
+              return reject(new Error("L'élève n'est pas dans le cours."));
             }
           });
         } // on vérifie si c'est un professeur
@@ -172,8 +164,10 @@ class UserService {
 
           db.query(checkTeacherSql, [userID, courseID], (err, result) => {
             if (err) {
-              return reject(err);
+              return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
             }
+            if(result.length == 0) return reject(new Error("Le cours n'existe pas."));
+
 
             // Si le professeur est inscrit au cours
             if (result.length > 0 && result[0].isParticipant) {
@@ -184,16 +178,16 @@ class UserService {
                 WHERE courseID = ?
               `;
 
-                db.query(updateLinkSql, [link, courseID], (err, result) => {
-                  if (err) {
-                    return reject(err);
-                  }
-                  resolve(result);
-                });
-              
+              db.query(updateLinkSql, [link, courseID], (err, result) => {
+                if (err || result.affectedRows == 0) {
+                  return reject(new Error("Erreur lors de l'ajout du lien."));
+                }
+                resolve(result);
+              });
+
             }
             else {
-              return resolve({ success: false, message: 'Teacher not enrolled in course' });
+              return reject(new Error("Le professeur n'est pas dans le cours."));
             }
           });
         }
@@ -221,11 +215,13 @@ class UserService {
 
       // Afficher la requête SQL avec les valeurs substituées
       const formattedSql = db.format(sql, params);
-      console.log('searchCoursesStudent | Executing SQL query:', formattedSql);
-
+      
       db.query(sql, params, (err, results) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la recherche de cours."));
+        }
+        if(results.length == 0){
+          return reject(new Error("Le cours n'a pas été trouvé."));
         }
         resolve(results);
       });
@@ -256,7 +252,10 @@ class UserService {
 
       db.query(sql, params, (err, results) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la recherche de cours."));
+        }
+        if(results.length == 0){
+          return reject(new Error("Le cours n'a pas été trouvé."));
         }
         resolve(results);
       });
@@ -271,10 +270,10 @@ class UserService {
       `;
       db.query(sql, [courseID], (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(new Error("Erreur lors de la recherche de cours."));
         }
         if (result.length == 0) {
-          return reject(new Error('Course not found'));
+          return reject(new Error("Le cours n'a pas été trouvé."));
         }
         resolve(result);
       });
@@ -283,41 +282,41 @@ class UserService {
 
   async getContactsStudents() {
     return new Promise((resolve, reject) => {
-        const sql = `
+      const sql = `
             SELECT email
             FROM Users
             WHERE userType = 'student'
         `;
-    
-        db.query(sql, (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                const contacts = rows.map(row => row.email);
-                resolve(contacts);
-            }
-        });
-    });
-}
 
-async getProfile(userID) {
-  return new Promise((resolve, reject) => {
-    const sql = `
+      db.query(sql, (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération des contacts."));
+        } else {
+          const contacts = rows.map(row => row.email);
+          resolve(contacts);
+        }
+      });
+    });
+  }
+
+  async getProfile(userID) {
+    return new Promise((resolve, reject) => {
+      const sql = `
       SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
       WHERE userID = ?
     `;
 
-    db.query(sql, [userID], (err, result) => {
-      if (err) {
-        return reject(err);
-      }
-      if (result.length === 0) {
-        return reject(new Error('No user found with the given ID'));
-      }
-      resolve(result);
+      db.query(sql, [userID], (err, result) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération du profil."));
+        }
+        if (result.length === 0) {
+          return reject(new Error("L'utilisateur n'existe pas."));
+        }
+        resolve(result);
+      });
     });
-  });
-}
+  }
 
 }
 
