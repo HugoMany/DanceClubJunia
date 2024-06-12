@@ -15,7 +15,7 @@ function Header({ title }) {
             
             <div class="footer">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-                <div><a href='/'><button><span class="material-symbols-outlined">
+                <div><a href='/'><button ><span class="material-symbols-outlined">
                     home
                 </span></button></a></div>
 
