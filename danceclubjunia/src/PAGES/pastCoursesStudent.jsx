@@ -37,7 +37,7 @@ const PastCoursesStudent = ({ studentId }) => {
         };
 
         fetchPastCourses();
-    }, []);
+    }, [studentId]);
 
     // Filtrer les cours passés
     let pastCourses = [];
