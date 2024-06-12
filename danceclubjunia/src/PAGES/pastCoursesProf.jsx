@@ -25,7 +25,7 @@ const StudentPastCourses = ({ studentId }) => {
         };
 
         fetchPastCourses();
-    }, [studentId]);
+    },);
 
     // Filtrer les cours passés
     const pastCourses = courses.filter(course => new Date(course.endDate) < new Date());
