@@ -166,7 +166,7 @@ const PlanningProf = ({ teacherId }) => {
             setError(error);
         }
     };
-
+     
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading courses: {error.message}</div>;
     return (
