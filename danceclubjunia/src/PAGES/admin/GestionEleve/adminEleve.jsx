@@ -7,9 +7,26 @@ import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 
+import { Modal, Button } from '@mui/material';
+
 const AdminEleve = () => {
   const [allUserData, setAllUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  
+  const [openModif, setOpenModif] = useState(false);
+  const [openCreer, setOpenCreer] = useState(false);
+  const [openSupp, setOpenSupp] = useState(false);
+
+
+  const handleOpenModif = () => setOpenModif(true);
+  const handleCloseModif = () => setOpenModif(false);
+
+  const handleOpenCreer = () => setOpenCreer(true);
+  const handleCloseCreer = () => setOpenCreer(false);
+
+  const handleOpenSupp = () => setOpenSupp(true);
+  const handleCloseSupp = () => setOpenSupp(false);
 
   useEffect(() => {
     const fetchAllUser = async () => {
@@ -76,7 +93,44 @@ const AdminEleve = () => {
           rowsPerPageOptions={[5]}
           checkboxSelection
         />
-        </div>
+
+</div>
+
+      <Button variant="contained" color="primary" onClick={handleOpenModif}>
+        Modifier un eleve
+      </Button>
+      <Modal
+        open={openModif}
+        onClose={handleCloseModif}
+      >
+        <>
+        Modifier
+        </>
+      </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
+        Créer un eleve
+      </Button>
+      <Modal
+        open={openCreer}
+        onClose={handleCloseCreer}
+      >
+        <>
+        Créer
+        </>
+      </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+        Supprimer un eleve
+      </Button>
+      <Modal
+        open={openSupp}
+        onClose={handleCloseSupp}
+      >
+        <>
+      Supp
+        </>
+      </Modal>
     </div>
   );
 };

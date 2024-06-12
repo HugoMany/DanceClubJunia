@@ -5,9 +5,26 @@ import { URL_DB } from '../../../const/const';
 import { DataGrid } from '@mui/x-data-grid';
 import Loading from '../../../elements/loading';
 
+import { Modal, Button } from '@mui/material';
+
+
 const AdminProf = () => {
   const [allProfData, setAllProfData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [openModif, setOpenModif] = useState(false);
+  const [openCreer, setOpenCreer] = useState(false);
+  const [openSupp, setOpenSupp] = useState(false);
+
+
+  const handleOpenModif = () => setOpenModif(true);
+  const handleCloseModif = () => setOpenModif(false);
+
+  const handleOpenCreer = () => setOpenCreer(true);
+  const handleCloseCreer = () => setOpenCreer(false);
+
+  const handleOpenSupp = () => setOpenSupp(true);
+  const handleCloseSupp = () => setOpenSupp(false);
 
   useEffect(() => {
     const fetchAllProf = async () => {
@@ -75,7 +92,41 @@ const AdminProf = () => {
           checkboxSelection
         />)}
         </div>
-      
+      <Button variant="contained" color="primary" onClick={handleOpenModif}>
+        Modifier un prof
+      </Button>
+      <Modal
+        open={openModif}
+        onClose={handleCloseModif}
+      >
+        <>
+        Modifier
+        </>
+      </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
+        Créer un prof
+      </Button>
+      <Modal
+        open={openCreer}
+        onClose={handleCloseCreer}
+      >
+        <>
+        Créer
+        </>
+      </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+        Supprimer un prof
+      </Button>
+      <Modal
+        open={openSupp}
+        onClose={handleCloseSupp}
+      >
+        <>
+      Supp
+        </>
+      </Modal>
     </div>
   );
 };
