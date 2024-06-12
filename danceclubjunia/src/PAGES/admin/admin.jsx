@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import Header from '../../elements/header';
 import '../../css/admin.css';
+import { Button } from '@mui/material';
 function Admin() {
     return(
         <div>
         <div className='Admin'>
-                           <Header ></Header>
+                           <Header title={"Admin"} ></Header>
 
             <h1>Admin</h1>
-            <button ><a href='/admin/prof'>Gestion professeur</a><br></br></button>
-            <button><a href='/admin/cours'>Gestion cours</a><br></br></button>
-            <button><a href='/admin/eleve'>Gestion Eleve</a><br></br></button>
-            <button><a href='/admin/eleve'>Gestion Credit</a></button>
+            <hr />
+            <Button variant="contained" color="primary"><a href='/admin/prof'>Gestion professeur</a><br></br></Button>
+            <Button variant="contained" color="primary"><a href='/admin/cours'>Gestion cours</a><br></br></Button>
+            <Button variant="contained" color="primary"><a href='/admin/eleve'>Gestion Eleve</a><br></br></Button>
+            <Button variant="contained" color="primary"><a href='/admin/credit'>Gestion Credit</a></Button>
 
 
         </div>

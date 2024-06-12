@@ -149,7 +149,9 @@ const AdminCours = () => {
 
 
 
-
+      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
+        Créer un cours
+      </Button>
 
       
       <Modal
@@ -159,9 +161,7 @@ const AdminCours = () => {
         <ModifCours idCours={3} />
       </Modal>
 
-      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
-        Créer un cours
-      </Button>
+    
       <Modal
         open={openCreer}
         onClose={handleCloseCreer}
