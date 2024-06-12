@@ -1,17 +1,26 @@
 import { URL_DB } from "../../../const/const";
+function SupprimerProf({ idProf }) {
 
-const profId = 'votre_id_de_prof';
-
-fetch(URL_DB+`admin/deleteTeacher?id=${profId}`, {
-    method: 'DELETE',
-})
-    .then(response => {
-        if (response.ok) {
-            console.log('Le prof a été supprimé avec succès.');
-        } else {
-            console.error('Une erreur s\'est produite lors de la suppression du prof.');
+    const fetchProf = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            console.log(token)
+            await fetch(URL_DB + 'admin/deleteTeacher', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body:
+                {
+                    teacherID: idProf
+                }
+            });
+        } catch (error) {
+            console.error('Erreur lors de la supprétion du prof', error);
         }
-    })
-    .catch(error => {
-        console.error('Une erreur s\'est produite lors de la suppression du prof :', error);
-    });
+    };
+    fetchProf();
+}
+
+export default SupprimerProf;
+
