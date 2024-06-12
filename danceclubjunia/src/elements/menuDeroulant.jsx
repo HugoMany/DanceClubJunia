@@ -56,39 +56,28 @@ const MenuDeroulant = () => {
       >
         
         {IS_ADMIN ? (
-                    <>
-                        <MenuItem onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
-
-                    </>
-
-                ) : (
-                    <>
-                        {/* nothing*/}
-                    </>
-                )}
-         {IS_CONNECT ? (
-                    <>
-                    <MenuItem onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>
-                    <MenuItem onClick={handleClose} component={Link} to="/connexion">Logout</MenuItem>
-
-                    </>
-
-                ) : (
-                    <>
-                    <MenuItem onClick={handleClose} component={Link} to="/connexion">Connexion</MenuItem>
-
-                    </>
-                )}
-            {IS_PROF ? (
-            <>
-            <MenuItem onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>
-
-            </>
-
+            [
+                <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
+            ]
         ) : (
-            <>
-
-            </>
+            []
+        )}
+         {IS_CONNECT ? (
+            [
+                <MenuItem key="profile" onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>,
+                <MenuItem key="logout" onClick={handleClose} component={Link} to="/connexion">Logout</MenuItem>
+            ]
+        ) : (
+            [
+                <MenuItem key="connexion" onClick={handleClose} component={Link} to="/connexion">Connexion</MenuItem>
+            ]
+        )}
+        {IS_PROF ? (
+            [
+                <MenuItem key="prof" onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>
+            ]
+        ) : (
+            []
         )}
       </Menu>
     </div>
