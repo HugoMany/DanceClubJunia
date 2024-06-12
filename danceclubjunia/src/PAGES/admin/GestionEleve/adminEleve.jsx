@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../../../elements/header';
+import ModifEleve from './modifEleve';
 
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
