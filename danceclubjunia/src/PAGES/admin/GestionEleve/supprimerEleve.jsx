@@ -1,17 +1,26 @@
 import { URL_DB } from "../../../const/const";
+function SupprimerEleve({ idEleve }) {
 
-const studentId = 'votre_id_de_student';
-
-fetch(URL_DB+`admin/deleteStudent?id=${studentId}`, {
-    method: 'DELETE',
-})
-    .then(response => {
-        if (response.ok) {
-            console.log('Le student a été supprimé avec succès.');
-        } else {
-            console.error('Une erreur s\'est produite lors de la suppression du student.');
+    const fetchEleve = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            console.log(token)
+            await fetch(URL_DB + 'admin/deleteStudent', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body:
+                {
+                    studentID: idEleve
+                }
+            });
+        } catch (error) {
+            console.error('Erreur lors de la supprétion du student', error);
         }
-    })
-    .catch(error => {
-        console.error('Une erreur s\'est produite lors de la suppression du student :', error);
-    });
+    };
+    fetchEleve();
+}
+
+export default SupprimerEleve;
+
