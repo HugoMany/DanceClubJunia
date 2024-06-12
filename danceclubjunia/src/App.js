@@ -32,7 +32,7 @@ import AjoutCredits from './PAGES/ajoutCredits';
 import Prof from './PAGES/prof';
 import Appel from './PAGES/appel';
 import CreerProf from './PAGES/admin/GestionProf/creerProf';
-
+import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 function App() {
   return (
     <div className="App">
@@ -70,6 +70,7 @@ function App() {
 
           <Route path="/appel" element={<Appel/>}/>
           <Route path="/creerProf" element={<CreerProf/>}/>
+          <Route path="/creditEleve" element={<CreditEleve/>}/>
         </Routes>
       </Router>
     </div>
