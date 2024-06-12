@@ -45,9 +45,9 @@ function Connexion() {
                 console.log(`${key}: ${value} (Type: ${typeof value})`);
             }
 
-            const success = (data.success === true || data.success === 'true');
+            //const success = (data.success === true || data.success === 'true');
 
-            if (success) {
+            if (data.success === true) {
                 console.log('Condition is true');
                 if (data.token) {
                     localStorage.setItem('token', data.token);
