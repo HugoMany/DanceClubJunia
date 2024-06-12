@@ -16,14 +16,21 @@ const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [openModifCours, setOpenModifCours] = useState(false);
-  const [openCreerCours, setOpenCreerCours] = useState(false);
 
-  const handleOpenModifCours = () => setOpenModifCours(true);
-  const handleCloseModifCours = () => setOpenModifCours(false);
 
-  const handleOpenCreerCours = () => setOpenCreerCours(true);
-  const handleCloseCreerCours = () => setOpenCreerCours(false);
+  const [openModif, setOpenModif] = useState(false);
+  const [openCreer, setOpenCreer] = useState(false);
+  const [openSupp, setOpenSupp] = useState(false);
+
+
+  const handleOpenModif = () => setOpenModif(true);
+  const handleCloseModif = () => setOpenModif(false);
+
+  const handleOpenCreer = () => setOpenCreer(true);
+  const handleCloseCreer = () => setOpenCreer(false);
+
+  const handleOpenSupp = () => setOpenSupp(true);
+  const handleCloseSupp = () => setOpenSupp(false);
 
 
 
@@ -101,25 +108,45 @@ const AdminCours = () => {
         </div>
         <Header title="Admin Cours"></Header>
       {/* <h1>Admin Cours</h1> */}
-      <Button variant="contained" color="primary" onClick={handleOpenModifCours}>
+
+
+
+
+
+
+      <Button variant="contained" color="primary" onClick={handleOpenModif}>
         Modifier le cours
       </Button>
       <Modal
-        open={openModifCours}
-        onClose={handleCloseModifCours}
+        open={openModif}
+        onClose={handleCloseModif}
       >
         <ModifCours idCours={3} />
       </Modal>
 
-      <Button variant="contained" color="primary" onClick={handleOpenCreerCours}>
+      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
         Créer un cours
       </Button>
       <Modal
-        open={openCreerCours}
-        onClose={handleCloseCreerCours}
+        open={openCreer}
+        onClose={handleCloseCreer}
       >
         <CreerCours />
       </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+        Supprimer un cours
+      </Button>
+      <Modal
+        open={openSupp}
+        onClose={handleCloseSupp}
+      >
+        <>
+      Supp cours à FAIRE
+        </>
+      </Modal>
+
+      
 
     </div>
   );

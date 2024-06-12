@@ -1,40 +1,48 @@
 import React, { useState, useEffect } from 'react';
 
-const PlanningEleve = ({ studentId }) => {
-    const [courses, setCourses] = useState([]);
-
+const PlanningEleve = ({ studentId }) => {const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     useEffect(() => {
-        const fetchUpcomingCourses = async () => {
-            try {
-                const response = await fetch(`http://example.com/api/courses/${studentId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+        const fetchCourses = async () => {
+            try {const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}/api/student/getCourses?studentID=${studentId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setCourses(data);
+                    const now = new Date();
+                    const upcomingCourses = data.filter(course => new Date(course.endDate) > now);
+                    setCourses(upcomingCourses);
                 } else {
-                    console.error('Erreur lors de la récupération des cours à venir');
+                    throw new Error('Error fetching courses');
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des cours à venir', error);
+                console.error('Error fetching courses:', error);
+                setError(error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchUpcomingCourses();
+        fetchCourses();
     }, [studentId]);
 
     // Filtrer les cours à venir
-    const upcomingCourses = courses.filter(course => new Date(course.startDate) > new Date());
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading courses: {error.message}</div>;
 
     return (
         <div>
             <h2>Upcoming Courses</h2>
             <ul>
-                {upcomingCourses.map(course => (
+                {courses.map(course => (
                     <li key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
