@@ -5,6 +5,7 @@ const courseId = 'votre_id_de_cours';
 fetch(URL_DB+`admin/deleteCourse?id=${courseId}`, {
     method: 'DELETE',
 })
+
     .then(response => {
         if (response.ok) {
             console.log('Le cours a été supprimé avec succès.');
