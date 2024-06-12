@@ -4,34 +4,57 @@ import Header from '../elements/header';
 import {URL_DB} from '../const/const';
 
 const CoursDynamique = () => {
-  const { courseId,idPerson } = useParams();
+   const { courseId } = useParams();
+   console.log(courseId+'courseId1');
+   const [course, setCourse] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
+   useEffect(() => {
+       const fetchCourses = async () => {
+           try {
+           const token = localStorage.getItem('token');
+           if (!token) return { valid: false };
+           
+           const response = await fetch(`${URL_DB}/api/guest/getAllCourses`, {
+               method: 'GET',
+               headers: {
+                   'Authorization': `Bearer ${token}`,
+               },
+               });
 
-  const [data,setData] = useState([]);
+               if (response.ok) {
+                   const data = await response.json();
+                   const filteredCourse = data.courses.find(course => course.courseID === courseId);
+                   setCourse(filteredCourse);
+               } else {
+                   throw new Error('Error fetching courses');
+               }
+           } catch (error) {
+               console.error('Error fetching courses:', error);
+               setError(error);
+           } finally {
+               setLoading(false);
+           }
+       };
 
-    useEffect(() => {
-        fetch( URL_DB+`/courses/${courseId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                setData(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    },);
+       fetchCourses();
+   }, );
+        
+    console.log(courseId+'ID cours');
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading courses: {error.message}</div>;
 
   return (
+    
     <div>
       <Header></Header>
-      <h1>Dynamic Course Page</h1>
-      <p>Course ID: {courseId}</p>
-      <p>Type de danse: {data.type}</p>
-      <p>Person ID: {idPerson}</p>
+      <p>Type: {course.type}</p>
+      <p>Start Date: {new Date(course.startDate).toDateString()}</p>
+      <p>Start Time: {course.startTime}</p>
+      <p>Location: {course.location}</p>
+      <p>Duration: {course.duration}</p>
+      <p>Teachers: {course.teachers.join(', ')}</p>
       {/* Render course details based on the fetched data */}
     </div>
   );
