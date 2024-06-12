@@ -33,13 +33,8 @@ const ProfPastCourses = ({ teacherId }) => {
             }
         };
 
-<<<<<<< Updated upstream
-        fetchPastCourses();
-    },);
-=======
         fetchCourses();
-    }, [teacherId]);
->>>>>>> Stashed changes
+    },[teacherId]);
 
     // Filtrer les cours passés
     
