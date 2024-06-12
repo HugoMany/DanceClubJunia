@@ -2,7 +2,7 @@ import { URL_DB } from "../../../const/const";
 
 const profId = 'votre_id_de_prof';
 
-fetch(URL_DB+`admin/deleteProf?id=${profId}`, {
+fetch(URL_DB+`admin/deleteTeacher?id=${profId}`, {
     method: 'DELETE',
 })
     .then(response => {
