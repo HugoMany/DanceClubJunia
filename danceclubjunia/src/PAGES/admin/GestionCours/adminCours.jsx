@@ -132,7 +132,7 @@ const AdminCours = () => {
                 // console.log("idCoursSelected"+idCoursSelected);
           
                 return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
-                Supprimer le cours
+                Supprimer le cours N°{params.row.courseID}
               </Button>;
               }
             }

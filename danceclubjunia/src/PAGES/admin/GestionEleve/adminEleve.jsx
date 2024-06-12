@@ -2,7 +2,6 @@ import React from 'react';
 import Header from '../../../elements/header';
 import ModifEleve from './modifEleve';
 
-import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
@@ -89,6 +88,40 @@ const AdminEleve = () => {
             { field: 'credit', headerName: 'Credit', width: 150 },
             { field: 'ticket', headerName: 'Ticket', width: 150 },
             { field: 'photo', headerName: 'Photo', width: 150 },
+            {
+              field: 'buttonModifier',
+              headerName: 'Modifier',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.userID}`);
+                };
+          
+                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                Modifier l'eleve N°{params.row.userID}
+              </Button>;
+              }
+            },
+            {
+              field: 'buttonDelete',
+              headerName: 'Delete',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.userID}`);
+                };
+                // idCoursSelected = params.row.courseID;
+                // console.log("idCoursSelected"+idCoursSelected);
+          
+                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                Supprimer l'eleve N°{params.row.userID}
+              </Button>;
+              }
+            }
           ]}
           pageSize={5}
           rowsPerPageOptions={[5]}
@@ -97,9 +130,7 @@ const AdminEleve = () => {
 
 </div>
 
-      <Button variant="contained" color="primary" onClick={handleOpenModif}>
-        Modifier un eleve
-      </Button>
+
       <Modal
         open={openModif}
         onClose={handleCloseModif}
@@ -121,9 +152,6 @@ const AdminEleve = () => {
         </>
       </Modal>
 
-      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
-        Supprimer un eleve
-      </Button>
       <Modal
         open={openSupp}
         onClose={handleCloseSupp}
