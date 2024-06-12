@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
+import { idID } from '@mui/material/locale';
 
 const showLoading = () => {
     // Placeholder for actual showLoading implementation
@@ -88,8 +89,9 @@ const ModifCours = ({ idCours }) => {
     }
 
     return (
-        <div>
-
+        <div className='ModalAdminGrid'>
+            <div>
+            <h1>Modifier le cours N°{idCours}</h1>
             <form onSubmit={handleSubmit}>
                 <label>
                     Type de danse:
@@ -98,6 +100,7 @@ const ModifCours = ({ idCours }) => {
                 {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
                 <button type="submit">Mettre à jour</button>
             </form>
+            </div>
         </div>
     );
 };

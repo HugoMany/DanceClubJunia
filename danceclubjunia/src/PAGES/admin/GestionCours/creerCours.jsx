@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../../elements/header';
-import URL_DB from '../../../const/const';
+import {URL_DB} from '../../../const/const';
 
 function CreerCours() {
     const [image, setImage] = useState('');
@@ -69,7 +69,7 @@ function CreerCours() {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch( URL_DB+'course', {
+        fetch( URL_DB+'admin/createCourse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ function CreerCours() {
 
     return (
         <form onSubmit={handleSubmit} className='Form'>
-            <Header></Header>
+            {/* <Header></Header> */}
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 

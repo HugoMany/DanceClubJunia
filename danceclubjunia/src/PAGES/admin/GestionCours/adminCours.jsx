@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../../../elements/header';
 import ModifCours from './modifCours';
+import CreerCours from './creerCours';
 
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -8,9 +9,31 @@ import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 
+import { Modal, Button } from '@mui/material';
+import SupprimerCours from './suppirmerCours';
+
+
 const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+
+
+  const [openModif, setOpenModif] = useState(false);
+  const [openCreer, setOpenCreer] = useState(false);
+  const [openSupp, setOpenSupp] = useState(false);
+
+
+  const handleOpenModif = () => setOpenModif(true);
+  const handleCloseModif = () => setOpenModif(false);
+
+  const handleOpenCreer = () => setOpenCreer(true);
+  const handleCloseCreer = () => setOpenCreer(false);
+
+  const handleOpenSupp = () => setOpenSupp(true);
+  const handleCloseSupp = () => setOpenSupp(false);
+
+
 
   useEffect(() => {
     const fetchAllCourses = async () => {
@@ -47,6 +70,7 @@ const AdminCours = () => {
    
     console.log(allCoursesData);
 }, []);
+
   return (
     <div>
 
@@ -54,6 +78,7 @@ const AdminCours = () => {
       
        
       <div className='DataAdmin'>
+        
       {allCoursesData && (
 
         <DataGrid
@@ -77,6 +102,40 @@ const AdminCours = () => {
             { field: 'links', headerName: 'Ticket', width: 150 },
             { field: 'studentsID', headerName: 'Ticket', width: 150 },
             { field: 'tags', headerName: 'Photo', width: 150 },
+            {
+              field: 'buttonModifier',
+              headerName: 'Modifier',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.courseID}`);
+                };
+          
+                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                Modifier le cours N°{params.row.courseID}
+              </Button>;
+              }
+            },
+            {
+              field: 'buttonDelete',
+              headerName: 'Delete',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.courseID}`);
+                };
+                // idCoursSelected = params.row.courseID;
+                // console.log("idCoursSelected"+idCoursSelected);
+          
+                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                Supprimer le cours N°{params.row.courseID}
+              </Button>;
+              }
+            }
             
           ]}
           pageSize={5}
@@ -86,7 +145,41 @@ const AdminCours = () => {
         </div>
         <Header title="Admin Cours"></Header>
       {/* <h1>Admin Cours</h1> */}
-      <ModifCours idCours={3}></ModifCours>
+
+
+
+
+      <Button variant="contained" color="primary" onClick={handleOpenCreer}>
+        Créer un cours
+      </Button>
+
+      
+      <Modal
+        open={openModif}
+        onClose={handleCloseModif}
+      >
+        <ModifCours idCours={3} />
+      </Modal>
+
+    
+      <Modal
+        open={openCreer}
+        onClose={handleCloseCreer}
+      >
+        <CreerCours />
+      </Modal>
+
+   
+      <Modal
+        open={openSupp}
+        onClose={handleCloseSupp}
+      >
+       <SupprimerCours idCours={3}>
+
+       </SupprimerCours>
+      </Modal>
+
+      
 
     </div>
   );

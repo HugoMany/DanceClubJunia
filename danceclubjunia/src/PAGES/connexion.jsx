@@ -27,6 +27,7 @@ function Connexion() {
 
         console.log('Form Data:', json);
 
+        console.log('Starting fetch...');
         fetch(URL_DB + 'guest/login', {
             method: 'POST',
             headers: {
@@ -34,19 +35,36 @@ function Connexion() {
             },
             body: JSON.stringify(json)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('HTTP Status:', response.status);
+            return response.json();
+        })
         .then(data => {
-            console.log('Success:', data);
-            if (data.token) {
-                localStorage.setItem('token', data.token);
+            console.log('Response JSON:', data);
+            for (const [key, value] of Object.entries(data)) {
+                console.log(`${key}: ${value} (Type: ${typeof value})`);
             }
-            window.location.href = '/';
-            return data;
+
+            //const success = (data.success === true || data.success === 'true');
+
+            if (data.success === true) {
+                console.log('Condition is true');
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    console.log('Token stored in localStorage');
+                } else {
+                    console.log('Token is missing');
+                }
+                console.log('ok');
+                window.location.href = '/'; // Décommentez cette ligne
+            } else {
+                console.log('pas ok');
+                window.location.href = '/connexion'; // Décommentez cette ligne
+            }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
         });
-        
     };
 
     return (

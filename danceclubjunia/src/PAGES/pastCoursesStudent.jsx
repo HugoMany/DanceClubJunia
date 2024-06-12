@@ -2,46 +2,55 @@ import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
 
-
-const CoursesList = () => {
-    const [cours, setCours] = useState([]);
+const PastCoursesStudent = ({ studentId }) => {
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchCours = async () => {
+        const fetchPastCourses = async () => {
             try {
-                const response = await fetch(URL_DB + 'guest/getAllCourses', {
+                //Recup TOKEN dans le local storage
+                const token = localStorage.getItem('token');
+                if (!token) return { valid: false };
+
+                const response = await fetch(`${URL_DB}student/getCourses?studentID=${studentId}`, {
                     method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                  },
+                    
+                    
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    // Filtrer les cours pour exclure ceux dont la date de début est passée
-                    const currentDate = new Date();
-                    const filteredCourses = data.courses.filter(course => new Date(course.startDate) > currentDate);
-                    // Trier les cours restants par date de début
-                    const sortedCourses = filteredCourses.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-                    setCours(sortedCourses);
-                    console.log(sortedCourses);
+                    setCourses(data.courses);
                     setLoading(false);
-
+                    console.log(data.courses);
                 } else {
-                    console.error('Erreur lors de la récupération des cours');
+                    console.error('Erreur lors de la récupération des cours terminés');
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des cours', error);
+                console.error('Erreur lors de la récupération des cours terminés', error);
             }
         };
 
-        fetchCours();
-    }, []);
-    if(loading){
-        return <div><Loading></Loading></div>
+        fetchPastCourses();
+    }, [studentId]);
+
+    // Filtrer les cours passés
+    let pastCourses = [];
+    if(Array.isArray(courses)) {
+        pastCourses = courses.filter(course => new Date(course.startDate) < new Date());
     }
+
+    if (loading) {
+        return <Loading></Loading>;
+      }
     return (
         <div>
-            <div>
-                {cours.map(course => (
+            {pastCourses.map(course => (
                     <a href={'/cours/' + course.courseId + '/1/'} className='courseA'>
                     <div class="coursesCase" key={course.courseId}>
                         <div className='divImageCoursSuivanteHomePage'>
@@ -60,9 +69,9 @@ const CoursesList = () => {
                     </div>
                     </a>
                 ))}
-            </div>
         </div>
     );
 };
 
-export default CoursesList;
+
+export default PastCoursesStudent;

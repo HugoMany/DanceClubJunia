@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
-import PastCoursesEleve from './studentPastCourses';
 import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
-import StudentPastCourses from './studentPastCourses';
+import PastCoursesStudent from './pastCoursesStudent';
+// import StudentPastCourses from './studentPastCourses';
 
 const ID_CONST_STUDENT = 10;
 
@@ -24,7 +24,7 @@ const Profil = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return { valid: false };
 
-                const response = await fetch(URL_DB + 'teacher/getStudent?studentID=' + ID_CONST_STUDENT, {
+                const response = await fetch(URL_DB + 'user/getProfile?userID=' + ID_CONST_STUDENT, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -34,7 +34,8 @@ const Profil = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setUserData(data);
-                    setLoading(false);
+                    fetchPaymentHistory();
+
 
                 } else {
                     console.error('Erreur lors de la récupération des info du compte');
@@ -73,7 +74,6 @@ const Profil = () => {
         };
 
         fetchUser();
-        fetchPaymentHistory();
         
     }, []);
 
@@ -108,13 +108,13 @@ if (loading) {
             <br></br>
         </div>
     ))}
-    </div>
+    '</div>
 </div>
 
     <div >
       <h2>Vos anciens cours</h2>
       <div className='studentPastCourses'>
-      <StudentPastCourses studentId={10}></StudentPastCourses>
+      <PastCoursesStudent studentId={10}></PastCoursesStudent>
       </div>
     </div>  
 

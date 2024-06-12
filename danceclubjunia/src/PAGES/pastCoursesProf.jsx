@@ -1,40 +1,50 @@
 import React, { useState, useEffect } from 'react';
 
-const StudentPastCourses = ({ studentId }) => {
+const ProfPastCourses = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
-
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     useEffect(() => {
-        const fetchPastCourses = async () => {
-            try {
-                const response = await fetch(`http://example.com/api/courses/${studentId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+        const fetchCourses = async () => {
+            try {const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            
+            const response = await fetch(`${URL}api/user/searchCoursesTeacher?userID=${teacherId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setCourses(data);
+                    const now = new Date();
+                    const pastCourses = data.filter(course => new Date(course.endDate) < now);
+                setCourses(pastCourses);
+                    
                 } else {
-                    console.error('Erreur lors de la récupération des cours terminés');
+                    throw new Error('Error fetching courses');
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des cours terminés', error);
+                console.error('Error fetching courses:', error);
+                setError(error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchPastCourses();
-    }, [studentId]);
+        fetchCourses();
+    },[teacherId]);
 
     // Filtrer les cours passés
-    const pastCourses = courses.filter(course => new Date(course.endDate) < new Date());
-
+    
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading courses: {error.message}</div>;
     return (
         <div>
             <h2>Past Courses</h2>
             <ul>
-                {pastCourses.map(course => (
+                {courses.map(course => (
                     <li key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
@@ -52,7 +62,8 @@ const StudentPastCourses = ({ studentId }) => {
 };
 
 const PastCoursesProf = () => {
-    return <StudentPastCourses studentId="Student 3" />;
+    
+    return <ProfPastCourses teacherId="teacher 3" />;
 };
 
 export default PastCoursesProf;
