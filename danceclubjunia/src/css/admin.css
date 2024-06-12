@@ -43,7 +43,7 @@ html body .Admin {
     background: white;
     height: 50vh;
     width: 75vw;
-    margin: 25vh 12.5vw;
+    /* margin: 25vh 12.5vw; */
     padding: 20px;
     flex-direction: column;
     align-content: center;
