@@ -3,15 +3,14 @@ import React, { useState } from 'react';
 const API_URL = 'http://90.110.227.143/api/teacher/searchStudent';
 
 const GetStudentID = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [userID, setUserID] = useState(null);
 
   const searchStudent = async () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) return { valid: false };
-      const response = await fetch(`${API_URL}?firstname=${firstName}&surname=${lastName}`, {
+      const response = await fetch(`${API_URL}?email=${email}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -33,15 +32,9 @@ const GetStudentID = () => {
     <div>
       <input
         type="text"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <button onClick={searchStudent}>Search</button>
       {userID && <p>User ID: {userID}</p>}

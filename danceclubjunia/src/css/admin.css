@@ -13,3 +13,17 @@
     width: 100%;
     margin-top: 3vh;
 }
+html body .Admin {
+    border: 0px;
+    border-radius: 20px;
+    background: white;
+    display: flex;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    height: 50vh;
+    /* margin: auto; */
+    align-items: center;
+    padding-bottom: 74px;
+    flex-direction: column;
+}
