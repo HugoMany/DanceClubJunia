@@ -69,7 +69,7 @@ function CreerCours() {
         console.log('Form Data:', json);
 
         // Add logic to save course data
-        fetch( URL_DB+'course', {
+        fetch( URL_DB+'admin/createCourse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
