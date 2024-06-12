@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../../../elements/header';
 import ModifCours from './modifCours';
+import CreerCours from './creerCours';
 
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -87,6 +88,7 @@ const AdminCours = () => {
         <Header title="Admin Cours"></Header>
       {/* <h1>Admin Cours</h1> */}
       <ModifCours idCours={3}></ModifCours>
+      <CreerCours></CreerCours>
 
     </div>
   );

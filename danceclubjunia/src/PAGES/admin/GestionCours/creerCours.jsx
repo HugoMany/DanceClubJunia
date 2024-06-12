@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../../elements/header';
-import URL_DB from '../../../const/const';
+import {URL_DB} from '../../../const/const';
 
 function CreerCours() {
     const [image, setImage] = useState('');

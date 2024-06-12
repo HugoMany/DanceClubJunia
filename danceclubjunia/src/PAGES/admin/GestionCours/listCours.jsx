@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import URL_DB from '../../../const/const';
+import {URL_DB} from '../../../const/const';
 
 const ListCours = () => {
     const [cours, setCours] = useState([]);
