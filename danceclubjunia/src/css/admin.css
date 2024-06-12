@@ -27,3 +27,18 @@ html body .Admin {
     padding-bottom: 74px;
     flex-direction: column;
 }
+.ModalAdminGrid {
+    /* height: 100vh;
+    width: 100vw; */
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.ModalAdminGrid>div {
+    display: flex;
+    border: 0px;
+    border-radius: 20px;
+    background: white;
+}

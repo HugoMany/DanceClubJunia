@@ -69,6 +69,7 @@ const AdminCours = () => {
    
     console.log(allCoursesData);
 }, []);
+
   return (
     <div>
 
@@ -76,6 +77,7 @@ const AdminCours = () => {
       
        
       <div className='DataAdmin'>
+        
       {allCoursesData && (
 
         <DataGrid
@@ -99,6 +101,38 @@ const AdminCours = () => {
             { field: 'links', headerName: 'Ticket', width: 150 },
             { field: 'studentsID', headerName: 'Ticket', width: 150 },
             { field: 'tags', headerName: 'Photo', width: 150 },
+            {
+              field: 'buttonModifier',
+              headerName: 'Modifier',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.courseID}`);
+                };
+          
+                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                Modifier le cours N°{params.row.courseID}
+              </Button>;
+              }
+            },
+            {
+              field: 'buttonDelete',
+              headerName: 'Delete',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.courseID}`);
+                };
+          
+                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                Supprimer le cours
+              </Button>;
+              }
+            }
             
           ]}
           pageSize={5}
@@ -114,9 +148,7 @@ const AdminCours = () => {
 
 
 
-      <Button variant="contained" color="primary" onClick={handleOpenModif}>
-        Modifier le cours
-      </Button>
+      
       <Modal
         open={openModif}
         onClose={handleCloseModif}
@@ -134,9 +166,7 @@ const AdminCours = () => {
         <CreerCours />
       </Modal>
 
-      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
-        Supprimer un cours
-      </Button>
+   
       <Modal
         open={openSupp}
         onClose={handleCloseSupp}
