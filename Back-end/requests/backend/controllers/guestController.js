@@ -6,7 +6,7 @@ exports.getAllCourses = async (req, res) => {
     try {
         console.log(`getAllCourses`);
         const courses = await guestService.getAllCourses();
-        res.json({ success: true, courses: courses });
+        res.status(200).json({ success: true, courses: courses });
     } catch (error) {
         console.error('getAllCourses | error:', error);
 
@@ -48,7 +48,7 @@ exports.login = async (req, res) => {
         });
 
         res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'strict' }); //  secure: true  si https
-        res.json({ success: true, userID: user[0].userID, userType: user[0].userType, token: token });
+        res.status(200).json({ success: true, userID: user[0].userID, userType: user[0].userType, token: token });
     } catch (error) {
         console.error('login | error:', error);
 
@@ -82,7 +82,7 @@ exports.registerStudent = async (req, res) => {
 
     try {
         const studentID = await guestService.registerStudent(firstname, surname, email, password, connectionMethod, photo);
-        res.json({ success: true, studentID });
+        res.status(200).json({ success: true, studentID });
     } catch (error) {
         console.error('registerStudent | error:', error);
 
@@ -115,7 +115,7 @@ exports.getCoursesByPeriod = async (req, res) => {
     try {
         const courses = await guestService.getCoursesByPeriod(startDate, endDate);
 
-        res.json({ success: true, courses });
+        res.status(200).json({ success: true, courses });
     } catch (error) {
         console.error('getCoursesByPeriod | error:', error);
 
@@ -135,7 +135,7 @@ exports.getCoursesByPeriod = async (req, res) => {
 exports.getTicketPrice = async (req, res) => {
     try {
         const ticketPrice = await guestService.getTicketPrice();
-        res.json({ success: true, ticketPrice });
+        res.status(200).json({ success: true, ticketPrice });
     } catch (error) {
         console.error('getTicketPrice | error:', error);
 
@@ -155,7 +155,7 @@ exports.getTicketPrice = async (req, res) => {
 exports.getSubscriptionPrice = async (req, res) => {
     try {
         const subscriptionPrice = await guestService.getSubscriptionPrice();
-        res.json({ success: true, subscriptionPrice });
+        res.status(200).json({ success: true, subscriptionPrice });
     } catch (error) {
         console.error('getSubscriptionPrice | error:', error);
 
@@ -175,7 +175,7 @@ exports.getSubscriptionPrice = async (req, res) => {
 exports.getCardPrices = async (req, res) => {
     try {
         const cardPrices = await guestService.getCardPrices();
-        res.json({ success: true, cardPrices });
+        res.status(200).json({ success: true, cardPrices });
     } catch (error) {
         console.error('getCardPrices | error:', error);
 
@@ -195,7 +195,7 @@ exports.getCardPrices = async (req, res) => {
 exports.getContactsTeachers = async (req, res) => {
     try {
         const contacts = await guestService.getContactsTeachers();
-        res.json({ success: true, contacts: contacts });
+        res.status(200).json({ success: true, contacts: contacts });
     } catch (error) {
         console.error('getContacts | error:', error);
 

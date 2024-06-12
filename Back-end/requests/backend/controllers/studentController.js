@@ -13,10 +13,10 @@ exports.addCredit = async (req, res) => {
         if (!credit) {
             return res.status(401).json({ success: false, message: 'Champ credit manquant.' });
         }
-        if (!Number.isInteger(credit) || credit <= 0) {
+        if (isNaN(credit) || credit <= 0) {
             return res.status(402).json({ success: false, message: 'Le champ credit doit être un entier positif.' });
         }
-        if (!Number.isInteger(studentID) || studentID <= 0) {
+        if (isNaN(studentID) || studentID <= 0) {
             return res.status(403).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
 
@@ -49,13 +49,13 @@ exports.getSubscriptionEndDate = async (req, res) => {
         if (!studentID) {
             return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
         }
-        if (!Number.isInteger(studentID) || studentID <= 0) {
+        if (isNaN(studentID) || studentID <= 0) {
             return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
 
         const subscriptionEndDate = await studentService.getSubscriptionEndDate(studentID);
 
-        res.json({ success: true, subscriptionEndDate: subscriptionEndDate });
+        res.status(200).json({ success: true, subscriptionEndDate: subscriptionEndDate });
     } catch (error) {
         console.log('getSubscriptionEndDate | error:', error);
 
@@ -81,13 +81,14 @@ exports.getCourses = async (req, res) => {
         if (!studentID) {
             return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
         }
-        if (!Number.isInteger(studentID) || studentID <= 0) {
+        if (isNaN(studentID) || studentID <= 0) {
+            console.log("getCourses :",typeof(studentID), Number.isInteger(studentID));
             return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
 
         const courses = await studentService.getCourses(studentID);
 
-        res.json({ success: true, courses });
+        res.status(200).json({ success: true, courses });
     } catch (error) {
         console.log('getSubscriptionEndDate | error:', error);
 
@@ -110,20 +111,20 @@ exports.buyPlace = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Tous les champs doivent être remplis.' });
     }
 
-    if (!Number.isInteger(studentID) || studentID <= 0) {
+    if (isNaN(studentID) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
     if (type !== 'ticket' && type !== 'subscription' && type !== 'card') {
         return res.status(402).json({ error: 'Type de place non valide. Utilisez "ticket", "subscription" ou "card".' });
     }
 
-    if (!Number.isInteger(number) || number <= 0) {
+    if (isNaN(number) || number <= 0) {
         return res.status(403).json({ success: false, message: 'Invalid number' });
     }
 
     try {
         await studentService.buyPlace(studentID, type, number);
-        res.json({ success: true, message: 'Place purchased successfully' });
+        res.status(200).json({ success: true, message: 'Place purchased successfully' });
     } catch (error) {
         console.error('buyPlace | error:', error);
 
@@ -170,13 +171,13 @@ exports.getPaymentHistory = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
     }
 
-    if (!Number.isInteger(studentID) || studentID <= 0) {
+    if (isNaN(studentID) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
 
     try {
         const payments = await studentService.getPaymentHistory(studentID);
-        res.json({ success: true, payments });
+        res.status(200).json({ success: true, payments });
     } catch (error) {
         console.error('getPaymentHistory | error:', error);
 

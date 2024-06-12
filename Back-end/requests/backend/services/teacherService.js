@@ -56,7 +56,7 @@ class TeacherService {
       const sql = `
         UPDATE Users
         SET ${fieldsToUpdate.join(', ')}
-        WHERE userID = ?
+        WHERE userID = ? AND userType = 'student'
       `;
 
       db.query(sql, values, (err, result) => {
