@@ -81,7 +81,41 @@ const AdminProf = () => {
             { field: 'surname', headerName: 'Nom', width: 150 },
             { field: 'email', headerName: 'Email', width: 150 },
             { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
-            { field: 'photo', headerName: 'Photo', width: 150 ,editable: true,}
+            { field: 'photo', headerName: 'Photo', width: 150 ,editable: true,},
+            {
+              field: 'buttonModifier',
+              headerName: 'Modifier',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.userID}`);
+                };
+          
+                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                Modifier le prof N°{params.row.userID}
+              </Button>;
+              }
+            },
+            {
+              field: 'buttonDelete',
+              headerName: 'Delete',
+              sortable: false,
+              width: 250,
+              disableClickEventBubbling: true,
+              renderCell: (params) => {
+                const onClick = () => {
+                  alert(`Clicked on row with id: ${params.row.userID}`);
+                };
+                // idCoursSelected = params.row.courseID;
+                // console.log("idCoursSelected"+idCoursSelected);
+          
+                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                Supprimer le prof  N°{params.row.userID}
+              </Button>;
+              }
+            }
           ]}
           onCellEditStop={(params, event) => 
             console.log("Case modifier")
@@ -92,9 +126,7 @@ const AdminProf = () => {
           checkboxSelection
         />)}
         </div>
-      <Button variant="contained" color="primary" onClick={handleOpenModif}>
-        Modifier un prof
-      </Button>
+   
       <Modal
         open={openModif}
         onClose={handleCloseModif}
@@ -116,9 +148,7 @@ const AdminProf = () => {
         </>
       </Modal>
 
-      <Button variant="contained" color="primary" onClick={handleOpenSupp}>
-        Supprimer un prof
-      </Button>
+
       <Modal
         open={openSupp}
         onClose={handleCloseSupp}

@@ -41,4 +41,13 @@ html body .Admin {
     border: 0px;
     border-radius: 20px;
     background: white;
+    height: 50vh;
+    width: 75vw;
+    margin: 25vh 12.5vw;
+    padding: 20px;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
 }
