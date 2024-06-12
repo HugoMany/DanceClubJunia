@@ -10,6 +10,7 @@ import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 
 import { Modal, Button } from '@mui/material';
+import SupprimerCours from './suppirmerCours';
 
 
 const AdminCours = () => {
@@ -127,6 +128,8 @@ const AdminCours = () => {
                 const onClick = () => {
                   alert(`Clicked on row with id: ${params.row.courseID}`);
                 };
+                // idCoursSelected = params.row.courseID;
+                // console.log("idCoursSelected"+idCoursSelected);
           
                 return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
                 Supprimer le cours
@@ -171,9 +174,9 @@ const AdminCours = () => {
         open={openSupp}
         onClose={handleCloseSupp}
       >
-        <>
-      Supp cours à FAIRE
-        </>
+       <SupprimerCours idCours={3}>
+
+       </SupprimerCours>
       </Modal>
 
       

@@ -6,10 +6,14 @@ function SupprimerCours({ idCours }) {
             const token = localStorage.getItem('token');
             if (!token) return { valid: false };
             console.log(token)
-            await fetch(URL_DB + 'admin/deleteCourse?id=' + { idCours }, {
+            await fetch(URL_DB + 'admin/deleteCourse', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
+                body:
+                {
+                    courseID: idCours
+                }
             });
         } catch (error) {
             console.error('Erreur lors de la supprétion du cours', error);
