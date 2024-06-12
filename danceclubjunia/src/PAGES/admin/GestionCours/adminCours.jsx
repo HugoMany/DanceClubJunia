@@ -9,9 +9,23 @@ import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 
+import { Modal, Button } from '@mui/material';
+
+
 const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [openModifCours, setOpenModifCours] = useState(false);
+  const [openCreerCours, setOpenCreerCours] = useState(false);
+
+  const handleOpenModifCours = () => setOpenModifCours(true);
+  const handleCloseModifCours = () => setOpenModifCours(false);
+
+  const handleOpenCreerCours = () => setOpenCreerCours(true);
+  const handleCloseCreerCours = () => setOpenCreerCours(false);
+
+
 
   useEffect(() => {
     const fetchAllCourses = async () => {
@@ -87,8 +101,25 @@ const AdminCours = () => {
         </div>
         <Header title="Admin Cours"></Header>
       {/* <h1>Admin Cours</h1> */}
-      <ModifCours idCours={3}></ModifCours>
-      <CreerCours></CreerCours>
+      <Button variant="contained" color="primary" onClick={handleOpenModifCours}>
+        Modifier le cours
+      </Button>
+      <Modal
+        open={openModifCours}
+        onClose={handleCloseModifCours}
+      >
+        <ModifCours idCours={3} />
+      </Modal>
+
+      <Button variant="contained" color="primary" onClick={handleOpenCreerCours}>
+        Créer un cours
+      </Button>
+      <Modal
+        open={openCreerCours}
+        onClose={handleCloseCreerCours}
+      >
+        <CreerCours />
+      </Modal>
 
     </div>
   );
