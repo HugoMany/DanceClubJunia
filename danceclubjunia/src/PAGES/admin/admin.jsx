@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Header from '../../elements/header';
 import '../../css/admin.css';
 import { Button } from '@mui/material';
+import AdminRequire from '../../elements/adminRequire';
 function Admin() {
+    AdminRequire();
     return(
         <div>
+            
         <div className='Admin'>
                            <Header title={"Admin"} ></Header>
 

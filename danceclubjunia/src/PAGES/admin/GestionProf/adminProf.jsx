@@ -6,9 +6,12 @@ import { DataGrid } from '@mui/x-data-grid';
 import Loading from '../../../elements/loading';
 
 import { Modal, Button } from '@mui/material';
+import AdminRequire from '../../../elements/adminRequire';
 
 
 const AdminProf = () => {
+
+  AdminRequire();
   const [allProfData, setAllProfData] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { IS_ADMIN, IS_CONNECT, IS_PROF } from "../const/const";
-import { Link } from 'react-router-dom';
-
+import { Link, redirect } from 'react-router-dom';
+import AdminRequire from './adminRequire';
 const MenuDeroulant = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -55,7 +55,7 @@ const MenuDeroulant = () => {
         }}
       >
         
-        {IS_ADMIN ? (
+        {AdminRequire(false) ? (
             [
                 <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
             ]
