@@ -1,6 +1,6 @@
-import Header from '../elements/header';
-import GetStudentID from './getStudentID';
-import AjoutCredits from './ajoutCredits';
+import Header from '../../../elements/header';
+import GetStudentID from '../../getStudentID';
+import AjoutCredits from '../../ajoutCredits';
 import React, { useState } from 'react';
 const CreditEleve = ()=>{
     const [userID, setUserID] = useState(null);
