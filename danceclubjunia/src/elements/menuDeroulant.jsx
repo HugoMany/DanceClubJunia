@@ -19,9 +19,9 @@ const MenuDeroulant = () => {
 
 
   useEffect(() => {
-    setIsAdmin(localStorage.getItem(IS_ADMIN) === 'false');
-    setIsTeacher(localStorage.getItem(IS_PROF) === 'false');
-    setIsConnected(localStorage.getItem(IS_CONNECT) === 'false');
+    setIsAdmin(true);
+    setIsTeacher(true);
+    setIsConnected(true);
     // isAdmin(false).then(setIsAdmin);
     // isAdmin(false).then(setIsTeacher);
     // isConnected(false).then(setIsConnected);
