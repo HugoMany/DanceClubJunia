@@ -135,9 +135,7 @@ const AdminEleve = () => {
         open={openModif}
         onClose={handleCloseModif}
       >
-        <>
-        Modifier
-        </>
+        <ModifEleve idEleve={10}></ModifEleve>
       </Modal>
 
       <Button variant="contained" color="primary" onClick={handleOpenCreer}>
