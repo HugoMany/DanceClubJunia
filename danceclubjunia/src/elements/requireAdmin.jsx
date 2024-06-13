@@ -19,9 +19,9 @@ function AdminRequire(redirect = true) {
                 return true;
             }
             else{
-                if(redirect){
-                    window.location.href = '/error';
-                }
+                // if(redirect){
+                //     window.location.href = '/error';
+                // }
                 console.log("Vous n'êtes pas un admin");
                 return false;
             }

@@ -1,7 +1,7 @@
 // import { UxRL_DB } from '../const/const.js';
 import React from "react";
 
-function TeacherRequire(redirect = true) {
+function isTeacher() {
     const token = localStorage.getItem('token');
     if (!token) return { valid: false };
     const url = `http://90.110.227.143/api/auth/verifyToken`;
@@ -16,9 +16,6 @@ function TeacherRequire(redirect = true) {
         if (data.userType === "teacher") {
             return true;
         } else {
-            if(redirect){
-                window.location.href = '/error';
-            }
             console.log("Vous n'êtes pas un enseignant");
             return false;
         }
@@ -28,4 +25,4 @@ function TeacherRequire(redirect = true) {
     });
         
     }
-    export default TeacherRequire;
+    export default isTeacher;

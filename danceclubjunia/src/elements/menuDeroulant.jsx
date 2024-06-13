@@ -3,9 +3,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { IS_ADMIN, IS_CONNECT, IS_PROF } from "../const/const";
 import { Link, redirect } from 'react-router-dom';
-import AdminRequire from './adminRequire';
 import React, { useState, useEffect } from 'react';
-import TeacherRequire from './teacherRequire';
+import isAdmin from './isAdmin';
+import isTeacher from './isTeacher';
 import isConnected from './isConnected';
 
 const MenuDeroulant = () => {
@@ -22,9 +22,9 @@ const MenuDeroulant = () => {
     setIsAdmin(localStorage.getItem(IS_ADMIN) === 'false');
     setIsTeacher(localStorage.getItem(IS_PROF) === 'false');
     setIsConnected(localStorage.getItem(IS_CONNECT) === 'false');
-    AdminRequire(false).then(setIsAdmin);
-    TeacherRequire(false).then(setIsTeacher);
-    isConnected(false).then(setIsConnected);
+    // isAdmin(false).then(setIsAdmin);
+    // isAdmin(false).then(setIsTeacher);
+    // isConnected(false).then(setIsConnected);
   }, []);
 
   const handleClick = (event) => {
@@ -79,7 +79,7 @@ const MenuDeroulant = () => {
          {isConnectedVar ? (
             [
                 <MenuItem key="profile" onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>,
-                <MenuItem key="logout" onClick={handleClose} component={Link} to="/connexion">Logout</MenuItem>
+                <MenuItem key="logout" onClick={handleClose} >Logout</MenuItem>
             ]
         ) : (
             [
