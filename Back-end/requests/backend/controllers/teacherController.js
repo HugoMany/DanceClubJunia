@@ -9,7 +9,7 @@ exports.getStudent = async (req, res) => {
     if (!courseID) {
       return res.status(400).json({ error: 'ID du cours manquante' });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(401).json({ error: 'Le champ courseID doit être un entier positif.' });
     }
 
@@ -45,7 +45,7 @@ exports.newStudent = async (req, res) => {
     if (password.length <= 8) {
       return res.status(401).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
     }
-    if (!Number.isInteger(credit) || credit <= 0) {
+    if (isNaN(credit) || credit <= 0) {
       return res.status(402).json({ error: 'Le champ credit doit être un entier positif.' });
     }
 
@@ -87,7 +87,7 @@ exports.modifyStudent = async (req, res) => {
     if (!studentID) {
       return res.status(400).json({ error: 'studentID manquant' });
     }
-    if (!Number.isInteger(studentID) || studentID <= 0) {
+    if (isNaN(studentID) || studentID <= 0) {
       return res.status(401).json({ error: 'Le champ studentID doit être un entier positif.' });
     }
 
@@ -179,13 +179,13 @@ exports.removeStudent = async (req, res) => {
       return res.status(400).json({ error: 'Les champs userID, courseID et studentID doivent être fournis.' });
     }
 
-    if (!Number.isInteger(studentID) || studentID <= 0) {
+    if (isNaN(studentID) || studentID <= 0) {
       return res.status(401).json({ error: 'L\'ID de l\'étudiant n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(userID) || userID <= 0) {
+    if (isNaN(userID) || userID <= 0) {
       return res.status(403).json({ error: 'L\'ID de l\'utilisateur n\'est pas un entier positif.' });
     }
 
@@ -228,13 +228,13 @@ exports.affectStudent = async (req, res) => {
       return res.status(400).json({ error: 'affectStudent | Les champs teacherID, studentID et courseID doivent être fournis.' });
     }
 
-    if (!Number.isInteger(studentID) || studentID <= 0) {
+    if (isNaN(studentID) || studentID <= 0) {
       return res.status(401).json({ error: 'L\'ID de l\'étudiant n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(teacherID) || userID <= 0) {
+    if (isNaN(teacherID) || userID <= 0) {
       return res.status(403).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
     }
 
@@ -315,10 +315,10 @@ exports.cancelCourse = async (req, res) => {
     if (!teacherID) {
       return res.status(401).json({ error: 'teacherID manquant.' });
     }
-    if (!Number.isInteger(teacherID) || teacherID <= 0) {
+    if (isNaN(teacherID) || teacherID <= 0) {
       return res.status(402).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(403).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
 
@@ -351,7 +351,7 @@ exports.getTeacherPlaces = async (req, res) => {
     if (!teacherID || !startDate || !endDate) {
       return res.status(400).json({ error: 'getTeacherPlaces | Les champs teacherID, startDate et endDate doivent être fournis.' });
     }
-    if (!Number.isInteger(teacherID) || teacherID <= 0) {
+    if (isNaN(teacherID) || teacherID <= 0) {
       return res.status(401).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -389,10 +389,10 @@ exports.modifyCourse = async (req, res) => {
       return res.status(400).json({ error: 'Les champs teacherID et courseID sont obligatoires.' });
     }
 
-    if (!Number.isInteger(teacherID) || teacherID <= 0) {
+    if (isNaN(teacherID) || teacherID <= 0) {
       return res.status(401).json({ error: "L'ID du professeur n'est pas un entier positif." });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 
@@ -512,10 +512,10 @@ exports.getStudentsInCourse = async (req, res) => {
     if (!courseID || !userID) {
       return res.status(400).json({ error: 'Le champs courseID et userID doivent être fournis.' });
     }
-    if (!Number.isInteger(userID) || userID <= 0) {
+    if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 
@@ -568,13 +568,13 @@ exports.addPlaceStudent = async (req, res) => {
   if (!courseID || !studentID || !type || !number) {
     return res.status(400).json({ error: 'Le champs courseID et userID doivent être fournis.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (!Number.isInteger(courseID) || courseID <= 0) {
+  if (isNaN(courseID) || courseID <= 0) {
     return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
-  if (!Number.isInteger(number) || number <= 0) {
+  if (isNaN(number) || number <= 0) {
     return res.status(403).json({ success: false, message: 'number n\'est pas un entier positif.' });
   }
 
@@ -622,10 +622,10 @@ exports.removeLink = async (req, res) => {
     if (!courseID || !userID || !link) {
       return res.status(400).json({ success: false, error: 'Les champs courseID, userID et link doivent être fournis.' });
     }
-    if (!Number.isInteger(userID) || userID <= 0) {
+    if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 
@@ -681,10 +681,10 @@ exports.addTag = async (req, res) => {
   if (!courseID || !userID || !tag) {
     return res.status(400).json({ success: false, error: ' Les champs courseID, userID et tag doivent être fournis.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (!Number.isInteger(courseID) || courseID <= 0) {
+  if (isNaN(courseID) || courseID <= 0) {
     return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -738,10 +738,10 @@ exports.removeTag = async (req, res) => {
     if (!courseID || !userID || !tag) {
       return res.status(400).json({ success: false, error: ' Les champs courseID, userID et tag doivent être fournis.' });
     }
-    if (!Number.isInteger(userID) || userID <= 0) {
+    if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
-    if (!Number.isInteger(courseID) || courseID <= 0) {
+    if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 

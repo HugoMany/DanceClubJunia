@@ -168,7 +168,7 @@ class StudentService {
         ORDER BY date DESC
       `;
       db.query(sql, [studentID], (err, results) => {
-        if (err || result.length == 0) {
+        if (err || results.length == 0) {
           return reject(new Error("Erreur lors de la récupération des paiements."));
         }
         resolve(results);

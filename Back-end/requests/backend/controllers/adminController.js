@@ -5,7 +5,7 @@ exports.getAllStudents = async (req, res) => {
         console.log("getAllStudents");
 
         const students = await adminService.getAllStudents();
-        res.json({ success: true, students: students });
+        res.status(200).json({ success: true, students: students });
     } catch (error) {
         console.error('getAllStudents | error:', error);
         res.status(500).json({ success: false, message: error.message });
@@ -18,7 +18,7 @@ exports.getAllTeachers = async (req, res) => {
 
         console.log("getAllTeachers");
         const teachers = await adminService.getAllTeachers();
-        res.json({ success: true, teachers: teachers });
+        res.status(200).json({ success: true, teachers: teachers });
     } catch (error) {
         console.error('getAllTeachers | error:', error);
         res.status(500).json({ success: false, message: error.message });
@@ -31,7 +31,7 @@ exports.getAllAdmins = async (req, res) => {
 
         console.log("getAllAdmins");
         const admins = await adminService.getAllAdmins();
-        res.json({ success: true, admins: admins });
+        res.status(200).json({ success: true, admins: admins });
     } catch (error) {
         console.error('getAllAdmins | error:', error);
         res.status(500).json({ success: false, message: error.message });
@@ -44,7 +44,7 @@ exports.getAllUsers = async (req, res) => {
 
         console.log("getAllUsers");
         const users = await adminService.getAllUsers();
-        res.json({ success: true, users: users });
+        res.status(200).json({ success: true, users: users });
     } catch (error) {
         console.error('getAllUsers | error:', error);
         res.status(500).json({ success: false, message: error.message });
@@ -60,14 +60,14 @@ exports.deleteCourse = async (req, res) => {
         if (!courseID) {
             return res.status(400).json({ error: 'ID du cours manquant.' });
         }
-        if (!Number.isInteger(courseID)) {
+        if (isNaN(courseID)) {
             return res.status(401).json({ error: 'L\'ID du cours n\'est pas un entier.' });
         }
 
         const result = await adminService.deleteCourse(courseID);
 
         if (result) {
-            res.json({ success: true });
+            res.status(200).json({ success: true });
         }
     } catch (error) {
         console.error('deleteCourse | error:', error);
@@ -85,8 +85,6 @@ exports.deleteCourse = async (req, res) => {
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
         };
-
-        res.status(500).json(false);
     }
 };
 
@@ -103,17 +101,17 @@ exports.createCard = async (req, res) => {
         if (!price) {
             return res.status(401).json({ error: 'Prix manquant.' });
         }
-        if (!Number.isInteger(place) || place <= 0) {
+        if (isNaN(place) || place <= 0) {
             return res.status(402).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
-        if (!Number.isInteger(price) || price <= 0) {
+        if (isNaN(price) || price <= 0) {
             return res.status(403).json({ error: 'Le champ price doit être un entier positif.' });
         }
 
         await adminService.createCard(place, price);
 
-        res.json({ success: true });
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error('createCard | error:', error);
 
@@ -142,13 +140,13 @@ exports.deleteCard = async (req, res) => {
         if (!place) {
             return res.status(400).json({ error: 'Nombre de places manquant.' });
         }
-        if (!Number.isInteger(place) || place <= 0) {
+        if (isNaN(place) || place <= 0) {
             return res.status(401).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
         await adminService.deleteCard(place);
 
-        res.json({ success: true });
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error('deleteCard | error:', error);
 
@@ -183,13 +181,13 @@ exports.modifyPlacePrice = async (req, res) => {
         if (type.startsWith('card') && !/card\d+/.test(type)) {
             return res.status(402).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
         }
-        if (!Number.isInteger(price) || price <= 0) {
+        if (isNaN(price) || price <= 0) {
             return res.status(403).json({ error: 'Le prix doit être un entier positif.' });
         }
 
         await adminService.modifyPlacePrice(type, price);
 
-        res.json({ success: true });
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error('modifyPlacePrice | error:', error);
 
@@ -234,7 +232,7 @@ exports.createCourse = async (req, res) => {
             return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
         }
         if (!/^\d{2}:\d{2}$/.test(startTime)) {
-            return res.status(403).json({ error: "L'heure de début du cours doit être au format HH:mm." });
+            return res.status(403).json({ error: "L'heure de début du cours doit être au format HH:MM." });
         }
         const startDateTime = new Date(`${startDate} ${startTime}`);
         if (isNaN(startDateTime.getTime())) {
@@ -243,7 +241,7 @@ exports.createCourse = async (req, res) => {
 
         const createdCourse = await adminService.createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags);
 
-        res.json({ success: true, course: createdCourse });
+        res.status(200).json({ success: true, course: createdCourse });
 
     } catch (error) {
         console.error('createCourse | error:', error);
@@ -275,13 +273,13 @@ exports.createTeacher = async (req, res) => {
         const { firstname, surname, email, password, connectionMethod, photo, description } = req.body;
 
         console.log(`createTeacher | firstname, surname, email, connectionMethod, photo, description : ${firstname}, ${surname}, ${email}, ${connectionMethod}, ${photo}, ${description}`);
-        
+
         if (!firstname || !surname || !email || !password || !connectionMethod) {
             return res.status(400).json({ error: 'Tous les champs sont obligatoires.' });
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-          return res.status(401).json({ error: 'Email invalide.' });
+            return res.status(401).json({ error: 'Email invalide.' });
         }
         if (password.length <= 8) {
             return res.status(402).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
@@ -298,7 +296,7 @@ exports.createTeacher = async (req, res) => {
         }
     } catch (error) {
         console.error('createTeacher | error:', error);
-        
+
         switch (error.message) {
             case "Erreur lors de la création du professeur.":
                 res.status(501).json({ success: false, message: error.message });
@@ -326,7 +324,7 @@ exports.getPayments = async (req, res) => {
             return res.status(401).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
         }
         const payments = await adminService.getPayments(startDate, endDate);
-        res.json({ success: true, payments });
+        res.status(200).json({ success: true, payments });
     } catch (error) {
         console.error('getPayments | error:', error);
 
@@ -339,3 +337,202 @@ exports.getPayments = async (req, res) => {
         }
     }
 };
+
+exports.deleteTeacher = async (req, res) => {
+    try {
+        const { teacherID } = req.body;
+
+        console.log(`deleteTeacher | teacherID : ${teacherID}`);
+
+        if (!teacherID) {
+            return res.status(400).json({ error: 'ID du professeur manquant.' });
+        }
+        if (isNaN(teacherID)) {
+            return res.status(401).json({ error: 'L\'ID du professeur n\'est pas un entier.' });
+        }
+
+        const result = await adminService.deleteTeacher(teacherID);
+
+        if (result) {
+            res.status(200).json({ success: true });
+        }
+    } catch (error) {
+        console.error('deleteTeacher | error:', error);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence du professeur.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Le professeur spécifié n'existe pas.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Cet utilisateur n'est pas un professeur.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du professeur dans le cours.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du cours.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression du professeur dans les cartes.":
+                res.status(506).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression des paiements.":
+                res.status(507).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression du professeur.":
+                res.status(508).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        };
+    }
+};
+
+exports.deleteStudent = async (req, res) => {
+    try {
+        const { studentID } = req.body;
+
+        console.log(`deleteStudent | studentID : ${studentID}`);
+
+        if (!studentID) {
+            return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
+        }
+        if (isNaN(studentID)) {
+            return res.status(401).json({ error: 'L\'de l\'étudiant n\'est pas un entier.' });
+        }
+
+        const result = await adminService.deleteStudent(studentID);
+
+        if (result) {
+            res.status(200).json({ success: true });
+        }
+    } catch (error) {
+        console.error('deleteStudent | error:', error);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence de l'étudiant.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "L'étudiant spécifié n'existe pas.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Cet utilisateur n'est pas un étudiant.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération de l'étudiant dans le cours.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du cours.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression de l'étudiant dans les cartes.":
+                res.status(506).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression des paiements.":
+                res.status(507).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression de l'étudiant.":
+                res.status(508).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        };
+    }
+};
+
+exports.modifyTeacher = async (req, res) => {
+    try {
+      const { teacherID, firstname, surname, email, password, connectionMethod, credit, photo, description} = req.body;
+  
+      console.log("modifyStudent | teacherID, firstname, surname, email, password, connectionMethod, credit, description : " + teacherID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo + ", " + description);
+  
+      if (!teacherID) {
+        return res.status(400).json({ error: 'teacherID manquant.' });
+      }
+      if (isNaN(teacherID) || teacherID <= 0) {
+        return res.status(401).json({ error: 'Le champ teacherID doit être un entier positif.' });
+      }
+  
+      const fieldsToUpdate = [];
+      const values = [];
+  
+      if (firstname) {
+        fieldsToUpdate.push('firstname = ?');
+        values.push(firstname);
+      }
+  
+      if (surname) {
+        fieldsToUpdate.push('surname = ?');
+        values.push(surname);
+      }
+  
+      if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          return res.status(402).json({ error: 'Email invalide.' });
+        }
+        fieldsToUpdate.push('email = ?');
+        values.push(email);
+      }
+  
+      if (password) {
+        if (password.length <= 8) {
+          return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
+        }
+        fieldsToUpdate.push('password = ?');
+        values.push(password);
+      }
+  
+      if (connectionMethod) {
+        fieldsToUpdate.push('connectionMethod = ?');
+        values.push(connectionMethod);
+      }
+  
+      if (credit) {
+        if (credit < 0) {
+          return res.status(404).json({ error: 'Credit invalide.' });
+        }
+        fieldsToUpdate.push('credit = ?');
+        values.push(credit);
+      }
+  
+      if (photo) {
+        fieldsToUpdate.push('photo = ?');
+        values.push(photo);
+      }
+
+      if (description) {
+        fieldsToUpdate.push('description = ?');
+        values.push(description);
+      }
+  
+      if (fieldsToUpdate.length === 0) {
+        return res.status(405).json({ error: 'Aucun champ à mettre à jour.' });
+      }
+  
+      values.push(teacherID);
+  
+      const result = await adminService.modifyTeacher(teacherID, values, fieldsToUpdate);
+  
+      res.status(200).json({ success: true, student: result[0] });
+  
+    } catch (error) {
+      console.error('modifyTeacher | error:', error);
+  
+      switch (error.message) {
+        case "Erreur lors de la modification du professeur.":
+          res.status(501).json({ success: false, message: error.message });
+          break;
+        case "Il n'existe pas de professeur avec cet ID.":
+          res.status(502).json({ success: false, message: error.message });
+          break;
+        case "Erreur lors de la récupération du professeur.":
+          res.status(503).json({ success: false, message: error.message });
+          break;
+        default:
+          res.status(500).json({ success: false, message: 'Erreur SQL' });
+      }
+    }
+  };

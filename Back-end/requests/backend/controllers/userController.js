@@ -86,10 +86,10 @@ exports.addLink = async (req, res) => {
   if (!courseID || !userID || !link) {
     return res.status(400).json({ error: 'Le champs courseID, userID et link doivent être fourni.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (!Number.isInteger(courseID) || courseID <= 0) {
+  if (isNaN(courseID) || courseID <= 0) {
     return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -138,7 +138,7 @@ exports.searchCoursesStudent = async (req, res) => {
   if (!tags || !userID || !startDate) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -169,7 +169,7 @@ exports.searchCoursesTeacher = async (req, res) => {
   if (!tags || !userID || !startDate) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -202,7 +202,7 @@ exports.searchCourse = async (req, res) => {
   if (courseID) {
     return res.status(400).json({ error: 'Le champ courseID doit être fourni.' });
   }
-  if (!Number.isInteger(userID) || userID <= 0) {
+  if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -252,7 +252,7 @@ exports.getProfile = async (req, res) => {
     if (!userID) {
       return res.status(200).json(false);
     }
-    if (!Number.isInteger(userID) || userID <= 0) {
+    if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
 
