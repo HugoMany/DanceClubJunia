@@ -248,7 +248,7 @@ exports.getProfile = async (req, res) => {
 
     console.log("getProfile | userID : " + userID);
 
-    
+
     if (!userID) {
       return res.status(200).json(false);
     }
@@ -269,6 +269,76 @@ exports.getProfile = async (req, res) => {
         break;
       case "L'utilisateur n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
+        break;
+      default:
+        res.status(500).json({ success: false, message: 'Erreur SQL' });
+    }
+  }
+};
+
+exports.modifyProfile = async (req, res) => {
+  try {
+    const { userID, firstname, surname, email, photo, description } = req.body;
+
+    console.log("modifyProfile | userID, firstname, surname, email, photo, description : " + userID + ", " + firstname + ", " + surname + ", " + email + ", " + photo + ", " + description);
+
+    if (!userID) {
+      return res.status(400).json({ error: 'userID manquant' });
+    }
+    if (isNaN(userID) || userID <= 0) {
+      return res.status(401).json({ error: 'Le champ userID doit être un entier positif.' });
+    }
+
+    const fieldsToUpdate = [];
+    const values = [];
+
+    if (firstname) {
+      fieldsToUpdate.push('firstname = ?');
+      values.push(firstname);
+    }
+
+    if (surname) {
+      fieldsToUpdate.push('surname = ?');
+      values.push(surname);
+    }
+
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Email invalide.' });
+      }
+      fieldsToUpdate.push('email = ?');
+      values.push(email);
+    }
+
+    if (photo) {
+      fieldsToUpdate.push('photo = ?');
+      values.push(photo);
+    }
+
+    if (fieldsToUpdate.length === 0) {
+      return res.status(403).json({ error: 'Aucun champ à mettre à jour.' });
+    }
+
+    const result = await userService.modifyProfile(userID, values, fieldsToUpdate, description);
+    console.log(result);
+    res.status(200).json({ success: true, user: result[0] });
+
+  } catch (error) {
+    console.error('modifyProfile | error:', error);
+
+    switch (error.message) {
+      case "Erreur lors de la récupération du type de l'utilisateur.":
+        res.status(501).json({ success: false, message: error.message });
+        break;
+      case "Aucun utilisateur trouvé.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la modification de l'utilisateur.":
+        res.status(503).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la récupération de l'utilisateur.":
+        res.status(504).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });

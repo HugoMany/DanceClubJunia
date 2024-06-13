@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { authorize } = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -47,7 +46,7 @@ const { authorize } = require('../middlewares/auth');
  *       500:
  *         description: Erreur SQL
  */
-router.post('/generateResetToken', authorize(['student', 'teacher', 'admin']), userController.generateResetToken);
+router.post('/generateResetToken', userController.generateResetToken);
 
 /**
  * @swagger
@@ -90,7 +89,7 @@ router.post('/generateResetToken', authorize(['student', 'teacher', 'admin']), u
  *       500:
  *         description: Erreur du serveur
  */
-router.post('/resetPassword', authorize(['student', 'teacher', 'admin']), userController.resetPassword);
+router.post('/resetPassword', userController.resetPassword);
 
 /**
  * @swagger
@@ -137,7 +136,7 @@ router.post('/resetPassword', authorize(['student', 'teacher', 'admin']), userCo
  *       500:
  *         description: Erreur du serveur
  */
-router.patch('/addLink', authorize(['student', 'teacher', 'admin']), userController.addLink);
+router.patch('/addLink', userController.addLink);
 
 /**
  * @swagger
@@ -202,7 +201,7 @@ router.patch('/addLink', authorize(['student', 'teacher', 'admin']), userControl
  *       500:
  *         description: Erreur SQL
  */
-router.get('/searchCoursesStudent', authorize(['student', 'teacher', 'admin']), userController.searchCoursesStudent);
+router.get('/searchCoursesStudent', userController.searchCoursesStudent);
 
 /**
  * @swagger
@@ -267,7 +266,7 @@ router.get('/searchCoursesStudent', authorize(['student', 'teacher', 'admin']), 
  *       500:
  *         description: Erreur SQL
  */
-router.get('/searchCoursesTeacher', authorize(['student', 'teacher', 'admin']), userController.searchCoursesTeacher);
+router.get('/searchCoursesTeacher', userController.searchCoursesTeacher);
 
 /**
  * @swagger
@@ -317,7 +316,7 @@ router.get('/searchCoursesTeacher', authorize(['student', 'teacher', 'admin']), 
  *       500:
  *         description: Erreur SQL
  */
-router.get('/searchCourse', authorize(['student', 'teacher', 'admin']), userController.searchCourse);
+router.get('/searchCourse', userController.searchCourse);
 
 /**
  * @swagger
@@ -347,7 +346,7 @@ router.get('/searchCourse', authorize(['student', 'teacher', 'admin']), userCont
  *         description: Erreur du serveur.
  */
 
-router.get('/getContactsStudents', authorize(['student', 'teacher', 'admin']), userController.getContactsStudents);
+router.get('/getContactsStudents', userController.getContactsStudents);
 
 /**
  * @swagger
@@ -413,6 +412,96 @@ router.get('/getContactsStudents', authorize(['student', 'teacher', 'admin']), u
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getProfile', authorize(['student', 'teacher', 'admin']), userController.getProfile);
+router.get('/getProfile', userController.getProfile);
+
+/**
+ * @swagger
+ * /api/user/modifyProfile:
+ *   patch:
+ *     summary: Modifier les informations d'un utilisateur
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userID:
+ *                 type: integer
+ *                 description: ID de l'utilisateur a modifier.
+ *                 example: 6
+ *               firstname:
+ *                 type: string
+ *                 description: Prenom de l'utilisateur.
+ *                 example: "Lucas"
+ *               surname:
+ *                 type: string
+ *                 description: Nom de famille de l'utilisateur.
+ *                 example: "Vano"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Adresse email de l'utilisateur.
+ *                 example: "lucas.vano@example.com"
+ *               photo:
+ *                 type: string
+ *                 description: Photo de l'utilisateur.
+ *                 example: "photo.png"
+ *               description:
+ *                 type: string
+ *                 description: description de l'utilisateur.
+ *                 example: "description"
+ *     responses:
+ *       200:
+ *         description: etudiant modifie avec succes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 student:
+ *                   type: object
+ *                   properties:
+ *                     userID:
+ *                       type: integer
+ *                       example: 6
+ *                     firstname:
+ *                       type: string
+ *                       example: "Lucas"
+ *                     surname:
+ *                       type: string
+ *                       example: "Vano"
+ *                     email:
+ *                       type: string
+ *                       example: "lucas.vano@example.com"
+ *                     connectionMethod:
+ *                       type: string
+ *                       example: "email"
+ *                     credit:
+ *                       type: integer
+ *                       example: 0
+ *                     tickets:
+ *                       type: integer
+ *                       example: 2
+ *                     subscriptionEnd:
+ *                       type: string
+ *                       format: date
+ *                       nullable: true
+ *                       example: null
+ *                     photo:
+ *                       type: string
+ *                       example: "photo.png"
+ *       400:
+ *         description: Entree invalide
+ *       500:
+ *         description: Erreur SQL
+ */
+router.patch('/modifyProfile', userController.modifyProfile);
 
 module.exports = router;

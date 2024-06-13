@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const studentController = require('../controllers/studentController');
-const { authorize } = require('../middlewares/auth');
+
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ const { authorize } = require('../middlewares/auth');
  *       500:
  *         description: Erreur SQL
  */
-router.post('/addCredit', authorize(['student', 'teacher', 'admin']), studentController.addCredit);
+router.post('/addCredit', studentController.addCredit);
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ router.post('/addCredit', authorize(['student', 'teacher', 'admin']), studentCon
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getSubscriptionEndDate', authorize(['student', 'teacher', 'admin']), studentController.getSubscriptionEndDate);
+router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
 
 /**
  * @swagger
@@ -177,7 +177,7 @@ router.get('/getSubscriptionEndDate', authorize(['student', 'teacher', 'admin'])
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getCourses', authorize(['student', 'teacher', 'admin']), studentController.getCourses);
+router.get('/getCourses', studentController.getCourses);
 
 /**
  * @swagger
@@ -227,7 +227,7 @@ router.get('/getCourses', authorize(['student', 'teacher', 'admin']), studentCon
  *       500:
  *         description: Erreur SQL
  */
-router.post('/buyPlace', authorize(['student', 'teacher', 'admin']), studentController.buyPlace);
+router.post('/buyPlace', studentController.buyPlace);
 
 /**
  * @swagger
@@ -295,6 +295,80 @@ router.post('/buyPlace', authorize(['student', 'teacher', 'admin']), studentCont
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getPaymentHistory', authorize(['student', 'teacher', 'admin']), studentController.getPaymentHistory);
+router.get('/getPaymentHistory', studentController.getPaymentHistory);
+
+/**
+ * @swagger
+ * /api/student/reserveCourse:
+ *   post:
+ *     summary: Réserve un cours pour un étudiant
+ *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               studentID:
+ *                 type: integer
+ *                 description: ID de l'étudiant
+ *                 example: 1
+ *               courseID:
+ *                 type: integer
+ *                 description: ID du cours
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Réservation réussie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "L'étudiant a été ajouté au cours via l'abonnement."
+ *       400:
+ *         description: ID de l'étudiant ou ID du cours manquant
+ *       401:
+ *         description: Le champ studentID doit être un entier positif
+ *       402:
+ *         description: Le champ courseID doit être un entier positif
+ *       501:
+ *         description: L'élève est déjà inscrit à ce cours.
+ *       502:
+ *         description: Aucun mode de paiement valide trouvé ou fonds insuffisants.
+ *       503:
+ *         description: Le cours n'existe pas.
+ *       504:
+ *         description: Erreur lors de la récupération du cours.
+ *       505:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       506:
+ *         description: L'élève n'existe pas.
+ *       507:
+ *         description: Erreur lors de la récupération des élèves du cours.
+ *       508:
+ *         description: Erreur lors de la modification du cours.
+ *       509:
+ *         description: Erreur lors de la récupération d'une carte valide.
+ *       510:
+ *         description: Erreur lors de la suppression de la carte utilisée.
+ *       511:
+ *         description: Erreur lors de l'utilisation de la carte.
+ *       512:
+ *         description: Erreur lors de la décrémentation des tickets.
+ *       513:
+ *         description: L'utilisateur n'est pas un élève.
+ *       500:
+ *         description: Erreur SQL
+ */
+router.post('/reserveCourse', studentController.reserveCourse);
 
 module.exports = router;

@@ -65,19 +65,8 @@ const { authorize } = require('../middlewares/auth');
  *                         example: "https://picsum.photos/200/200"
  *       500:
  *         description: Aucun élève trouvé.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Aucun élève trouvé."
  */
-router.get('/getAllStudents', authorize(['admin']), adminController.getAllStudents);
+router.get('/getAllStudents', adminController.getAllStudents);
 
 /**
  * @swagger
@@ -127,19 +116,8 @@ router.get('/getAllStudents', authorize(['admin']), adminController.getAllStuden
  *                         example: "chevalier déchu"
  *       500:
  *         description: Aucun professeur trouvé.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Aucun professeur trouvé."
  */
-router.get('/getAllTeachers', authorize(['admin']), adminController.getAllTeachers);
+router.get('/getAllTeachers', adminController.getAllTeachers);
 
 /**
  * @swagger
@@ -189,19 +167,8 @@ router.get('/getAllTeachers', authorize(['admin']), adminController.getAllTeache
  *                         example: "chevalier déchu"
  *       500:
  *         description: Aucun admin trouvé.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Aucun admin trouvé."
  */
-router.get('/getAllAdmins', authorize(['admin']), adminController.getAllAdmins);
+router.get('/getAllAdmins', adminController.getAllAdmins);
 
 /**
  * @swagger
@@ -265,19 +232,8 @@ router.get('/getAllAdmins', authorize(['admin']), adminController.getAllAdmins);
  *                         example: "chevalier déchu"
  *       500:
  *         description: Aucun utilisateur trouvé.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Aucun utilisateur trouvé."
  */
-router.get('/getAllUsers', authorize(['admin']), adminController.getAllUsers);
+router.get('/getAllUsers', adminController.getAllUsers);
 
 /**
  * @swagger
@@ -311,84 +267,18 @@ router.get('/getAllUsers', authorize(['admin']), adminController.getAllUsers);
  *                   example: true
  *       400:
  *         description: Erreur de requête - ID du cours manquant
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "ID du cours manquant."
  *       401:
  *         description: L'ID du cours n'est pas un entier
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "L'ID du cours n'est pas un entier."
  *       501:
  *         description: Erreur lors de la vérification de l'existence du cours
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence du cours."
  *       502:
  *         description: Le cours spécifié n'existe pas
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Le cours spécifié n'existe pas."
  *       503:
  *         description: Erreur lors de la suppression du cours
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la suppression du cours."
  *       500:
- *         description: Erreur serveur
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur SQL"
+ *         description: Erreur SQL
  */
-router.delete('/deleteCourse', authorize(['admin']), adminController.deleteCourse);
+router.delete('/deleteCourse', adminController.deleteCourse);
 
 /**
  * @swagger
@@ -425,111 +315,23 @@ router.delete('/deleteCourse', authorize(['admin']), adminController.deleteCours
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête - champs place et price obligatoires
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Nombre de places manquant."
+ *         description: Erreur de requête - champ place obligatoires
  *       401:
  *         description: Erreur de requête - prix manquant
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Prix manquant."
  *       402:
  *         description: Erreur de requête - le champ place doit être un entier positif
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Le champ place doit être un entier positif."
  *       403:
  *         description: Erreur de requête - le champ price doit être un entier positif
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Le champ price doit être un entier positif."
  *       501:
  *         description: Erreur serveur - Erreur lors de la vérification de l'existence de la carte
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence de la carte."
  *       502:
  *         description: Erreur serveur - La carte existe déjà
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "La carte existe déjà."
  *       503:
  *         description: Erreur serveur - Erreur lors de l'insertion de la carte dans la base de données
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de l'insertion de la carte dans la base de données."
  *       500:
  *         description: Erreur serveur - Erreur SQL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur SQL"
  */
-router.post('/createCard', authorize(['admin']), adminController.createCard);
+router.post('/createCard', adminController.createCard);
 
 /**
  * @swagger
@@ -562,72 +364,17 @@ router.post('/createCard', authorize(['admin']), adminController.createCard);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Mauvaise requête
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Nombre de places manquant."
+ *         description: Nombre de places manquant.
  *       401:
  *         description: Le champ place doit être un entier positif
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Le champ place doit être un entier positif."
  *       501:
  *         description: Erreur lors de la vérification de l'existence de la carte
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence de la carte."
  *       502:
  *         description: La carte spécifiée n'existe pas
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "La carte spécifiée n'existe pas."
  *       503:
  *         description: Erreur lors de la suppression de la carte
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression de la carte."
  */
-router.delete('/deleteCard', authorize(['admin']), adminController.deleteCard);
+router.delete('/deleteCard', adminController.deleteCard);
 
 /**
  * @swagger
@@ -664,150 +411,29 @@ router.delete('/deleteCard', authorize(['admin']), adminController.deleteCard);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Les paramètres type et price sont requis."
+ *         description: Les paramètres type et price sont requis.
  *       401:
- *         description: Type de place non valide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: 'Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".'
+ *         description: Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".
  *       402:
- *         description: Format de carte invalide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: 'Format de carte invalide. Utilisez "cardN" où N est un entier.'
+ *         description: Format de carte invalide. Utilisez "cardN" où N est un entier.
  *       403:
  *         description: Le prix doit être un entier positif.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Le prix doit être un entier positif."
  *       501:
  *         description: Nombre d'utilisations de la carte non valide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Nombre d'utilisations de la carte non valide."
  *       502:
  *         description: Erreur lors de la vérification de l'existence de la carte.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence de la carte."
  *       503:
  *         description: La carte avec le nombre d'utilisations spécifié n'existe pas.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "La carte avec le nombre d'utilisations spécifié n'existe pas."
  *       504:
  *         description: Erreur lors de la modification de la carte.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la modification de la carte."
  *       505:
  *         description: Erreur lors de la modification du prix.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la modification du prix."
  *       506:
  *         description: Le type de place n'est pas valide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Le type de place n'est pas valide."
  *       500:
- *         description: Erreur du serveur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur SQL"
+ *         description: Erreur SQL
  */
-router.post('/modifyPlacePrice', authorize(['admin']), adminController.modifyPlacePrice);
+router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
 
 /**
  * @swagger
@@ -962,150 +588,29 @@ router.post('/modifyPlacePrice', authorize(['admin']), adminController.modifyPla
  *                       type: string
  *                       example: "danse,salsa,debutant"
  *       400:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Certains champs obligatoires sont manquants ou invalides."
+ *         description: Certains champs obligatoires sont manquants ou invalides.
  *       401:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Certains champs numériques sont invalides."
+ *         description: Certains champs numériques sont invalides.
  *       402:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "La date de début du cours doit être au format YYYY-MM-DD."
+ *         description: La date de début du cours doit être au format YYYY-MM-DD.
  *       403:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "L'heure de début du cours doit être au format HH:MM."
+ *         description: L'heure de début du cours doit être au format HH:MM.
  *       404:
- *         description: Erreur de requête.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "La date ou l'heure de début du cours est invalide."
+ *         description: La date ou l'heure de début du cours est invalide.
  *       500:
- *         description: Erreur du serveur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Erreur SQL"
+ *         description: Erreur SQL.
  *       501:
  *         description: Impossible de spécifier des enseignants pour un cours en soirée.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Impossible de spécifier des enseignants pour un cours en soirée."
  *       502:
  *         description: Erreur lors de la création du cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la création du cours."
  *       503:
  *         description: Erreur lors de la récupération du cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la récupération du cours."
  *       504:
  *         description: Erreur lors de la récupération des ID.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la récupération des ID."
  *       505:
  *         description: Les emails n'appartiennent à aucun utilisateur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Les emails n'appartiennent à aucun utilisateur."
  */
-router.post('/createCourse', authorize(['admin']), adminController.createCourse);
+router.post('/createCourse', adminController.createCourse);
 
 /**
  * @swagger
@@ -1188,66 +693,18 @@ router.post('/createCourse', authorize(['admin']), adminController.createCourse)
  *                       example: Professeur passionné de mathématiques.
  *       400:
  *         description: Erreur de requête - tous les champs sont obligatoires.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Tous les champs sont obligatoires."
  *       401:
  *         description: Erreur de requête - e-mail invalide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Email invalide."
  *       402:
- *         description: Erreur de requête - mot de passe trop court.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Mot de passe trop court (minimum 8 caractères)."
+ *         description: Erreur de requête - mot de passe trop court (minimum 8 caractères).
  *       501:
  *         description: Erreur serveur - erreur lors de la création du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la création du professeur."
  *       502:
  *         description: Erreur serveur - erreur lors de la récupération du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la récupération du professeur."
  *       500:
- *         description: Erreur du lors de la création du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur SQL"
+ *         description: Erreur SQL
  */
-router.post('/createTeacher', authorize(['admin']), adminController.createTeacher);
+router.post('/createTeacher', adminController.createTeacher);
 
 /**
  * @swagger
@@ -1318,46 +775,14 @@ router.post('/createTeacher', authorize(['admin']), adminController.createTeache
  *                         example: null
  *       400:
  *         description: Erreur de requête - les paramètres startDate et endDate sont requis.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Les paramètres startDate et endDate sont requis."
  *       401:
  *         description: Erreur de requête - les dates de début et de fin doivent être au format YYYY-MM-DD.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Les dates de début et de fin doivent être au format YYYY-MM-DD."
  *       501:
  *         description: Erreur lors de la récupération des paiements.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur lors de la récupération des paiements."
  *       500:
  *         description: Erreur SQL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur SQL"
  */
-router.get('/getPayments', authorize(['admin']), adminController.getPayments);
+router.get('/getPayments', adminController.getPayments);
 
 /**
  * @swagger
@@ -1390,150 +815,29 @@ router.get('/getPayments', authorize(['admin']), adminController.getPayments);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "ID du professeur manquant."
+ *         description: ID du professeur manquant.
  *       401:
- *         description: Erreur de requête
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "L'ID du professeur n'est pas un entier."
+ *         description: L'ID du professeur n'est pas un entier.
  *       501:
  *         description: Erreur lors de la vérification de l'existence du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence du professeur."
  *       502:
  *         description: Le professeur spécifié n'existe pas.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Le professeur spécifié n'existe pas."
  *       503:
  *         description: Cet utilisateur n'est pas un professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Cet utilisateur n'est pas un professeur."
  *       504:
  *         description: Erreur lors de la récupération du professeur dans le cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la récupération du professeur dans le cours."
  *       505:
  *         description: Erreur lors de la modification du cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la modification du cours."
  *       506:
  *         description: Erreur lors de la suppression du professeur dans les cartes.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression du professeur dans les cartes."
  *       507:
  *         description: Erreur lors de la suppression des paiements.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression des paiements."
  *       508:
  *         description: Erreur lors de la suppression du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression du professeur."
  *       500:
  *         description: Erreur SQL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur SQL"
  */
-router.delete('/deleteTeacher', authorize(['admin']), adminController.deleteTeacher);
+router.delete('/deleteTeacher', adminController.deleteTeacher);
 
 /**
  * @swagger
@@ -1566,150 +870,29 @@ router.delete('/deleteTeacher', authorize(['admin']), adminController.deleteTeac
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "ID de l'étudiant manquant."
+ *         description: ID de l'étudiant manquant.
  *       401:
- *         description: Erreur de requête
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "L'ID de l'étudiant n'est pas un entier."
+ *         description: L'ID de l'étudiant n'est pas un entier.
  *       501:
  *         description: Erreur lors de la vérification de l'existence de l'étudiant.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la vérification de l'existence de l'étudiant."
  *       502:
  *         description: L'étudiant spécifié n'existe pas.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "L'étudiant spécifié n'existe pas."
  *       503:
  *         description: Cet utilisateur n'est pas un étudiant.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Cet utilisateur n'est pas un étudiant."
  *       504:
  *         description: Erreur lors de la récupération de l'étudiant dans le cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la récupération de l'étudiant dans le cours."
  *       505:
  *         description: Erreur lors de la modification du cours.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la modification du cours."
  *       506:
  *         description: Erreur lors de la suppression de l'étudiant dans les cartes.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression de l'étudiant dans les cartes."
  *       507:
  *         description: Erreur lors de la suppression des paiements.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression des paiements."
  *       508:
  *         description: Erreur lors de la suppression de l'étudiant.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la suppression de l'étudiant."
  *       500:
  *         description: Erreur SQL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur SQL"
  */
-router.delete('/deleteStudent', authorize(['admin']), adminController.deleteStudent);
+router.delete('/deleteStudent', adminController.deleteStudent);
 
 /**
  * @swagger
@@ -1813,135 +996,25 @@ router.delete('/deleteStudent', authorize(['admin']), adminController.deleteStud
  *                       example: "description"
  *       400:
  *         description: Erreur de requête - ID du professeur manquant ou invalide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "teacherID manquant."
  *       401:
  *         description: Erreur de requête - Le champ teacherID doit être un entier positif.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Le champ teacherID doit être un entier positif."
  *       402:
  *         description: Erreur de requête - Email invalide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Email invalide."
  *       403:
  *         description: Erreur de requête - Mot de passe trop court (minimum 8 caractères).
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Mot de passe trop court (minimum 8 caractères)."
  *       404:
  *         description: Erreur de requête - Crédit invalide.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Crédit invalide."
  *       405:
  *         description: Erreur de requête - Aucun champ à mettre à jour.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Aucun champ à mettre à jour."
   *       501:
  *         description: Erreur lors de la modification du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la modification du professeur."
  *       502:
  *         description: Il n'existe pas de professeur avec cet ID.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Il n'existe pas de professeur avec cet ID."
  *       503:
  *         description: Erreur lors de la récupération du professeur.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Erreur lors de la récupération du professeur."
  *       500:
  *         description: Erreur SQL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 'Erreur SQL'
  */
-router.patch('/modifyTeacher', authorize(['admin']), adminController.modifyTeacher);
+router.patch('/modifyTeacher', adminController.modifyTeacher);
 
 module.exports = router;

@@ -191,3 +191,72 @@ exports.getPaymentHistory = async (req, res) => {
     }
 };
 
+exports.reserveCourse = async (req, res) => {
+    const { studentID, courseID } = req.body;
+
+    console.log(`reserveCourse | studentID : ${studentID}, courseID : ${courseID}`);
+
+    if (!studentID || !courseID) {
+        return res.status(400).json({ error: "ID de l'étudiant ou ID du cours manquant." });
+    }
+
+    if (isNaN(studentID) || studentID <= 0) {
+        return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
+    }
+
+    if (isNaN(courseID) || courseID <= 0) {
+        return res.status(402).json({ success: false, message: 'Le champ courseID doit être un entier positif.' });
+    }
+
+    try {
+        const result = await studentService.reserveCourse(studentID, courseID);
+        res.status(200).json({ success: true, result });
+    } catch (error) {
+        console.error('reserveCourse | error:', error);
+
+        switch (error.message) {
+            case "L'élève est déjà inscrit à ce cours.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Aucun mode de paiement valide trouvé ou fonds insuffisants.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Le cours n'existe pas.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du cours.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération de l'élève.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            case "L'élève n'existe pas.":
+                res.status(506).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération des élèves du cours.":
+                res.status(507).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du cours.":
+                res.status(508).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération d'une carte valide.":
+                res.status(509).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la suppression de la carte utilisée.":
+                res.status(510).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de l'utilisation de la carte.":
+                res.status(511).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la décrémentation des tickets.":
+                res.status(512).json({ success: false, message: error.message });
+                break;
+            case "L'utilisateur n'est pas un élève.":
+                res.status(513).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
+    }
+};
+  

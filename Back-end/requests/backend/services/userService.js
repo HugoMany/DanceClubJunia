@@ -117,7 +117,7 @@ class UserService {
         if (err) {
           return reject(new Error("Erreur lors de la vérification du type de l'utilisateur."));
         }
-        if(result.length == 0) return reject(new Error("L'utilisateur n'existe pas."));
+        if (result.length == 0) return reject(new Error("L'utilisateur n'existe pas."));
 
         if (result.length > 0 && result[0].userType == "student") {
           // SQL pour vérifier si l'étudiant est inscrit au cours
@@ -131,7 +131,7 @@ class UserService {
             if (err) {
               return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
             }
-            if(result.length == 0) return reject(new Error("Le cours n'existe pas."));
+            if (result.length == 0) return reject(new Error("Le cours n'existe pas."));
 
             // Si l'étudiant est inscrit au cours
             if (result[0].isParticipant) {
@@ -166,7 +166,7 @@ class UserService {
             if (err) {
               return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
             }
-            if(result.length == 0) return reject(new Error("Le cours n'existe pas."));
+            if (result.length == 0) return reject(new Error("Le cours n'existe pas."));
 
 
             // Si le professeur est inscrit au cours
@@ -215,12 +215,12 @@ class UserService {
 
       // Afficher la requête SQL avec les valeurs substituées
       const formattedSql = db.format(sql, params);
-      
+
       db.query(sql, params, (err, results) => {
         if (err) {
           return reject(new Error("Erreur lors de la recherche de cours."));
         }
-        if(results.length == 0){
+        if (results.length == 0) {
           return reject(new Error("Le cours n'a pas été trouvé."));
         }
         resolve(results);
@@ -254,7 +254,7 @@ class UserService {
         if (err) {
           return reject(new Error("Erreur lors de la recherche de cours."));
         }
-        if(results.length == 0){
+        if (results.length == 0) {
           return reject(new Error("Le cours n'a pas été trouvé."));
         }
         resolve(results);
@@ -317,6 +317,56 @@ class UserService {
       });
     });
   }
+
+  async modifyProfile(userID, values, fieldsToUpdate, description) {
+    return new Promise((resolve, reject) => {
+      const checkUserTypeSql = `
+        SELECT userType
+        FROM Users
+        WHERE userID = ?
+      `;
+  
+      db.query(checkUserTypeSql, [userID], (err, rows) => {
+        if (err) {
+          return reject(new Error("Erreur lors de la récupération du type de l'utilisateur."));
+        }
+  
+        if (rows.length === 0) {
+          return reject(new Error("Aucun utilisateur trouvé."));
+        }
+  
+        const userType = rows[0].userType;
+  
+        if ((userType === 'teacher' || userType === "admin") && description) {
+          fieldsToUpdate.push('description = ?');
+          values.push(description);
+        }
+
+        values.push(userID);
+  
+        const sql = `
+          UPDATE Users
+          SET ${fieldsToUpdate.join(', ')}
+          WHERE userID = ?
+        `;
+  
+        db.query(sql, values, (err, result) => {
+          if (err || result.affectedRows === 0) {
+            return reject(new Error("Erreur lors de la modification de l'utilisateur."));
+          }
+  
+          const selectSql = 'SELECT userID, firstname, surname, email, photo, description FROM Users WHERE userID = ?';
+          db.query(selectSql, [userID], (err, rows) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la récupération de l'utilisateur."));
+            }
+            resolve(rows);
+          });
+        });
+      });
+    });
+  }
+  
 
 }
 

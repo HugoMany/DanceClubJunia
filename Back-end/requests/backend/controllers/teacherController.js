@@ -6,11 +6,11 @@ exports.getStudent = async (req, res) => {
 
     console.log("getStudent | studentID : " + studentID);
 
-    if (!courseID) {
+    if (!studentID) {
       return res.status(400).json({ error: 'ID du cours manquante' });
     }
-    if (isNaN(courseID) || courseID <= 0) {
-      return res.status(401).json({ error: 'Le champ courseID doit être un entier positif.' });
+    if (isNaN(studentID) || studentID <= 0) {
+      return res.status(401).json({ error: 'Le champ studentID doit être un entier positif.' });
     }
 
     const result = await teacherService.getStudent(studentID);

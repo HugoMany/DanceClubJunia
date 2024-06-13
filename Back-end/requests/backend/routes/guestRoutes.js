@@ -85,6 +85,8 @@ const guestController = require('../controllers/guestController');
  *                     example: "danse,salsa,debutant"
  *       500:
  *         description: Erreur SQL
+ *       501:
+ *         description: Il n\'y a pas de cours.
  */
 router.get('/getAllCourses', guestController.getAllCourses);
 
@@ -125,7 +127,15 @@ router.get('/getAllCourses', guestController.getAllCourses);
  *                   type: integer
  *                   example: 1
  *       400:
- *         description: Entree invalide
+ *         description: Email manquant.
+ *       401:
+ *         description: Mot de passe manquant.
+ *       402:
+ *         description: Email invalide.
+ *       403:
+ *         description: Mot de passe trop court (minimum 8 caractères).
+ *       501:
+ *         description: Identifiants invalides.
  *       500:
  *         description: Erreur SQL
  */
@@ -180,7 +190,17 @@ router.post('/login', guestController.login);
  *                   type: integer
  *                   example: 1
  *       400:
- *         description: Entrée invalide
+ *         description: Au moins un des champs suivants n'est pas rempli firstname, surname, email, password, connectionMethod
+ *       401:
+ *         description: Email invalide.
+ *       402:
+ *         description: Mot de passe trop court (minimum 8 caractères).
+ *       501:
+ *         description: Erreur lors de la vérification de l'existence de l'email.
+ *       502:
+ *         description: Email déjà utilisé.
+ *       503:
+ *         description: Erreur lors de la création du compte.
  *       500:
  *         description: Erreur SQL
  */
@@ -243,9 +263,15 @@ router.post('/registerStudent', guestController.registerStudent);
  *                       isEvening:
  *                         type: boolean
  *       400:
- *         description: Erreur de requete.
+ *         description: Les paramètres startDate et endDate sont requis.
+ *       401:
+ *         description: Les dates de début et de fin doident être au format YYYY-MM-DD.
+ *       501:
+ *         description: Erreur lors de la récupération des cours.
+ *       502:
+ *         description: Il n'y a pas de cours pour cette période.
  *       500:
- *         description: Erreur du serveur.
+ *         description: Erreur SQL
  */
 router.get('/getCoursesByPeriod', guestController.getCoursesByPeriod);
 
@@ -271,6 +297,10 @@ router.get('/getCoursesByPeriod', guestController.getCoursesByPeriod);
  *                 ticketPrice:
  *                   type: integer
  *                   example: 5
+ *       501:
+ *         description: Erreur lors de la récupération du prix du ticket.
+ *       502:
+ *         description: Le prix du ticket n'a pas été trouvé.
  *       500:
  *         description: Erreur SQL
  */
@@ -298,6 +328,10 @@ router.get('/getTicketPrice', guestController.getTicketPrice);
  *                 subscriptionPrice:
  *                   type: integer
  *                   example: 35
+ *       501:
+ *         description: Erreur lors de la récupération du prix de l'abonnement.
+ *       502:
+ *         description: Le prix de l'abonnement n'a pas été trouvé.
  *       500:
  *         description: Erreur SQL
  */
@@ -333,6 +367,10 @@ router.get('/getSubscriptionPrice', guestController.getSubscriptionPrice);
  *                       price:
  *                         type: integer
  *                         example: 12
+ *       501:
+ *         description: Erreur lors de la récupération du prix des cartes.
+ *       502:
+ *         description: Le prix des cartes n'a pas été trouvé
  *       500:
  *         description: Erreur SQL
  */
@@ -362,8 +400,12 @@ router.get('/getCardPrices', guestController.getCardPrices);
  *                   items:
  *                     type: string
  *                     example: "john.doe@example.com"
+ *       501:
+ *         description: Erreur lors de la récupération des contacts.
+ *       502:
+ *         description: Il n'y a pas de professeur.
  *       500:
- *         description: Erreur du serveur.
+ *         description: Erreur SQL
  */
 
 router.get('/getContactsTeachers', guestController.getContactsTeachers);

@@ -74,7 +74,7 @@ const { authorize } = require('../middlewares/auth');
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getStudent', authorize(['teacher', 'admin']), teacherController.getStudent);
+router.get('/getStudent', teacherController.getStudent);
 
 /**
  * @swagger
@@ -168,7 +168,7 @@ router.get('/getStudent', authorize(['teacher', 'admin']), teacherController.get
  *       500:
  *         description: Erreur SQL
  */
-router.post('/newStudent', authorize(['teacher', 'admin']), teacherController.newStudent);
+router.post('/newStudent', teacherController.newStudent);
 
 /**
  * @swagger
@@ -266,7 +266,7 @@ router.post('/newStudent', authorize(['teacher', 'admin']), teacherController.ne
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/modifyStudent', authorize(['teacher', 'admin']), teacherController.modifyStudent);
+router.patch('/modifyStudent', teacherController.modifyStudent);
 
 /**
  * @swagger
@@ -311,7 +311,7 @@ router.patch('/modifyStudent', authorize(['teacher', 'admin']), teacherControlle
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/removeStudent', authorize(['teacher', 'admin']), teacherController.removeStudent);
+router.patch('/removeStudent', teacherController.removeStudent);
 
 /**
  * @swagger
@@ -356,7 +356,7 @@ router.patch('/removeStudent', authorize(['teacher', 'admin']), teacherControlle
  *       500:
  *         description: Erreur SQL
  */
-router.patch('/affectStudent', authorize(['teacher', 'admin']), teacherController.affectStudent);
+router.patch('/affectStudent', teacherController.affectStudent);
 
 /**
  * @swagger
@@ -432,7 +432,7 @@ router.patch('/affectStudent', authorize(['teacher', 'admin']), teacherControlle
  *       500:
  *         description: Erreur interne du serveur.
  */
-router.get('/searchStudent', authorize(['teacher', 'admin']), teacherController.searchStudent);
+router.get('/searchStudent', teacherController.searchStudent);
 
 /**
  * @swagger
@@ -475,7 +475,7 @@ router.get('/searchStudent', authorize(['teacher', 'admin']), teacherController.
  *       500:
  *         description: Erreur SQL
  */
-router.delete('/cancelCourse', authorize(['teacher', 'admin']), teacherController.cancelCourse);
+router.delete('/cancelCourse', teacherController.cancelCourse);
 
 /**
  * @swagger
@@ -526,7 +526,7 @@ router.delete('/cancelCourse', authorize(['teacher', 'admin']), teacherControlle
  *       500:
  *         description: Erreur SQL
  */
-router.get('/getTeacherPlaces', authorize(['teacher', 'admin']), teacherController.getTeacherPlaces);
+router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
 
 /**
  * @swagger
@@ -693,7 +693,7 @@ router.get('/getTeacherPlaces', authorize(['teacher', 'admin']), teacherControll
  *       500:
  *         description: Erreur du serveur
  */
-router.patch('/modifyCourse', authorize(['teacher', 'admin']), teacherController.modifyCourse);
+router.patch('/modifyCourse', teacherController.modifyCourse);
 
 /**
  * @swagger
@@ -805,7 +805,7 @@ router.post('/getStudentsInCourse', teacherController.getStudentsInCourse);
  *       500:
  *         description: Erreur SQL
  */
-router.post('/addPlaceStudent', authorize(['teacher', 'admin']), teacherController.addPlaceStudent);
+router.post('/addPlaceStudent', teacherController.addPlaceStudent);
 
 /**
  * @swagger
