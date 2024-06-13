@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { IS_ADMIN, IS_CONNECT, IS_PROF } from "../const/const";
 import { Link, redirect } from 'react-router-dom';
 import AdminRequire from './adminRequire';
+import React, { useState, useEffect } from 'react';
+import TeacherRequire from './teacherRequire';
+import isConnected from './isConnected';
+
 const MenuDeroulant = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
+  const [isConnectedVar, setIsConnected] = useState(false);
+
+
+
+  useEffect(() => {
+    AdminRequire(false).then(setIsAdmin);
+    TeacherRequire(false).then(setIsTeacher);
+    isConnected(false).then(setIsConnected);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,7 +42,7 @@ const MenuDeroulant = () => {
         onClick={handleClick}
       >
         <button>
-        {IS_CONNECT ? (
+        {isConnectedVar ? (
                     <span class="material-symbols-outlined">
                     person
                     </span>
@@ -54,15 +69,11 @@ const MenuDeroulant = () => {
           horizontal: 'left',
         }}
       >
-        
-        {AdminRequire(false) ? (
-            [
-                <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
-            ]
-        ) : (
-            []
-        )}
-         {IS_CONNECT ? (
+        {
+          isAdmin && <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
+        }
+       
+         {isConnectedVar ? (
             [
                 <MenuItem key="profile" onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>,
                 <MenuItem key="logout" onClick={handleClose} component={Link} to="/connexion">Logout</MenuItem>
@@ -72,13 +83,8 @@ const MenuDeroulant = () => {
                 <MenuItem key="connexion" onClick={handleClose} component={Link} to="/connexion">Connexion</MenuItem>
             ]
         )}
-        {IS_PROF ? (
-            [
-                <MenuItem key="prof" onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>
-            ]
-        ) : (
-            []
-        )}
+        {
+        isTeacher && <MenuItem key="prof" onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>}
       </Menu>
     </div>
   );
