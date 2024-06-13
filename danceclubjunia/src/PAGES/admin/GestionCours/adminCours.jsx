@@ -158,7 +158,7 @@ const AdminCours = () => {
         open={openModif}
         onClose={handleCloseModif}
       >
-        <ModifCours idCours={3} />
+        <ModifCours idCours={7} />
       </Modal>
 
     

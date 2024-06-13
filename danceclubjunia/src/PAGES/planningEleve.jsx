@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-const PlanningEleve = ({ studentId }) => {const [courses, setCourses] = useState([]);
+const PlanningEleve = ({ studentId }) => {
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
         const fetchCourses = async () => {
-            try {const token = localStorage.getItem('token');
+            try {
+            const token = localStorage.getItem('token');
             if (!token) return { valid: false };
             
             const response = await fetch(`${URL}/api/student/getCourses?studentID=${studentId}`, {

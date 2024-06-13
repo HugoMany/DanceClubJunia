@@ -17,87 +17,176 @@ const hideLoading = () => {
 showLoading();
 
 const ModifCours = ({ idCours }) => {
-    const [loading, setLoading] = useState(true);
+    
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
     const [courseData, setCourseData] = useState(null);
-
+    
     useEffect(() => {
-        const fetchCours = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) return { valid: false };
-                console.log(token)
-                const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                const data = await response.json();
-                setCourseData(data);
-                setLoading(false);
-                hideLoading();
-            } catch (error) {
-                console.error('Erreur lors de la récupération des info du cours', error);
-                hideLoading();
-            }
-        };
-        fetchCours();
-    }, [idCours]);
+       const fetchCourses = async () => {
+           try {
+           const token = localStorage.getItem('token');
+           if (!token) return { valid: false };
+           
+           const response = await fetch(`${URL_DB}guest/getAllCourses`, {
+               method: 'GET',
+               headers: {
+                   'Authorization': `Bearer ${token}`,
+               },
+               });
+               console.log(response);
+               if (response.ok) {
+                   const data = await response.json();
+                   console.log(data);
+                   const filteredCourse = data.courses.find(course => course.courseID === idCours);
+                   console.log(idCours+'OO')
+                   console.log(filteredCourse);
+                   setCourseData(filteredCourse);
+               } else {
+                   throw new Error('Error fetching courses 101');
+               }
+           } catch (error) {
+               console.error('Error fetching courses:', error);
+               setError(error);
+           } finally {
+               setLoading(false);
+           }
+       };
 
-    const handleSubmit = async (event) => {
-        console.log("ooooo")
-        event.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) return { valid: false };
+       fetchCourses();
+   },[idCours]);
+    // useEffect(() => {
+    //     const fetchCours = async () => {
+    //         try {
+    //             const token = localStorage.getItem('token');
+    //             if (!token) return { valid: false };
+    //             console.log(token)
+    //             const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                 },
+    //             });
+    //             const data = await response.json();
+    //             setCourseData(data);
+    //             setLoading(false);
+    //             hideLoading();
+    //         } catch (error) {
+    //             console.error('Erreur lors de la récupération des info du cours', error);
+    //             hideLoading();
+    //         }
+    //     };
+    //     fetchCours();
+    // }, [idCours]);
 
-            console.log(token)
-            console.log(courseData)
-            let courseDataModify = {
-                ...courseData.courses[0],
-                teacherID: "1",
-                type:"rock" // A modifier
-            };
+    // const handleSubmit = async (event) => {
+    //     console.log("ooooo")
+    //     event.preventDefault();
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         if (!token) return { valid: false };
+
+    //         console.log(token)
+    //         console.log(courseData)
+    //         let courseDataModify = {
+    //             ...courseData.courses[0],
+    //             teacherID: "1",
+    //             type:"rock" // A modifier
+    //         };
 
             
-            console.log(courseDataModify)
+    //         console.log(courseDataModify)
 
-            const response = await fetch(URL_DB + `teacher/modifyCourse`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(courseDataModify),
-            });
-            if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour du cours');
-            }
-            alert('Cours mis à jour avec succès');
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour du cours', error);
-        }
-    };
+    //         const response = await fetch(URL_DB + `teacher/modifyCourse`, {
+    //             method: 'PATCH',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(courseDataModify),
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error('Erreur lors de la mise à jour du cours');
+    //         }
+    //         alert('Cours mis à jour avec succès');
+    //     } catch (error) {
+    //         console.error('Erreur lors de la mise à jour du cours', error);
+    //     }
+    // };
 
-    const handleChange = (event) => {
-        setCourseData(prevState => ({
-            ...prevState,
-        }));
-    };
+    // const handleChange = (event) => {
+    //     setCourseData(prevState => ({
+    //         ...prevState,
+    //     }));
+    // };
 
-    if (loading) {
-        return <Loading></Loading>;
-    }
+    // if (loading) {
+    //     return <Loading></Loading>;
+    // }
+    // 
+    
+    if (loading){}
+    if (error) return <div>Error loading courses: {error.message}</div>;
 
     return (
+        // <div className='ModalAdminGrid'>
+        //     <div>
+        //     <h1>Modifier le cours N°{idCours}</h1>
+        //     <form onSubmit={handleSubmit}>
+        //         <label>
+        //             Type de danse:
+        //             <input type="text" name="type" placeholder={courseData.type} onChange={handleChange} />
+        //         </label>
+        //         {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
+        //         <button type="submit">Mettre à jour</button>
+        //     </form>
+        //     </div>
+        // </div>
         <div className='ModalAdminGrid'>
             <div>
             <h1>Modifier le cours N°{idCours}</h1>
-            <form onSubmit={handleSubmit}>
+            <form >
+                <label>
+                    image du cours:
+                    <input type="file" name="image" accept="image/*" placeholder="Placez la nouvelle image" />
+                </label>
+                <label>
+                    Titre du cours:
+                    <input type="text" name="title" placeholder={courseData.title}/>
+                </label>
                 <label>
                     Type de danse:
-                    <input type="text" name="type" placeholder={courseData.type} onChange={handleChange} />
+                    <input type="text" name="type" placeholder={courseData.type}/>
                 </label>
-                {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
+                <label>
+                    Durée:
+                    <input type="number" name="durée du cours" placeholder={courseData.duration}/>
+                </label>
+                <label>
+                    Jour du cours:
+                    <input type="date" name="jour du cours" placeholder={courseData.startDate}/>
+                </label>
+                <label>
+                    Heure du cours:
+                    <input type="time" name="heurs du cours" placeholder={courseData.startTime}/>
+                </label>
+                <label>
+                    Lieu du cours:
+                    <input type="text" name="lieu du cours" placeholder={courseData.location}/>
+                </label>
+                <label>
+                    Nombre max de participants:
+                    <input type="Number" name="nombre max de participants" placeholder={courseData.maxParticipants}/>
+                </label>
+                <label>
+                    Est-ce une soirée :
+                    <input type="boolean" name="soiree?" placeholder={courseData.isEvening}/>
+                </label>
+                <label>
+                    récurrence:
+                    <input type="Number" name="recurrence" placeholder={courseData.recurrense}/>
+                </label>
+                
+                
                 <button type="submit">Mettre à jour</button>
             </form>
             </div>
