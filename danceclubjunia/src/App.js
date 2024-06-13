@@ -34,6 +34,7 @@ import Appel from './PAGES/appel';
 import CreerProf from './PAGES/admin/GestionProf/creerProf';
 import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 import ErreurNotAccess from './PAGES/erreurNotAccess';
+import Logout from './elements/logout';
 function App() {
   return (
     <div className="App">
@@ -53,7 +54,7 @@ function App() {
           <Route path="/admin/eleve" element={<AdminEleve />} />
 
           <Route path="/admin/" element={<Admin />} />
-          <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
+          <Route path="/cours/:courseId" element={<CoursDynamique />} />
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />
@@ -62,6 +63,8 @@ function App() {
           <Route path="/listCourse" element={<CoursesList/>}/>
 
           <Route path='/load' element={<Loading></Loading>}/>
+
+          <Route path='logout' element={<Logout></Logout>}></Route>
 
           <Route path='/error' element={<ErreurNotAccess></ErreurNotAccess>}/>
 

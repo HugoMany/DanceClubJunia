@@ -3,12 +3,10 @@ import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 
 const showLoading = () => {
-    // Placeholder for actual showLoading implementation
     console.log('Loading...');
 };
 
 const hideLoading = () => {
-    // Placeholder for actual hideLoading implementation
     console.log('Loading complete.');
 };
 
@@ -17,21 +15,35 @@ showLoading();
 
 const ModifEleve = ({ idEleve }) => {
     const [loading, setLoading] = useState(true);
-    const [courseData, setCourseData] = useState(null);
+    const [courseData, setCourseData] = useState({
+        studentID: idEleve,
+        firstname: '',
+        surname: '',
+        email: '',
+        password: '',
+        connectionMethod: '',
+        credit: 0,
+        photo: ''
+    });
 
     useEffect(() => {
         const fetchProf = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return { valid: false };
-                console.log(token)
-                const response = await fetch(URL_DB + 'user/searchStudent?studentID=' + idEleve, {
+                console.log(token);
+                const response = await fetch(URL_DB + 'teacher/getStudent?studentID=' + idEleve, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
                 const data = await response.json();
-                setCourseData(data);
+                if (data.success) {
+                    setCourseData({
+                        studentID: idEleve,
+                        ...data.student,
+                    });
+                }
                 setLoading(false);
                 hideLoading();
             } catch (error) {
@@ -43,21 +55,15 @@ const ModifEleve = ({ idEleve }) => {
     }, [idEleve]);
 
     const handleSubmit = async (event) => {
-        console.log("ooooo")
         event.preventDefault();
         try {
             const token = localStorage.getItem('token');
             if (!token) return { valid: false };
 
-            console.log(token)
-            console.log(courseData)
-            let courseDataModify = {
-                ...courseData.courses[0]
+            const courseDataModify = {
+                ...courseData,
             };
-
-            
-            console.log(courseDataModify)
-
+            console.log(courseDataModify);
             const response = await fetch(URL_DB + `teacher/modifyStudent`, {
                 method: 'PATCH',
                 headers: {
@@ -69,42 +75,87 @@ const ModifEleve = ({ idEleve }) => {
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du student');
             }
-            alert('Student mis à jour avec succès');
+            else {
+                window.location.href = '/admin/eleve'
+            }
         } catch (error) {
             console.error('Erreur lors de la mise à jour du student', error);
         }
     };
 
     const handleChange = (event) => {
+        const { name, value } = event.target;
         setCourseData(prevState => ({
             ...prevState,
+            [name]: value,
         }));
     };
 
     if (loading) {
-        return <Loading></Loading>;
+        return <Loading />;
     }
+
     return (
         <form onSubmit={handleSubmit}>
-
-            <label htmlFor="firsname">Firsname:</label>
-            <input type="text" name="firstname" placeholder={courseData.firstname} onChange={handleChange} />
+            <label htmlFor="firstname">Firstname:</label>
+            <input 
+                type="text" 
+                name="firstname" 
+                value={courseData.firstname || ''} 
+                onChange={handleChange} 
+            />
 
             <label htmlFor="surname">Surname:</label>
-            <input type="text" name="surname" placeholder={courseData.surname} onChange={handleChange} />
+            <input 
+                type="text" 
+                name="surname" 
+                value={courseData.surname || ''} 
+                onChange={handleChange} 
+            />
 
             <label htmlFor="email">Email:</label>
-            <input type="email" name="email" placeholder={courseData.email} onChange={handleChange} />
+            <input 
+                type="email" 
+                name="email" 
+                value={courseData.email || ''} 
+                onChange={handleChange} 
+            />
+
+            <label htmlFor="password">Password:</label>
+            <input 
+                type="password" 
+                name="password" 
+                value={courseData.password || ''} 
+                onChange={handleChange} 
+            />
 
             <label htmlFor="connectionMethod">Connection Method:</label>
-            <input type="text" name="connectionMethod" placeholder={courseData.connectionMethod} onChange={handleChange} />
+            <input 
+                type="text" 
+                name="connectionMethod" 
+                value={courseData.connectionMethod || ''} 
+                onChange={handleChange} 
+            />
+
+            <label htmlFor="credit">Credit:</label>
+            <input 
+                type="number" 
+                name="credit" 
+                value={courseData.credit} 
+                onChange={handleChange} 
+            />
+
+            <label htmlFor="photo">Photo:</label>
+            <input 
+                type="text" 
+                name="photo" 
+                value={courseData.photo || ''} 
+                onChange={handleChange} 
+            />
 
             <button type="submit">Submit</button>
         </form>
     );
 };
-
-
-
 
 export default ModifEleve;

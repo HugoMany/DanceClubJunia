@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from '../../../elements/header';
 import {URL_DB} from '../../../const/const';
 
 function CreerCours() {
@@ -23,28 +22,6 @@ function CreerCours() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Check if any field is empty
-        if (
-            image === '' ||
-            title === '' ||
-            type === '' ||
-            duration === '' ||
-            startDate === '' ||
-            startTime === '' ||
-            location === '' ||
-            maxParticipants === '' ||
-            paymentType === '' ||
-            price === '' ||
-            paymentOptions === '' ||
-            recurrence === '' ||
-            teachers === '' ||
-            links === '' ||
-            tags === ''
-        ) {
-            alert('Please fill in all fields');
-            return;
-        }
 
         const json = {
             image,
@@ -87,36 +64,35 @@ function CreerCours() {
 
     return (
         <form onSubmit={handleSubmit} className='Form'>
-            {/* <Header></Header> */}
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
             <label htmlFor="title">Title:</label>
-            <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <input type="text" id="title" required="required" value={title} onChange={(e) => setTitle(e.target.value)} />
 
             <label htmlFor="type">Type:</label>
-            <input type="text" id="type" value={type} onChange={(e) => setType(e.target.value)} />
+            <input type="text" id="type" required="required" value={type} onChange={(e) => setType(e.target.value)} />
 
             <label htmlFor="duration">Duration:</label>
-            <input type="time" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
+            <input type="number" id="duration" required="required" value={duration} onChange={(e) => setDuration(e.target.value)} />
 
             <label htmlFor="startDate">Start Date:</label>
-            <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" id="startDate" required="required" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
 
             <label htmlFor="startTime">Start Time:</label>
-            <input type="time" id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+            <input type="time" id="startTime" required="required" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
 
             <label htmlFor="location">Location:</label>
-            <input type="text" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+            <input type="text" id="location" required="required" value={location} onChange={(e) => setLocation(e.target.value)} />
 
             <label htmlFor="maxParticipants">Max Participants:</label>
-            <input type="number" id="maxParticipants" value={maxParticipants} onChange={(e) => setMaxParticipants(e.target.value)} />
+            <input type="number" id="maxParticipants" required="required" value={maxParticipants} onChange={(e) => setMaxParticipants(e.target.value)} />
 
             <label htmlFor="paymentType">Payment Type:</label>
             <input type="text" id="paymentType" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} />
 
             <label htmlFor="price">Price:</label>
-            <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <input type="number" id="price" required="required" value={price} onChange={(e) => setPrice(e.target.value)} />
 
             <label htmlFor="paymentOptions">Payment Options (comma separated):</label>
             <input type="text" id="paymentOptions" value={paymentOptions} onChange={(e) => setPaymentOptions(e.target.value)} />
@@ -128,7 +104,7 @@ function CreerCours() {
             <input type="text" id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} />
 
             <label htmlFor="teachers">Teachers :</label>
-            <input type="text" id="teachers" value={teachers} onChange={(e) => setTeachers(e.target.value)} />
+            <input type="text" id="teachers" required="required" value={teachers} onChange={(e) => setTeachers(e.target.value)} />
 
             <label htmlFor="links">Links :</label>
             <input type="text" id="links" value={links} onChange={(e) => setLinks(e.target.value)} />
