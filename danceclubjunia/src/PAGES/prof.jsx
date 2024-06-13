@@ -4,8 +4,10 @@ import Appel from './appel';
 import GetStudentID from './getStudentID';
 import AjoutCredits from './ajoutCredits';
 import React, { useState } from 'react';
+import TeacherRequire from '../elements/teacherRequire.jsx';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
+    TeacherRequire()
     return(
     <div>
         

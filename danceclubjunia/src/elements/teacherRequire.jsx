@@ -16,6 +16,9 @@ function TeacherRequire(redirect = true) {
         if (data.userType === "teacher") {
             return true;
         } else {
+            if(redirect){
+                window.location.href = '/error';
+            }
             console.log("Vous n'êtes pas un enseignant");
             return false;
         }
