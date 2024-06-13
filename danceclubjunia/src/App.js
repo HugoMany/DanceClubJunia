@@ -54,7 +54,7 @@ function App() {
           <Route path="/admin/eleve" element={<AdminEleve />} />
 
           <Route path="/admin/" element={<Admin />} />
-          <Route path="/cours/:courseId/:idPerson" element={<CoursDynamique />} />
+          <Route path="/cours/:courseId" element={<CoursDynamique />} />
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />

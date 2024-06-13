@@ -42,7 +42,7 @@ const CoursesList = () => {
         <div>
             <div>
                 {cours.map(course => (
-                    <a href={'/cours/' + course.courseId + '/1/'} className='courseA'>
+                    <a href={'/cours/' + course.courseId} className='courseA'>
                     <div class="coursesCase" key={course.courseId}>
                         <div className='divImageCoursSuivanteHomePage'>
                         <div className='imageCoursSuivanteHomePage'><img src={"https://gap.asptt.com/files/2021/08/salsa.png"} alt={course.title} /></div>

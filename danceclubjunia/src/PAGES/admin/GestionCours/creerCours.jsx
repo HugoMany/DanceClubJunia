@@ -74,7 +74,7 @@ function CreerCours() {
             <input type="text" id="type" required="required" value={type} onChange={(e) => setType(e.target.value)} />
 
             <label htmlFor="duration">Duration:</label>
-            <input type="time" id="duration" required="required" value={duration} onChange={(e) => setDuration(e.target.value)} />
+            <input type="number" id="duration" required="required" value={duration} onChange={(e) => setDuration(e.target.value)} />
 
             <label htmlFor="startDate">Start Date:</label>
             <input type="date" id="startDate" required="required" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
