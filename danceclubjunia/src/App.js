@@ -35,6 +35,12 @@ import CreerProf from './PAGES/admin/GestionProf/creerProf';
 import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 import ErreurNotAccess from './PAGES/erreurNotAccess';
 import Logout from './elements/logout';
+import SupprimerCours from './PAGES/admin/GestionCours/suppirmerCours';
+import ModifProf from './PAGES/admin/GestionProf/modifProf';
+import ModifEleve from './PAGES/admin/GestionEleve/modifEleve';
+import SupprimerEleve from './PAGES/admin/GestionEleve/supprimerEleve';
+import SupprimerProf from './PAGES/admin/GestionProf/supprimerProf';
+
 function App() {
   return (
     <div className="App">
@@ -52,7 +58,16 @@ function App() {
           <Route path="/admin/prof" element={<AdminProf />} />
           <Route path="/admin/cours" element={<AdminCours />} />
           <Route path="/admin/cours" element={<AdminCours />} />
+
           <Route path="/admin/cours/modifCours/:courseId" element={<ModifCours />} />
+          <Route path="/admin/cours/suppCours/:courseId" element={<SupprimerCours />} />
+
+          <Route path="/admin/cours/modifProf/:profId" element={<ModifProf />} />
+          <Route path="/admin/cours/suppProf/:prof" element={< SupprimerProf/>} />
+
+          <Route path="/admin/cours/suppStudent/:studentId" element={<ModifEleve />} />
+          <Route path="/admin/cours/suppStudent/:studentId" element={<SupprimerEleve />} />
+
 
           <Route path="/admin/eleve" element={<AdminEleve />} />
 
