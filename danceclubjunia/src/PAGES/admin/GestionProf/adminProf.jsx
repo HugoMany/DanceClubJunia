@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import { DataGrid } from '@mui/x-data-grid';
 import Loading from '../../../elements/loading';
+import CreerProf from './creerProf';
 
 import { Modal, Button } from '@mui/material';
 import AdminRequire from '../../../elements/isAdmin';
@@ -146,9 +147,9 @@ const AdminProf = () => {
         open={openCreer}
         onClose={handleCloseCreer}
       >
-        <>
-        Créer
-        </>
+        <CreerProf>
+        </CreerProf>
+       
       </Modal>
 
 
