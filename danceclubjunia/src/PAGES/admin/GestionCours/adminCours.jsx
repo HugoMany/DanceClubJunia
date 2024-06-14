@@ -12,26 +12,16 @@ import Loading from '../../../elements/loading';
 import { Modal, Button } from '@mui/material';
 import SupprimerCours from './suppirmerCours';
 
-
+import AdminRequire from '../../../elements/isAdmin';
 const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
-  const [openModif, setOpenModif] = useState(false);
   const [openCreer, setOpenCreer] = useState(false);
-  const [openSupp, setOpenSupp] = useState(false);
-
-
-  const handleOpenModif = () => setOpenModif(true);
-  const handleCloseModif = () => setOpenModif(false);
 
   const handleOpenCreer = () => setOpenCreer(true);
   const handleCloseCreer = () => setOpenCreer(false);
 
-  const handleOpenSupp = () => setOpenSupp(true);
-  const handleCloseSupp = () => setOpenSupp(false);
 
 
 
@@ -70,6 +60,12 @@ const AdminCours = () => {
    
     console.log(allCoursesData);
 }, []);
+
+AdminRequire()
+
+if (loading) {
+    return <Loading />;
+}
 
   return (
     <div>
@@ -113,9 +109,18 @@ const AdminCours = () => {
                   alert(`Clicked on row with id: ${params.row.courseID}`);
                 };
           
-                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                return (
+                <>
+               
+                <a href={'/admin/cours/modifCours/'+params.row.courseID}>
+                <Button variant="contained" color="primary" >
                 Modifier le cours N°{params.row.courseID}
-              </Button>;
+              </Button>
+              </a>
+
+                </>
+              
+              )
               }
             },
             {
@@ -131,9 +136,15 @@ const AdminCours = () => {
                 // idCoursSelected = params.row.courseID;
                 // console.log("idCoursSelected"+idCoursSelected);
           
-                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                return (  
+                  <> 
+                <a href={'/admin/cours/supp/'+params.row.courseID}>
+                <Button variant="contained" color="primary">
                 Supprimer le cours N°{params.row.courseID}
-              </Button>;
+                </Button>
+                </a>
+              </>
+               )
               }
             }
             
@@ -152,32 +163,18 @@ const AdminCours = () => {
       <Button variant="contained" color="primary" onClick={handleOpenCreer}>
         Créer un cours
       </Button>
-
-      
-      <Modal
-        open={openModif}
-        onClose={handleCloseModif}
-      >
-        <ModifCours idCours={7} />
-      </Modal>
-
-    
       <Modal
         open={openCreer}
         onClose={handleCloseCreer}
       >
         <CreerCours />
       </Modal>
+      
+      
 
-   
-      <Modal
-        open={openSupp}
-        onClose={handleCloseSupp}
-      >
-       <SupprimerCours idCours={3}>
+    
+     
 
-       </SupprimerCours>
-      </Modal>
 
       
 

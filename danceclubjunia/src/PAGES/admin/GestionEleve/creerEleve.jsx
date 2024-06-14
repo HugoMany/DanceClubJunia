@@ -1,100 +1,125 @@
 import React, { useState } from 'react';
 //import Header from '../elements/header';
 //import '../css/login.css';
-import {URL_DB} from '../../../const/const';
+import { URL_DB } from '../../../const/const';
 function CreerEleve() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [connectionMethod, setConnectionMethod] = useState('');
+    const [photo, setPhoto] = useState('');
     const credit = 0;
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Ajoutez ici la logique pour traiter les données d'inscription
-        const json = {
+        const formData = {
             firstname,
             surname,
             email,
             password,
             connectionMethod,
+            photo,
             credit
         };
-        console.log('Form Data:', json);
-        
-        // Add logic to save course data
-        fetch(URL_DB+'teacher/newStudent', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(json)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        console.log('Form Data:', formData);
 
+        const fetchProf = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return { valid: false };
+                }
+
+                console.log('Token:', token);
+
+                const response = await fetch(URL_DB + 'teacher/newStudent', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Response:', data);
+
+            } catch (error) {
+                console.error('Erreur lors de la création du student', error);
+            }
+        };
+
+        fetchProf();
     };
 
     return (
         <div className='Form'>
-            {/* <Header></Header> */}
-            <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="nom">Firstname:</label>
+                <label>
+                    firstname:
                     <input
                         type="text"
-                        id="nom"
+                        required
                         value={firstname}
                         onChange={(e) => setFirstname(e.target.value)}
                     />
-                </div>
-                <div>
-                    <label htmlFor="prenom">Surname:</label>
+                </label>
+                <br />
+                <label>
+                    surname:
                     <input
                         type="text"
-                        id="prenom"
+                        required
                         value={surname}
                         onChange={(e) => setSurname(e.target.value)}
                     />
-                </div>
-                <div>
-                    <label htmlFor="motDePasse">Password:</label>
-                    <input
-                        type="password"
-                        id="motDePasse"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Email:</label>
+                </label>
+                <br />
+                <label>
+                    mail:
                     <input
                         type="email"
-                        id="email"
+                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </div>
-                <div>
-                    <label htmlFor="connection">Connection Method:</label>
+                </label>
+                <br />
+                <label>
+                    password:
+                    <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </label>
+                <br />
+                <label>
+                    connectionMethod:
                     <input
                         type="text"
-                        id="connectionMethod"
+                        required
                         value={connectionMethod}
                         onChange={(e) => setConnectionMethod(e.target.value)}
                     />
-                </div>
-                <button type="submit">Creer l'élève</button>
+                </label>
+                <br />
+                <label>
+                    photo:
+                    <input
+                        type="file"
+                        onChange={(e) => setPhoto(e.target.files[0]?.name || '')}
+                    />
+                </label>
+                <br />
+                <button type="submit">Créer le student</button>
             </form>
         </div>
     );
-}
+};
 
 export default CreerEleve;

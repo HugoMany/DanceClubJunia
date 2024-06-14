@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../elements/header';
 import '../../css/admin.css';
 import { Button } from '@mui/material';
-import AdminRequire from '../../elements/isAdmin';
+import AdminRequire from '../../elements/requireAdmin';
 function Admin() {
-    AdminRequire();
+    useEffect(() => {
+        AdminRequire();
+    }, []);
     return(
         <div>
             

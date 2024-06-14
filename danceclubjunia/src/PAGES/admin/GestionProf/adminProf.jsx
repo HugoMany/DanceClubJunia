@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import { DataGrid } from '@mui/x-data-grid';
 import Loading from '../../../elements/loading';
+import CreerProf from './creerProf';
 
 import { Modal, Button } from '@mui/material';
 import AdminRequire from '../../../elements/isAdmin';
@@ -15,19 +16,10 @@ const AdminProf = () => {
   const [allProfData, setAllProfData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [openModif, setOpenModif] = useState(false);
   const [openCreer, setOpenCreer] = useState(false);
-  const [openSupp, setOpenSupp] = useState(false);
-
-
-  const handleOpenModif = () => setOpenModif(true);
-  const handleCloseModif = () => setOpenModif(false);
-
+  
   const handleOpenCreer = () => setOpenCreer(true);
   const handleCloseCreer = () => setOpenCreer(false);
-
-  const handleOpenSupp = () => setOpenSupp(true);
-  const handleCloseSupp = () => setOpenSupp(false);
 
   useEffect(() => {
     const fetchAllProf = async () => {
@@ -96,9 +88,9 @@ const AdminProf = () => {
                   alert(`Clicked on row with id: ${params.row.userID}`);
                 };
           
-                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                return <a href={"/admin/teacher/modif/"+params.row.userID}><Button variant="contained" color="primary" >
                 Modifier le prof N°{params.row.userID}
-              </Button>;
+              </Button></a>;
               }
             },
             {
@@ -114,9 +106,9 @@ const AdminProf = () => {
                 // idCoursSelected = params.row.courseID;
                 // console.log("idCoursSelected"+idCoursSelected);
           
-                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                return    <a href={"/admin/teacher/supp/"+params.row.userID}><Button variant="contained" color="primary">
                 Supprimer le prof  N°{params.row.userID}
-              </Button>;
+              </Button></a>;
               }
             }
           ]}
@@ -130,14 +122,7 @@ const AdminProf = () => {
         />)}
         </div>
    
-      <Modal
-        open={openModif}
-        onClose={handleCloseModif}
-      >
-        <>
-        Modifier
-        </>
-      </Modal>
+    
 
       <Button variant="contained" color="primary" onClick={handleOpenCreer}>
         Créer un prof
@@ -146,20 +131,13 @@ const AdminProf = () => {
         open={openCreer}
         onClose={handleCloseCreer}
       >
-        <>
-        Créer
-        </>
+        <CreerProf>
+        </CreerProf>
+       
       </Modal>
 
 
-      <Modal
-        open={openSupp}
-        onClose={handleCloseSupp}
-      >
-        <>
-      Supp
-        </>
-      </Modal>
+   
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 import { URL_DB } from '../const/const';
 
-function AdminRequire(redirect = true) {
+function AdminRequire() {
     const token = localStorage.getItem('token');
-    if (!token) return { valid: false };
+    // if (!token) return { valid: false };
     const url = `${URL_DB}auth/verifyToken`;
 
     return fetch(url, {
@@ -19,9 +19,7 @@ function AdminRequire(redirect = true) {
                 return true;
             }
             else{
-                // if(redirect){
-                //     window.location.href = '/error';
-                // }
+                window.location.href = '/error';
                 console.log("Vous n'êtes pas un admin");
                 return false;
             }
