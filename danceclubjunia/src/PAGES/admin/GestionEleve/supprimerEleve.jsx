@@ -13,7 +13,7 @@ function SupprimerEleve() {
     const fetchEleve = async () => {
         try {
             const token = localStorage.getItem('token');
-            // if (!token) return { valid: false };
+            if (!token) return { valid: false };
             console.log(token)
             await fetch(URL_DB + 'admin/deleteStudent', {
                 method: 'DELETE',
@@ -23,7 +23,7 @@ function SupprimerEleve() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    userID: idParam
+                    studentID: idParam
                 })
             });
         } catch (error) {

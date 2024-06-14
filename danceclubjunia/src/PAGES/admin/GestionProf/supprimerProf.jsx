@@ -13,8 +13,8 @@ function SupprimerProf() {
     const fetchProf = async () => {
         try {
             const token = localStorage.getItem('token');
-            // if (!token) return { valid: false };
-            console.log(token)
+            if (!token) return { valid: false };
+
             await fetch(URL_DB + 'admin/deleteTeacher', {
                 method: 'DELETE',
                 headers: {

@@ -22,9 +22,11 @@ const MenuDeroulant = () => {
     setIsAdmin(true);
     setIsTeacher(true);
     setIsConnected(true);
+    
     // setIsAdmin(isAdmin())
     // setIsTeacher(isTeacher())
     // setIsConnected(isConnected())
+
     console.log(isAdminVar,isTeacherVar,isConnectedVar);
 
     // isAdmin(false).then(setIsAdmin);
