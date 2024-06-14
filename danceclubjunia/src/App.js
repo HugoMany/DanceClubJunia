@@ -62,11 +62,11 @@ function App() {
           <Route path="/admin/cours/modif/:idParam" element={<ModifCours />} />
           <Route path="/admin/cours/supp/:idParam" element={<SupprimerCours />} />
 
-          <Route path="/admin/teacher/modif/:profId" element={<ModifProf />} />
-          <Route path="/admin/teacher/supp/:prof" element={< SupprimerProf/>} />
+          <Route path="/admin/teacher/modif/:idParam" element={<ModifProf />} />
+          <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
 
-          <Route path="/admin/student/modif/:studentId" element={<ModifEleve />} />
-          <Route path="/admin/student/supp/:studentId" element={<SupprimerEleve />} />
+          <Route path="/admin/student/modif/:idParam" element={<ModifEleve />} />
+          <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
 
 
           <Route path="/admin/eleve" element={<AdminEleve />} />
