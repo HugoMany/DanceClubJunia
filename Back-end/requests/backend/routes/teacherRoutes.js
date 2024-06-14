@@ -349,11 +349,13 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *       403:
  *         description: Email invalide.
  *       501:
- *         description: Erreur lors de la création de l'élève.
- *       502:
  *         description: Erreur lors de la récupération de l'élève.
+ *       502:
+ *         description: Le cours n'existe pas.
  *       503:
- *         description: L'utilisateur n'existe pas
+ *         description: Erreur lors de la modification de l'élève.
+ *       504:
+ *         description: Erreur lors de la récupération des élèves du cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -808,24 +810,24 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
 /**
  * @swagger
  * /api/teacher/getStudentsInCourse:
- *   post:
+ *   get:
  *     summary: Recupere les informations des etudiants d'un cours
  *     tags: [Teachers]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur faisant la demande
- *                 example: 1
- *               courseID:
- *                 type: integer
- *                 description: ID du cours dont on veut recuperer les etudiants
- *                 example: 3
+ *     parameters:
+ *       - in: query
+ *         name: userID
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         required: true
+ *         description: ID de l'utilisateur faisant la demande
+ *       - in: query
+ *         name: courseID
+ *         schema:
+ *           type: integer
+ *           example: 3
+ *         required: true
+ *         description: ID du cours dont on veut recuperer les etudiants
  *     responses:
  *       200:
  *         description: Liste des etudiants du cours
@@ -854,7 +856,7 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *                       description:
  *                         type: string
  *       400:
- *         description: Le champs courseID et userID doivent être fournis.
+ *         description: Les champs courseID et userID doivent être fournis.
  *       401:
  *         description: L'ID de l'utilisateur n'est pas un entier positif.
  *       402:
@@ -870,7 +872,7 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *       505:
  *         description: Erreur lors de la récupération du cours.
  *       506:
- *         description: Cours non trouvé
+ *         description: Cours non trouvé.
  *       507:
  *         description: Erreur lors de la récupération de l'utilisateur.
  *       508:
@@ -878,10 +880,9 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *       509:
  *         description: L'utilisateur n'est pas un professeur ou un administrateur.
  *       500:
- *         description: Erreur SQL
+ *         description: Erreur SQL.
  */
-
-router.post('/getStudentsInCourse', teacherController.getStudentsInCourse);
+router.get('/getStudentsInCourse', teacherController.getStudentsInCourse);
 
 /**
  * @swagger
@@ -1019,6 +1020,8 @@ router.post('/addPlaceStudent', teacherController.addPlaceStudent);
  *         description: Ce cours n'existe pas.
  *       510:
  *         description: Le lien n'est pas contenu dans le cours.
+ *       511:
+ *         description: Ce cours n'existe pas ou ce lien n'est pas dans le cours
  *       500:
  *         description: Erreur SQL
  */

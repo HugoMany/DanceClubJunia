@@ -194,6 +194,7 @@ exports.getCardPrices = async (req, res) => {
 
 exports.getContactsTeachers = async (req, res) => {
     try {
+        console.log("getContactsTeachers");
         const contacts = await guestService.getContactsTeachers();
         res.status(200).json({ success: true, contacts: contacts });
     } catch (error) {
