@@ -13,7 +13,7 @@ function SupprimerCours() {
     const fetchCours = async () => {
         try {
             const token = localStorage.getItem('token');
-            // if (!token) return { valid: false };
+
             console.log(token)
             await fetch(URL_DB + 'admin/deleteCourse', {
                 method: 'DELETE',

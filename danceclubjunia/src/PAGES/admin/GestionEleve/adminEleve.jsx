@@ -14,19 +14,10 @@ const AdminEleve = () => {
   const [loading, setLoading] = useState(true);
 
   
-  const [openModif, setOpenModif] = useState(false);
   const [openCreer, setOpenCreer] = useState(false);
-  const [openSupp, setOpenSupp] = useState(false);
-
-
-  const handleOpenModif = () => setOpenModif(true);
-  const handleCloseModif = () => setOpenModif(false);
-
+  
   const handleOpenCreer = () => setOpenCreer(true);
   const handleCloseCreer = () => setOpenCreer(false);
-
-  const handleOpenSupp = () => setOpenSupp(true);
-  const handleCloseSupp = () => setOpenSupp(false);
 
   useEffect(() => {
     const fetchAllUser = async () => {
@@ -99,9 +90,9 @@ const AdminEleve = () => {
                   alert(`Clicked on row with id: ${params.row.userID}`);
                 };
           
-                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                return <a href={"/admin/student/modif/"+params.row.userID}><Button variant="contained" color="primary">
                 Modifier l'eleve N°{params.row.userID}
-              </Button>;
+              </Button></a>;
               }
             },
             {
@@ -117,9 +108,9 @@ const AdminEleve = () => {
                 // idCoursSelected = params.row.courseID;
                 // console.log("idCoursSelected"+idCoursSelected);
           
-                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                return   <a href={"/admin/student/supp/"+params.row.userID}><Button variant="contained" color="primary">
                 Supprimer l'eleve N°{params.row.userID}
-              </Button>;
+              </Button></a>;
               }
             }
           ]}
@@ -131,12 +122,7 @@ const AdminEleve = () => {
 </div>
 
 
-      <Modal
-        open={openModif}
-        onClose={handleCloseModif}
-      >
-        <ModifEleve idEleve={10}></ModifEleve>
-      </Modal>
+   
 
       <Button variant="contained" color="primary" onClick={handleOpenCreer}>
         Créer un eleve
@@ -150,14 +136,6 @@ const AdminEleve = () => {
         </>
       </Modal>
 
-      <Modal
-        open={openSupp}
-        onClose={handleCloseSupp}
-      >
-        <>
-      Supp
-        </>
-      </Modal>
     </div>
   );
 };

@@ -17,21 +17,11 @@ const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
-  const [openModif, setOpenModif] = useState(false);
   const [openCreer, setOpenCreer] = useState(false);
-  const [openSupp, setOpenSupp] = useState(false);
-
-
-  const handleOpenModif = () => setOpenModif(true);
-  const handleCloseModif = () => setOpenModif(false);
-
+  
   const handleOpenCreer = () => setOpenCreer(true);
   const handleCloseCreer = () => setOpenCreer(false);
 
-  const handleOpenSupp = () => setOpenSupp(true);
-  const handleCloseSupp = () => setOpenSupp(false);
 
 
 
@@ -71,13 +61,7 @@ const AdminCours = () => {
     console.log(allCoursesData);
 }, []);
 
-function buttonModifCours(idCours)
-{
-  console.log("idCoursSelected"+idCours);
-  window.location.href = '/admin/cours/modifCours/'+idCours;
-  // return <ModifCours idCours={idCours} />
 
-}
 
 if (loading) {
     return <Loading />;
@@ -127,14 +111,7 @@ if (loading) {
           
                 return (
                 <>
-                {/* <Modal
-                  open={openModif}
-                  onClose={handleCloseModif}
-                > <>
-                  <h1>Cours N°{params.row.courseID}</h1>
-                  </>
-                </Modal> */}
-                {/* <ModifCours idCours={params.row.courseID} /> */}
+               
                 <a href={'/admin/cours/modifCours/'+params.row.courseID}>
                 <Button variant="contained" color="primary" >
                 Modifier le cours N°{params.row.courseID}
@@ -186,27 +163,18 @@ if (loading) {
       <Button variant="contained" color="primary" onClick={handleOpenCreer}>
         Créer un cours
       </Button>
-
-      
-      
-
-    
       <Modal
         open={openCreer}
         onClose={handleCloseCreer}
       >
         <CreerCours />
       </Modal>
+      
+      
 
-   
-      <Modal
-        open={openSupp}
-        onClose={handleCloseSupp}
-      >
-       <SupprimerCours idCours={3}>
+    
+     
 
-       </SupprimerCours>
-      </Modal>
 
       
 
