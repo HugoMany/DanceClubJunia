@@ -9,6 +9,8 @@ import Loading from '../../../elements/loading';
 
 import { Modal, Button } from '@mui/material';
 
+import CreerEleve from './creerEleve';
+
 const AdminEleve = () => {
   const [allUserData, setAllUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -131,9 +133,7 @@ const AdminEleve = () => {
         open={openCreer}
         onClose={handleCloseCreer}
       >
-        <>
-        Créer
-        </>
+       <CreerEleve></CreerEleve>
       </Modal>
 
     </div>
