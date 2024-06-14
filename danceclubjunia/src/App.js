@@ -51,6 +51,9 @@ function App() {
 
           <Route path="/admin/prof" element={<AdminProf />} />
           <Route path="/admin/cours" element={<AdminCours />} />
+          <Route path="/admin/cours" element={<AdminCours />} />
+          <Route path="/admin/cours/modifCours/:courseId" element={<ModifCours />} />
+
           <Route path="/admin/eleve" element={<AdminEleve />} />
 
           <Route path="/admin/" element={<Admin />} />

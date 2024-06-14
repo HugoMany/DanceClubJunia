@@ -71,6 +71,14 @@ const AdminCours = () => {
     console.log(allCoursesData);
 }, []);
 
+function buttonModifCours(idCours)
+{
+  console.log("idCoursSelected"+idCours);
+  window.location.href = '/admin/cours/modifCours/'+idCours;
+  // return <ModifCours idCours={idCours} />
+
+}
+
 if (loading) {
     return <Loading />;
 }
@@ -117,9 +125,25 @@ if (loading) {
                   alert(`Clicked on row with id: ${params.row.courseID}`);
                 };
           
-                return <Button variant="contained" color="primary" onClick={handleOpenModif}>
+                return (
+                <>
+                {/* <Modal
+                  open={openModif}
+                  onClose={handleCloseModif}
+                > <>
+                  <h1>Cours N°{params.row.courseID}</h1>
+                  </>
+                </Modal> */}
+                {/* <ModifCours idCours={params.row.courseID} /> */}
+                <a href={'/admin/cours/modifCours/'+params.row.courseID}>
+                <Button variant="contained" color="primary" >
                 Modifier le cours N°{params.row.courseID}
-              </Button>;
+              </Button>
+              </a>
+
+                </>
+              
+              )
               }
             },
             {
@@ -135,9 +159,15 @@ if (loading) {
                 // idCoursSelected = params.row.courseID;
                 // console.log("idCoursSelected"+idCoursSelected);
           
-                return    <Button variant="contained" color="primary" onClick={handleOpenSupp}>
+                return (  
+                  <> 
+                <a href={'/admin/cours/supp/'+params.row.courseID}>
+                <Button variant="contained" color="primary">
                 Supprimer le cours N°{params.row.courseID}
-              </Button>;
+                </Button>
+                </a>
+              </>
+               )
               }
             }
             
@@ -158,12 +188,7 @@ if (loading) {
       </Button>
 
       
-      <Modal
-        open={openModif}
-        onClose={handleCloseModif}
-      >
-        <ModifCours idCours={7} />
-      </Modal>
+      
 
     
       <Modal
