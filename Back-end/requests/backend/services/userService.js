@@ -208,9 +208,13 @@ class UserService {
         params.push(startDate);
       }
 
-      if (tags && tags.length > 0) {
-        sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
-        params.push(...tags);
+      if(tags){
+        const tagArray = tags.split(',').map(tag => tag.trim());
+  
+        if (tags && tags.length > 0) {
+          sql += ' AND (' + tagArray.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
+          params.push(...tagArray);
+        }
       }
 
       // Afficher la requête SQL avec les valeurs substituées
@@ -241,9 +245,13 @@ class UserService {
         params.push(startDate);
       }
 
-      if (tags && tags.length > 0) {
-        sql += ' AND (' + tags.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
-        params.push(...tags);
+      if(tags){
+        const tagArray = tags.split(',').map(tag => tag.trim());
+  
+        if (tags && tags.length > 0) {
+          sql += ' AND (' + tagArray.map(tag => 'JSON_CONTAINS(tags, JSON_ARRAY(?))').join(' AND ') + ')';
+          params.push(...tagArray);
+        }
       }
 
       // Afficher la requête SQL avec les valeurs substituées

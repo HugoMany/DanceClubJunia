@@ -77,7 +77,7 @@ class GuestService {
         if (err) {
           return reject(new Error("Erreur lors de la récupération des cours."));
         }
-        else if (result.length == 0) {
+        else if (rows.length == 0) {
           return reject(new Error("Il n'y a pas de cours pour cette période."));
         }
         else {
@@ -141,7 +141,7 @@ class GuestService {
     });
   }
 
-  async getContacts() {
+  async getContactsTeachers() {
     return new Promise((resolve, reject) => {
       const sql = `
             SELECT email
@@ -153,7 +153,7 @@ class GuestService {
         if (err) {
           return reject(new Error("Erreur lors de la récupération des contacts."));
         }
-        if (result.length === 0) {
+        if (rows.length === 0) {
           return reject(new Error("Il n'y a pas de professeur."));
         }
 
