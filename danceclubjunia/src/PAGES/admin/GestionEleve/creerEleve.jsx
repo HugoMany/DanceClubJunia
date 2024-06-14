@@ -48,7 +48,7 @@ function CreerEleve() {
                 console.log('Response:', data);
 
             } catch (error) {
-                console.error('Erreur lors de la création du prof', error);
+                console.error('Erreur lors de la création du student', error);
             }
         };
 
@@ -116,7 +116,7 @@ function CreerEleve() {
                     />
                 </label>
                 <br />
-                <button type="submit">Créer le prof</button>
+                <button type="submit">Créer le student</button>
             </form>
         </div>
     );
