@@ -11,7 +11,10 @@ import { Modal, Button } from '@mui/material';
 
 import CreerEleve from './creerEleve';
 
+import AdminRequire from '../../../elements/isAdmin';
+
 const AdminEleve = () => {
+  AdminRequire()
   const [allUserData, setAllUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
