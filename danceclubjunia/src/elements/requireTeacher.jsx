@@ -3,7 +3,7 @@ import { URL_DB } from '../const/const';
 
 function AdminRequire(redirect = true) {
     const token = localStorage.getItem('token');
-    if (!token) return { valid: false };
+    // if (!token) return { valid: false };
     const url = `${URL_DB}auth/verifyToken`;
 
     return fetch(url, {

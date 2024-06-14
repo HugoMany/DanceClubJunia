@@ -12,8 +12,8 @@ const MenuDeroulant = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isTeacher, setIsTeacher] = useState(false);
+  const [isAdminVar, setIsAdmin] = useState(false);
+  const [isTeacherVar, setIsTeacher] = useState(false);
   const [isConnectedVar, setIsConnected] = useState(false);
 
 
@@ -22,6 +22,11 @@ const MenuDeroulant = () => {
     setIsAdmin(true);
     setIsTeacher(true);
     setIsConnected(true);
+    // setIsAdmin(isAdmin())
+    // setIsTeacher(isTeacher())
+    // setIsConnected(isConnected())
+    console.log(isAdminVar,isTeacherVar,isConnectedVar);
+
     // isAdmin(false).then(setIsAdmin);
     // isAdmin(false).then(setIsTeacher);
     // isConnected(false).then(setIsConnected);
@@ -72,10 +77,17 @@ const MenuDeroulant = () => {
           horizontal: 'left',
         }}
       >
-        {
-          isAdmin && <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
-        }
-       
+ 
+       {isAdminVar ? (
+            [
+              <MenuItem key="admin" onClick={handleClose} component={Link} to="/admin">Admin</MenuItem>
+
+            ]
+        ) : (
+            [
+            ]
+        )}
+
          {isConnectedVar ? (
             [
                 <MenuItem key="profile" onClick={handleClose} component={Link} to="/profil">Profile</MenuItem>,
@@ -86,8 +98,16 @@ const MenuDeroulant = () => {
                 <MenuItem key="connexion" onClick={handleClose} component={Link} to="/connexion">Connexion</MenuItem>
             ]
         )}
-        {
-        isTeacher && <MenuItem key="prof" onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>}
+        {isTeacherVar ? (
+            [
+              <MenuItem key="prof" onClick={handleClose} component={Link} to="/prof">Prof</MenuItem>
+
+            ]
+        ) : (
+            [
+
+            ]
+        )}
       </Menu>
     </div>
   );
