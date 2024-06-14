@@ -21,7 +21,7 @@ const ModifCours = ({ idCours }) => {
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);
     const [courseData, setCourseData] = useState(null);
-    
+    const [formData, setFormData] = useState({});
     useEffect(() => {
        const fetchCourses = async () => {
            try {
@@ -55,28 +55,31 @@ const ModifCours = ({ idCours }) => {
 
        fetchCourses();
    },[idCours]);
-    useEffect(() => {
-        const fetchCours = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) return { valid: false };
-                console.log(token)
-                const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                const data = await response.json();
-                setCourseData(data);
-                setLoading(false);
-                hideLoading();
-            } catch (error) {
-                console.error('Erreur lors de la récupération des info du cours', error);
-                hideLoading();
-            }
-        };
-        fetchCours();
-    }, [idCours]);
+
+
+
+    // useEffect(() => {
+    //     const fetchCours = async () => {
+    //         try {
+    //             const token = localStorage.getItem('token');
+    //             if (!token) return { valid: false };
+    //             console.log(token)
+    //             const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                 },
+    //             });
+    //             const data = await response.json();
+    //             setCourseData(data);
+    //             setLoading(false);
+    //             hideLoading();
+    //         } catch (error) {
+    //             console.error('Erreur lors de la récupération des info du cours', error);
+    //             hideLoading();
+    //         }
+    //     };
+    //     fetchCours();
+    // }, [idCours]);
 
     const handleSubmit = async (event) => {
         console.log("ooooo")
@@ -87,10 +90,9 @@ const ModifCours = ({ idCours }) => {
 
             console.log(token)
             console.log(courseData)
-            let courseDataModify = {
-                ...courseData.courses[0],
-                teacherID: "1",
-                type:"rock" // A modifier
+            const courseDataModify = {
+               ...courseData,
+               ...formData,
             };
 
             
@@ -114,13 +116,15 @@ const ModifCours = ({ idCours }) => {
     };
 
     const handleChange = (event) => {
+        const { name, value } = event.target;
         setCourseData(prevState => ({
             ...prevState,
+            [name]: value
         }));
     };
 
     if (loading) {
-        return <Loading></Loading>;
+        return <Loading/>;
     }
     
     
