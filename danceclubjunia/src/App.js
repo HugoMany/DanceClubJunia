@@ -35,17 +35,17 @@ import CreerProf from './PAGES/admin/GestionProf/creerProf';
 import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 import ErreurNotAccess from './PAGES/erreurNotAccess';
 import Logout from './elements/logout';
-<<<<<<< Updated upstream
+
 import SupprimerCours from './PAGES/admin/GestionCours/suppirmerCours';
 import ModifProf from './PAGES/admin/GestionProf/modifProf';
 import ModifEleve from './PAGES/admin/GestionEleve/modifEleve';
 import SupprimerEleve from './PAGES/admin/GestionEleve/supprimerEleve';
 import SupprimerProf from './PAGES/admin/GestionProf/supprimerProf';
-=======
+
 import InfoStudent from './PAGES/infoStudent';
 import InfoStudentCourse from './PAGES/infoStudentCourse';
 import InfoStudentForProf from './PAGES/infoStudentForProf';
->>>>>>> Stashed changes
+
 
 function App() {
   return (
