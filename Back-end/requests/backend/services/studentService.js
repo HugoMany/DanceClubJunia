@@ -187,6 +187,7 @@ class StudentService {
             Promise.all([this.getCourseDetails(courseID), this.getStudentDetails(studentID)])
               .then(([course, student]) => {
                 const paymentType = course.paymentType.split(',');
+                const currentDate = new Date();
 
                 // Vérifie si l'étudiant est abonné et si le cours accepte les abonnements
                 console.log("reserveCourse paymentType",paymentType,paymentType.includes('subscription'),student,student.subscriptionEnd);

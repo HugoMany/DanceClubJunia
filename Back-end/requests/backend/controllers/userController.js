@@ -47,7 +47,7 @@ exports.resetPassword = async (req, res) => {
     return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
   }
   if (newPassword.lengh < 8) {
-    return res.status(400).json({ success: false, message: 'Le mot de passe est trop court.' });
+    return res.status(401).json({ success: false, message: 'Le mot de passe est trop court.' });
   }
 
   try {
@@ -106,19 +106,19 @@ exports.addLink = async (req, res) => {
       case "Erreur lors de la vérification du type de l'utilisateur.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la vérification de la présence de de l'élève dans le cours.":
+      case "L'utilisateur n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
         break;
-      case "Le cours n'existe pas.":
+      case "Erreur lors de la vérification de la présence de de l'élève dans le cours.":
         res.status(503).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de l'ajout du lien.":
+      case "Le cours n'existe pas.":
         res.status(504).json({ success: false, message: error.message });
         break;
-      case "L'élève n'est pas dans le cours.":
+      case "Erreur lors de l'ajout du lien.":
         res.status(505).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la vérification de la présence de de l'élève dans le cours.":
+      case "L'élève n'est pas dans le cours.":
         res.status(506).json({ success: false, message: error.message });
         break;
       case "Le professeur n'est pas dans le cours.":
@@ -250,7 +250,7 @@ exports.getProfile = async (req, res) => {
 
 
     if (!userID) {
-      return res.status(200).json(false);
+      return res.status(400).json({ error: "Champ userID manquant." });
     }
     if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
@@ -305,7 +305,7 @@ exports.modifyProfile = async (req, res) => {
     if (email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Email invalide.' });
+        return res.status(402).json({ error: 'Email invalide.' });
       }
       fieldsToUpdate.push('email = ?');
       values.push(email);

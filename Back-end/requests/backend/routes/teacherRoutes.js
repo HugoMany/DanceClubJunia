@@ -70,7 +70,13 @@ const { authorize } = require('../middlewares/auth');
  *                       type: string
  *                       example: "photo.png"
  *       400:
- *         description: Entree invalide
+ *         description: ID du cours manquante
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       502:
+ *         description: Aucun élève trouvé avec cet ID.
  *       500:
  *         description: Erreur SQL
  */
@@ -164,7 +170,19 @@ router.get('/getStudent', teacherController.getStudent);
  *                       type: string
  *                       example: "photo.png"
  *       400:
- *         description: Entree invalide
+ *         description: Tous les champs doivent être remplis.
+ *       401:
+ *         description: Mot de passe trop court (minimum 8 caractères).
+ *       402:
+ *         description: Le champ credit doit être un entier positif.
+ *       403:
+ *         description: Email invalide.
+ *       501:
+ *         description: Erreur lors de la création de l'élève.
+ *       502:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       503:
+ *         description: L'utilisateur n'existe pas
  *       500:
  *         description: Erreur SQL
  */
@@ -262,7 +280,23 @@ router.post('/newStudent', teacherController.newStudent);
  *                       type: string
  *                       example: "photo.png"
  *       400:
- *         description: Entree invalide
+ *         description: studentID manquant
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       402:
+ *         description: Email invalide.
+ *       403:
+ *         description: Mot de passe trop court (minimum 8 caractères).
+ *       404:
+ *         description: Credit invalide.
+ *       405:
+ *         description: Aucun champ à mettre à jour.
+ *       501:
+ *         description: Erreur lors de la modification de l'élève.
+ *       502:
+ *         description: Il n'existe pas d'élève avec cet ID.
+ *       503:
+ *         description: Erreur lors de la récupération de l'élève.
  *       500:
  *         description: Erreur SQL
  */
@@ -307,7 +341,19 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Entree invalide
+ *         description: Tous les champs doivent être remplis.
+ *       401:
+ *         description: Mot de passe trop court (minimum 8 caractères).
+ *       402:
+ *         description: Le champ credit doit être un entier positif.
+ *       403:
+ *         description: Email invalide.
+ *       501:
+ *         description: Erreur lors de la création de l'élève.
+ *       502:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       503:
+ *         description: L'utilisateur n'existe pas
  *       500:
  *         description: Erreur SQL
  */
@@ -352,7 +398,21 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Entree invalide
+ *         description: Les champs userID, courseID et studentID doivent être fournis.
+ *       401:
+ *         description: L'ID de l'étudiant n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       403:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       502:
+ *         description: L'élève n'existe pas.
+ *       503:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       504:
+ *         description: Erreur lors de la modification du cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -428,9 +488,15 @@ router.patch('/affectStudent', teacherController.affectStudent);
  *                         nullable: true
  *                         example: null
  *       400:
- *         description: Requete invalide.
+ *         description: Au moins un critère de recherche doit être fourni.
+ *       401:
+ *         description: Email invalide.
+ *       501:
+ *         description: Erreur lors de la récupération des élèves.
+ *       502:
+ *         description: Aucun élève trouvé.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Erreur SQL
  */
 router.get('/searchStudent', teacherController.searchStudent);
 
@@ -469,9 +535,17 @@ router.get('/searchStudent', teacherController.searchStudent);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: champs vide
+ *         description: courseID manquant.
  *       401:
- *         description: teacherID invalide
+ *         description: teacherID manquant.
+ *       402:
+ *         description: L'ID du professeur n'est pas un entier positif.
+ *       403:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la suppression.
+ *       502:
+ *         description: Le cours n'existe pas.
  *       500:
  *         description: Erreur SQL
  */
@@ -522,7 +596,15 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *                   description: Nombre d'etudiants a qui le professeur a fait cours dans la periode specifiee.
  *                   example: 25
  *       400:
- *         description: Entree invalide
+ *         description: Les champs teacherID, startDate et endDate doivent être fournis.
+ *       401:
+ *         description: L'ID du professeur n'est pas un entier positif.
+ *       402:
+ *         description: La date de début du cours doit être au format YYYY-MM-DD.
+ *       403:
+ *         description: La date de fin du cours doit être au format YYYY-MM-DD.
+ *       501:
+ *         description: Erreur lors de la récupération du nombre d'élèves.
  *       500:
  *         description: Erreur SQL
  */
@@ -689,9 +771,37 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                       type: string
  *                       example: "danse,salsa,debutant"
  *       400:
- *         description: Requête invalide
+ *         description: Les champs teacherID et courseID sont obligatoires.
+ *       401:
+ *         description: L'ID du professeur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       403:
+ *         description: La durée doit être positive.
+ *       404:
+ *         description: Les dates de début et de fin doident être au format YYYY-MM-DD.
+ *       405:
+ *         description: Le nombre maximal d'apprenants doit être positif.
+ *       406:
+ *         description: Une soirée ne peut pas avoir de professeur.
+ *       407:
+ *         description: La récurrence doit être positive ou nulle.
+ *       408:
+ *         description: Aucun champ à mettre à jour.
+ *       501:
+ *         description: La récupération du nombre de cours du professeur a échoué.
+ *       502:
+ *         description: Le professeur n'est pas autorisé à modifier ce cours.
+ *       503:
+ *         description: Erreur lors de la récupération des ID avec les emails fournis
+ *       504:
+ *         description: La modification du cours a échoué.
+ *       505:
+ *         description: Le cours n'existe pas.
+ *       506:
+ *         description: La récupération du cours a échoué.
  *       500:
- *         description: Erreur du serveur
+ *         description: Erreur SQL
  */
 router.patch('/modifyCourse', teacherController.modifyCourse);
 
@@ -744,9 +854,31 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *                       description:
  *                         type: string
  *       400:
- *         description: Erreur de requete.
+ *         description: Le champs courseID et userID doivent être fournis.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération des types d'utilisateurs.
+ *       502:
+ *         description: Aucun utilisateur trouvé.
+ *       503:
+ *         description: Erreur lors de la vérification de la présence du professeur dans le cours.
+ *       504:
+ *         description: Le professeur n'est pas dans le cours ou le cours n'existe pas.
+ *       505:
+ *         description: Erreur lors de la récupération du cours.
+ *       506:
+ *         description: Cours non trouvé
+ *       507:
+ *         description: Erreur lors de la récupération de l'utilisateur.
+ *       508:
+ *         description: L'utilisateur n'a pas été trouvé.
+ *       509:
+ *         description: L'utilisateur n'est pas un professeur ou un administrateur.
  *       500:
- *         description: Erreur du serveur.
+ *         description: Erreur SQL
  */
 
 router.post('/getStudentsInCourse', teacherController.getStudentsInCourse);
@@ -797,11 +929,27 @@ router.post('/getStudentsInCourse', teacherController.getStudentsInCourse);
  *                   type: string
  *                   example: "Place added successfully"
  *       400:
- *         description: Nombre invalide
+ *         description: Le champs courseID et userID doivent être fournis.
  *       401:
- *         description: Identifiant etudiant invalide
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
  *       402:
- *         description: Identifiant utilisateur invalide
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       403:
+ *         description: number n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération des prix.
+ *       502:
+ *         description: Le prix n'a pas été trouvé.
+ *       503:
+ *         description: Erreur lors de l'ajout de ticket(s) à l'utilisateur.
+ *       504:
+ *         description: Erreur lors de l'ajout de la carte à l'utilisateur.
+ *       505:
+ *         description: Erreur lors de la modification de la date de fin de l'abonnement de l'utilisateur.
+ *       506:
+ *         description: L'utilisateur n'existe pas.
+ *       507:
+ *         description: Erreur lors de l'enregistrement du paiement.
  *       500:
  *         description: Erreur SQL
  */
@@ -846,7 +994,31 @@ router.post('/addPlaceStudent', teacherController.addPlaceStudent);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Entree invalide
+ *         description: Les champs courseID, userID et link doivent être fournis.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération de l'utilisateur.
+ *       502:
+ *         description: L'utilisateur n'existe pas.
+ *       503:
+ *         description: L'utilisateur est un élève.
+ *       504:
+ *         description: Erreur lors de la vérification de la présence du professeur dans le cours.
+ *       505:
+ *         description: Le professeur ou le cours n'existe pas.
+ *       506:
+ *         description: userID ou userType invalide.
+ *       507:
+ *         description: Erreur lors de la récupération des liens du cours.
+ *       508:
+ *         description: Erreur lors de la modification du cours.
+ *       509:
+ *         description: Ce cours n'existe pas.
+ *       510:
+ *         description: Le lien n'est pas contenu dans le cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -891,9 +1063,31 @@ router.patch('/removeLink', teacherController.removeLink);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête
+ *         description: Les champs courseID, userID et tag doivent être fournis.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération du type de l'utilisateur.
+ *       502:
+ *         description: L'utilisateur n'existe pas
+ *       503:
+ *         description: Les élèves ne peuvent pas ajouter de tags aux cours.
+ *       504:
+ *         description: Erreur lors de la vérification de la présence du professeur dans le cours.
+ *       505:
+ *         description: Erreur Le cours n'existe pas.
+ *       506:
+ *         description: Le professeur n'est pas dans le cours.
+ *       507:
+ *         description: Erreur lors de la récupération des tags du cours.
+ *       508:
+ *         description: Le cours a déjà ce tag.
+ *       509:
+ *         description: Erreur lors de l'ajout du tag.
  *       500:
- *         description: Erreur serveur
+ *         description: Erreur SQL
  */
 router.post('/addTag', teacherController.addTag);
 
@@ -936,7 +1130,31 @@ router.post('/addTag', teacherController.addTag);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Entree invalide
+ *         description: Les champs courseID, userID et tag doivent être fournis.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération du type de l'utilisateur.
+ *       502:
+ *         description: L'utilisateur n'existe pas
+ *       503:
+ *         description: Les élèves ne peuvent pas ajouter de tags aux cours.
+ *       504:
+ *         description: Erreur lors de la vérification de la présence du professeur dans le cours.
+ *       505:
+ *         description: Le cours n'existe pas.
+ *       506:
+ *         description: Le professeur n'est pas dans le cours.
+ *       507:
+ *         description: UserType invalide.
+ *       508:
+ *         description: Erreur lors de la récupération des tags du cours.
+ *       509:
+ *         description: Le cours n'a pas ce tag.
+ *       510:
+ *         description: Erreur lors de la suppression du tag.
  *       500:
  *         description: Erreur SQL
  */

@@ -119,7 +119,7 @@ exports.buyPlace = async (req, res) => {
     }
 
     if (isNaN(number) || number <= 0) {
-        return res.status(403).json({ success: false, message: 'Invalid number' });
+        return res.status(403).json({ success: false, message: 'number n\'est pas un entier postif.' });
     }
 
     try {

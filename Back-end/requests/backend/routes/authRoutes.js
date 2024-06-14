@@ -39,7 +39,7 @@ const authController = require('../controllers/authController');
  *                 message:
  *                   type: string
  *                   example: Token expired
- *       403:
+ *       402:
  *         description: Aucun token fourni
  *         content:
  *           application/json:

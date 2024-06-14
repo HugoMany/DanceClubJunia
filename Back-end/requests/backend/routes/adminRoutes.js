@@ -266,9 +266,9 @@ router.get('/getAllUsers', adminController.getAllUsers);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête - ID du cours manquant
+ *         description: ID du cours manquant.
  *       401:
- *         description: L'ID du cours n'est pas un entier
+ *         description: L'ID du cours n'est pas un entier.
  *       501:
  *         description: Erreur lors de la vérification de l'existence du cours
  *       502:
@@ -315,21 +315,21 @@ router.delete('/deleteCourse', adminController.deleteCourse);
  *                   type: boolean
  *                   example: true
  *       400:
- *         description: Erreur de requête - champ place obligatoires
+ *         description: Nombre de places manquant.
  *       401:
- *         description: Erreur de requête - prix manquant
+ *         description: Prix manquant
  *       402:
- *         description: Erreur de requête - le champ place doit être un entier positif
+ *         description: Le champ place doit être un entier positif
  *       403:
- *         description: Erreur de requête - le champ price doit être un entier positif
+ *         description: Le champ price doit être un entier positif
  *       501:
- *         description: Erreur serveur - Erreur lors de la vérification de l'existence de la carte
+ *         description: Erreur lors de la vérification de l'existence de la carte
  *       502:
- *         description: Erreur serveur - La carte existe déjà
+ *         description: La carte existe déjà
  *       503:
- *         description: Erreur serveur - Erreur lors de l'insertion de la carte dans la base de données
+ *         description: Erreur lors de l'insertion de la carte dans la base de données
  *       500:
- *         description: Erreur serveur - Erreur SQL
+ *         description: Erreur SQL
  */
 router.post('/createCard', adminController.createCard);
 
@@ -373,6 +373,8 @@ router.post('/createCard', adminController.createCard);
  *         description: La carte spécifiée n'existe pas
  *       503:
  *         description: Erreur lors de la suppression de la carte
+ *       500:
+ *         description: Erreur SQL
  */
 router.delete('/deleteCard', adminController.deleteCard);
 
@@ -692,15 +694,15 @@ router.post('/createCourse', adminController.createCourse);
  *                       type: string
  *                       example: Professeur passionné de mathématiques.
  *       400:
- *         description: Erreur de requête - tous les champs sont obligatoires.
+ *         description: Tous les champs sont obligatoires.
  *       401:
- *         description: Erreur de requête - e-mail invalide.
+ *         description: Email invalide.
  *       402:
- *         description: Erreur de requête - mot de passe trop court (minimum 8 caractères).
+ *         description: Mot de passe trop court (minimum 8 caractères).
  *       501:
- *         description: Erreur serveur - erreur lors de la création du professeur.
+ *         description: Erreur lors de la création du professeur.
  *       502:
- *         description: Erreur serveur - erreur lors de la récupération du professeur.
+ *         description: Erreur lors de la récupération du professeur.
  *       500:
  *         description: Erreur SQL
  */
@@ -774,9 +776,9 @@ router.post('/createTeacher', adminController.createTeacher);
  *                         type: integer
  *                         example: null
  *       400:
- *         description: Erreur de requête - les paramètres startDate et endDate sont requis.
+ *         description: Les paramètres startDate et endDate sont requis.
  *       401:
- *         description: Erreur de requête - les dates de début et de fin doivent être au format YYYY-MM-DD.
+ *         description: Les dates de début et de fin doivent être au format YYYY-MM-DD.
  *       501:
  *         description: Erreur lors de la récupération des paiements.
  *       500:
@@ -946,7 +948,6 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                 type: string
  *                 description: description professeur.
  *                 example: "description"
- * 
  *     responses:
  *       200:
  *         description: professeur modifie avec succes
@@ -995,18 +996,18 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                       description: description professeur.
  *                       example: "description"
  *       400:
- *         description: Erreur de requête - ID du professeur manquant ou invalide.
+ *         description: teacherID manquant.
  *       401:
- *         description: Erreur de requête - Le champ teacherID doit être un entier positif.
+ *         description: Le champ teacherID doit être un entier positif.
  *       402:
- *         description: Erreur de requête - Email invalide.
+ *         description: Email invalide.
  *       403:
- *         description: Erreur de requête - Mot de passe trop court (minimum 8 caractères).
+ *         description: Mot de passe trop court (minimum 8 caractères).
  *       404:
- *         description: Erreur de requête - Crédit invalide.
+ *         description: Crédit invalide.
  *       405:
- *         description: Erreur de requête - Aucun champ à mettre à jour.
-  *       501:
+ *         description: Aucun champ à mettre à jour.
+ *       501:
  *         description: Erreur lors de la modification du professeur.
  *       502:
  *         description: Il n'existe pas de professeur avec cet ID.
@@ -1016,5 +1017,6 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *         description: Erreur SQL
  */
 router.patch('/modifyTeacher', adminController.modifyTeacher);
+
 
 module.exports = router;

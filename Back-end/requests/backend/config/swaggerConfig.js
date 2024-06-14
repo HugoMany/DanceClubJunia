@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Documentation',
-      version: '1.0.0',
-      description: 'API documentation with JWT authentication',
+      title: 'Dance Club Junia',
+      version: '0.1.5',
+      description: 'API documentation pour Dance Club Junia',
     },
     servers: [
       {

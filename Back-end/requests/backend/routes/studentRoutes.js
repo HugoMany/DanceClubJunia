@@ -47,7 +47,17 @@ const studentController = require('../controllers/studentController');
  *                     type: boolean
  *                     example: true
  *       400:
- *         description: Entree invalide
+ *         description: Champ studentID manquant.
+ *       401:
+ *         description: Champ credit manquant.
+ *       402:
+ *         description: Le champ credit doit être un entier positif.
+ *       403:
+ *         description: Le champ studentID doit être un entier positif.
+ *       501:
+ *         description: Erreur lors de l'ajout du credit.
+ *       502:
+ *         description: Erreur lors de l'enregistrement du paiement.
  *       500:
  *         description: Erreur SQL
  */
@@ -86,7 +96,13 @@ router.post('/addCredit', studentController.addCredit);
  *                     type: string
  *                     example: "2025-01-29T00:00:00.000Z"
  *       400:
- *         description: Entree invalide
+ *         description: Champ studentID manquant.
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération de la date de fin de l'abonnement.
+ *       502:
+ *         description: Pas de date de fin d'abonnement.
  *       500:
  *         description: Erreur SQL
  */
@@ -173,7 +189,11 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *                         type: string
  *                         example: "[\"tag3\", \"tag4\"]"
  *       400:
- *         description: Entree invalide
+ *         description: Champ studentID manquant.
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération des cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -221,9 +241,31 @@ router.get('/getCourses', studentController.getCourses);
  *                   type: string
  *                   example: "Place purchased successfully"
  *       400:
- *         description: Nombre invalide
+ *         description: Tous les champs doivent être remplis.
  *       401:
- *         description: Identifiant invalide
+ *         description: Le champ studentID doit être un entier positif.
+ *       402:
+ *         description: Type de place non valide. Utilisez "ticket", "subscription" ou "card".
+ *       403:
+ *         description: number n'est pas un entier postif.
+ *       501:
+ *         description: Erreur lors de la récupération du prix.
+ *       502:
+ *         description: Erreur lors de la vérification des crédits.
+ *       503:
+ *         description: Pas d\'utilisateur avec cet ID
+ *       504:
+ *         description: Erreur lors de la mise à jour du crédit de l\'utilisateur.
+ *       505:
+ *         description: Erreur lors de l'enregistrement du paiement.
+ *       506:
+ *         description: Erreur lors de l'ajout du ticket à l'élève.
+ *       507:
+ *         description: Erreur lors de l'ajout de la carte à l'élève.
+ *       508:
+ *         description: Erreur lors de l'ajout de temps d'abonnement.
+ *       509:
+ *         description: Crédit insuffisant.
  *       500:
  *         description: Erreur SQL
  */
@@ -291,7 +333,11 @@ router.post('/buyPlace', studentController.buyPlace);
  *                         description: Methode de paiement (en ligne, en especes)
  *                         example: Credit Card
  *       400:
- *         description: Entree invalide
+ *         description: Champ studentID manquant.
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération des paiements.
  *       500:
  *         description: Erreur SQL
  */

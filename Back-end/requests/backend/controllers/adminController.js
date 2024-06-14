@@ -292,7 +292,7 @@ exports.createTeacher = async (req, res) => {
             delete result.password;
             res.status(200).json({ success: true, teacher: result });
         } else {
-            res.status(500).json({ error: 'Impossible de créer le professeur.' });
+            res.status(500).json({ error: 'Erreur SQL' });
         }
     } catch (error) {
         console.error('createTeacher | error:', error);

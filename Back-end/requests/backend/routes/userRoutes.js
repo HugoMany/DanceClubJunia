@@ -42,7 +42,17 @@ const userController = require('../controllers/userController');
  *                   type: string
  *                   example: Token generated and stored
  *       400:
- *         description: Email non renseigné
+ *         description: Email manquant.
+ *       401:
+ *         description: Email invalide.
+ *       501:
+ *         description: Erreur lors de la vérification de l'existence du token.
+ *       502:
+ *         description: Erreur lors de l'insertion du token dans la base de données.
+ *       503:
+ *         description: Erreur lors de la vérification de l'existence de l'utilisateur.
+ *       504:
+ *         description: L'utilisateur n'existe pas.
  *       500:
  *         description: Erreur SQL
  */
@@ -85,9 +95,21 @@ router.post('/generateResetToken', userController.generateResetToken);
  *                   type: string
  *                   example: "Mot de passe réinitialisé avec succès"
  *       400:
- *         description: Entrée invalide
+ *         description: Token et newPassword sont requis.
+ *       401:
+ *         description: Le mot de passe est trop court.
+ *       501:
+ *         description: Token expiré.
+ *       502:
+ *         description: Token introuvable.
+ *       503:
+ *         description: Erreur lors de la modification du mot de passe.
+ *       504:
+ *         description: Le token n'existe pas.
+ *       505:
+ *         description: Token invalide.
  *       500:
- *         description: Erreur du serveur
+ *         description: Erreur SQL
  */
 router.post('/resetPassword', userController.resetPassword);
 
@@ -132,9 +154,27 @@ router.post('/resetPassword', userController.resetPassword);
  *                   type: string
  *                   example: "Lien ajouté avec succès"
  *       400:
- *         description: Entrée invalide
+ *         description: Le champs courseID, userID et link doivent être fourni.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la vérification du type de l'utilisateur.
+ *       502:
+ *         description: L'utilisateur n'existe pas.
+ *       503:
+ *         description: Erreur lors de la vérification de la présence de de l'élève dans le cours.
+ *       504:
+ *         description: Le cours n'existe pas.
+ *       505:
+ *         description: Erreur lors de l'ajout du lien.
+ *       506:
+ *         description: L'élève n'est pas dans le cours.
+ *       507:
+ *         description: Le professeur n'est pas dans le cours.
  *       500:
- *         description: Erreur du serveur
+ *         description: Erreur SQL
  */
 router.patch('/addLink', userController.addLink);
 
@@ -197,7 +237,13 @@ router.patch('/addLink', userController.addLink);
  *                         type: string
  *                         description: Horaire du cours
  *       400:
- *         description: Entree invalide
+ *         description: Le champs tags, userID et startDate doivent être fourni.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: La date de début du cours doit être au format YYYY-MM-DD.
+ *       501:
+ *         description: Erreur lors de la recherche de cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -262,7 +308,15 @@ router.get('/searchCoursesStudent', userController.searchCoursesStudent);
  *                         type: string
  *                         description: Horaire du cours
  *       400:
- *         description: Entree invalide
+ *         description: Le champs tags, userID et startDate doivent être fourni.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: La date de début du cours doit être au format YYYY-MM-DD.
+ *       501:
+ *         description: Erreur lors de la recherche de cours.
+ *       502:
+ *         description: Le cours n'a pas été trouvé
  *       500:
  *         description: Erreur SQL
  */
@@ -312,7 +366,13 @@ router.get('/searchCoursesTeacher', userController.searchCoursesTeacher);
  *                         type: string
  *                         description: Horaire du cours
  *       400:
- *         description: Entree invalide
+ *         description: Le champ courseID doit être fourni.
+ *       401:
+ *         description: L'ID du cours n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la recherche de cours.
+ *       502:
+ *         description: Le cours n'a pas été trouvé
  *       500:
  *         description: Erreur SQL
  */
@@ -342,8 +402,10 @@ router.get('/searchCourse', userController.searchCourse);
  *                   items:
  *                     type: string
  *                     example: "john.doe@example.com"
+ *       501:
+ *         description: Erreur lors de la récupération des contacts.
  *       500:
- *         description: Erreur du serveur.
+ *         description: Erreur SQL
  */
 
 router.get('/getContactsStudents', userController.getContactsStudents);
@@ -408,7 +470,13 @@ router.get('/getContactsStudents', userController.getContactsStudents);
  *                       type: string
  *                       example: "photo.png"
  *       400:
- *         description: Entree invalide
+ *         description: Champ userID manquant.
+ *       401:
+ *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       501:
+ *         description: Erreur lors de la récupération du profil.
+ *       502:
+ *         description: L'utilisateur n'existe pas.
  *       500:
  *         description: Erreur SQL
  */
@@ -498,7 +566,21 @@ router.get('/getProfile', userController.getProfile);
  *                       type: string
  *                       example: "photo.png"
  *       400:
- *         description: Entree invalide
+ *         description: userID manquant
+ *       401:
+ *         description: Le champ userID doit être un entier positif.
+ *       402:
+ *         description: Email invalide.
+ *       403:
+ *         description: Aucun champ à mettre à jour.
+ *       501:
+ *         description: Erreur lors de la récupération du type de l'utilisateur.
+ *       502:
+ *         description: Aucun utilisateur trouvé.
+ *       503:
+ *         description: Erreur lors de la modification de l'utilisateur.
+ *       504:
+ *         description: Erreur lors de la récupération de l'utilisateur.
  *       500:
  *         description: Erreur SQL
  */
