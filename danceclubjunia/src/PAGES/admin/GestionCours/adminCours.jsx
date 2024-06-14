@@ -71,6 +71,10 @@ const AdminCours = () => {
     console.log(allCoursesData);
 }, []);
 
+if (loading) {
+    return <Loading />;
+}
+
   return (
     <div>
 
