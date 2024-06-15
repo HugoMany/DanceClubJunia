@@ -43,9 +43,9 @@ const CoursDynamique = () => {
     console.log(courseId+'ID cours');
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading courses: {error.message}</div>;
-
-  return (
+    // if (error) return <div>Error loading courses: {error.message}</div>;
+else{
+        return (
     
     <div>
       <Header></Header>
@@ -59,5 +59,6 @@ const CoursDynamique = () => {
     </div>
   );
 };
+}
 
 export default CoursDynamique;
