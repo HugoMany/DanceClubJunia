@@ -62,65 +62,73 @@ function CreerEleve() {
     };
 
     return (
-        <div className='Form'>
-            <form onSubmit={handleSubmit}>
+        <div className='scrollerFormAdmin'>
+
+
+            <form onSubmit={handleSubmit}  className='formAdminCreate'>
                 <label>
                     firstname:
-                    <input
+                    
+                </label>
+                <input
                         type="text"
                         required
                         value={firstname}
                         onChange={(e) => setFirstname(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     surname:
-                    <input
+                    
+                </label>
+                <input
                         type="text"
                         required
                         value={surname}
                         onChange={(e) => setSurname(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     mail:
-                    <input
+                   
+                </label>
+                <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     password:
-                    <input
+                   
+                </label>
+                <input
                         type="password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     connectionMethod:
-                    <input
+                   
+                </label>
+                <input
                         type="text"
                         required
                         value={connectionMethod}
                         onChange={(e) => setConnectionMethod(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     photo:
-                    <input
+                    
+                </label>
+                <input
                         type="file"
                         onChange={(e) => setPhoto(e.target.files[0]?.name || '')}
                     />
-                </label>
                 <br />
                 <button type="submit">Créer le student</button>
             </form>

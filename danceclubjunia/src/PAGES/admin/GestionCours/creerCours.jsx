@@ -39,17 +39,24 @@ function CreerCours() {
             recurrence,
             teachers, // Assume teachers is a JSON string
             links, // Assume links is a JSON string
-            students: 0, // Assume students is a JSON string
+            students: [], // Assume students is a JSON string
             tags: tags.split(',') // Assume tags is a comma-separated string
         };
 
         console.log('Form Data:', json);
 
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found');
+            return { valid: false };
+        }
         // Add logic to save course data
         fetch( URL_DB+'admin/createCourse', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(json)
         })
@@ -63,7 +70,8 @@ function CreerCours() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='Form'>
+        <div className='scrollerFormAdmin'>
+        <form onSubmit={handleSubmit} className='formAdminCreate'>
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
@@ -114,6 +122,7 @@ function CreerCours() {
 
             <button type="submit">Créer un cours</button>
         </form>
+        </div>
     );
 }
 

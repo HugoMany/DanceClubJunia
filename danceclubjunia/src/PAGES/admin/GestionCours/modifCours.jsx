@@ -38,7 +38,7 @@ const ModifCours = ({ idCours }) => {
                if (response.ok) {
                    const data = await response.json();
                    console.log(data);
-                   const filteredCourse = data.courses.find(course => course.courseID === idCours);
+                   const filteredCourse = data.courses.find(course => course.courseID ===  parseInt(idCours, 10));
                    console.log(idCours+'OO')
                    console.log(filteredCourse);
                    setCourseData(filteredCourse);

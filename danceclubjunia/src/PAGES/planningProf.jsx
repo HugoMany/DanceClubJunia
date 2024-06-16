@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GetStudentID from './getStudentID';
 const URL = 'http://90.110.227.143/'
+
 const PlanningProf = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -135,13 +135,13 @@ exports.searchCoursesStudent = async (req, res) => {
 
   console.log(`searchCoursesStudent | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
 
-  if (!tags || !userID || !startDate) {
+  if (!userID) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
   if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+  if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
     return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
   }
 
@@ -166,13 +166,13 @@ exports.searchCoursesTeacher = async (req, res) => {
 
   console.log(`searchCoursesTeacher | userID: ${userID}, startDate: ${startDate}, tags: ${tags}`);
 
-  if (!tags || !userID || !startDate) {
+  if (!userID) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
   if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+  if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
     return res.status(402).json({ error: 'La date de début du cours doit être au format YYYY-MM-DD.' });
   }
   try {
@@ -199,10 +199,10 @@ exports.searchCourse = async (req, res) => {
 
   console.log(`searchCourse | courseID: ${courseID}`);
 
-  if (courseID) {
+  if (!courseID) {
     return res.status(400).json({ error: 'Le champ courseID doit être fourni.' });
   }
-  if (isNaN(userID) || userID <= 0) {
+  if (isNaN(courseID) || courseID <= 0) {
     return res.status(401).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -321,7 +321,7 @@ exports.modifyProfile = async (req, res) => {
     }
 
     const result = await userService.modifyProfile(userID, values, fieldsToUpdate, description);
-    console.log(result);
+    
     res.status(200).json({ success: true, user: result[0] });
 
   } catch (error) {

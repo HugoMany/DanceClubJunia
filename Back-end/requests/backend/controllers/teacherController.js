@@ -39,13 +39,13 @@ exports.newStudent = async (req, res) => {
 
     console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);
 
-    if (!firstname || !surname || !email || !password || !connectionMethod || !credit || !photo === undefined) {
+    if (!firstname || !surname || !email || !password || !connectionMethod || !photo) {
       return res.status(400).json({ error: 'Tous les champs doivent être remplis.' });
     }
     if (password.length <= 8) {
       return res.status(401).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
     }
-    if (isNaN(credit) || credit <= 0) {
+    if (isNaN(credit) || credit < 0) {
       return res.status(402).json({ error: 'Le champ credit doit être un entier positif.' });
     }
 
@@ -200,13 +200,13 @@ exports.removeStudent = async (req, res) => {
       case "Erreur lors de la récupération de l'élève.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "L'élève n'existe pas.":
+      case "Le cours n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la récupération de l'élève.":
+      case "Erreur lors de la modification du cours.":
         res.status(503).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la modification du cours.":
+      case "Erreur lors de la récupération des élèves du cours.":
         res.status(504).json({ success: false, message: error.message });
         break;
       default:
@@ -234,7 +234,7 @@ exports.affectStudent = async (req, res) => {
     if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
-    if (isNaN(teacherID) || userID <= 0) {
+    if (isNaN(teacherID) || teacherID <= 0) {
       return res.status(403).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
     }
 
@@ -276,9 +276,11 @@ exports.searchStudent = async (req, res) => {
     if (!firstname && !surname && !email) {
       return res.status(400).json({ error: 'Au moins un critère de recherche doit être fourni.' });
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(401).json({ error: 'Email invalide.' });
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(401).json({ error: 'Email invalide.' });
+      }
     }
 
     const result = await teacherService.searchStudent(firstname, surname, email);
@@ -505,7 +507,7 @@ exports.modifyCourse = async (req, res) => {
 
 exports.getStudentsInCourse = async (req, res) => {
   try {
-    const { courseID, userID } = req.query;
+    const { userID, courseID } = req.query;
 
     console.log("getStudentsInCourse |  courseID, userID : " + courseID, userID);
 
@@ -666,6 +668,9 @@ exports.removeLink = async (req, res) => {
         break;
       case "Le lien n'est pas contenu dans le cours.":
         res.status(510).json({ success: false, message: error.message });
+        break;
+      case "Ce cours n'existe pas ou ce lien n'est pas dans le cours":
+        res.status(511).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });

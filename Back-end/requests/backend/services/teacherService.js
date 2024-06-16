@@ -27,6 +27,7 @@ class TeacherService {
         VALUES (?, ?, ?, ?, ?, 'student', ?, ?)
       `;
 
+      console.log("newStudent service | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);
       db.query(sql, [firstname, surname, email, password, connectionMethod, credit, photo], (err, result) => {
         if (err) {
           return reject(new Error("Erreur lors de la création de l'élève."));
@@ -78,15 +79,15 @@ class TeacherService {
     });
   }
 
-  async removeStudent(courseID, studentID) {
+  async removeStudent(userID, courseID, studentID) {
     return new Promise((resolve, reject) => {
       const selectSql = 'SELECT studentsID FROM Courses WHERE courseID = ?';
       db.query(selectSql, [courseID], (err, rows) => {
         if (err) {
-          return reject(new Error("Erreur lors de la récupération de l'élève."));
+          return reject(new Error("Erreur lors de la récupération des élèves du cours."));
         }
         if (rows.length == 0) {
-          return reject(new Error("L'élève n'existe pas."));
+          return reject(new Error("Le cours n'existe pas."));
         }
 
         let studentsID = [];
@@ -296,7 +297,6 @@ class TeacherService {
             });
           });
       })
-        .catch(reject);
     });
   }
 
@@ -552,7 +552,7 @@ class TeacherService {
               return reject(new Error("Erreur lors de la récupération des liens du cours."));
             }
             if (rows.length === 0) {
-              return reject(new Error("Ce cours n'existe pas."));
+              return reject(new Error("Ce cours n'existe pas ou ce lien n'est pas dans le cours."));
             }
 
             let links = [];

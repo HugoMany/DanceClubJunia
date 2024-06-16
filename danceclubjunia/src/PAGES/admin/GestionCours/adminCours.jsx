@@ -12,13 +12,13 @@ import Loading from '../../../elements/loading';
 import { Modal, Button } from '@mui/material';
 import SupprimerCours from './suppirmerCours';
 
-
+import AdminRequire from '../../../elements/isAdmin';
 const AdminCours = () => {
   const [allCoursesData, setAllCoursesData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [openCreer, setOpenCreer] = useState(false);
-  
+
   const handleOpenCreer = () => setOpenCreer(true);
   const handleCloseCreer = () => setOpenCreer(false);
 
@@ -61,7 +61,7 @@ const AdminCours = () => {
     console.log(allCoursesData);
 }, []);
 
-
+AdminRequire()
 
 if (loading) {
     return <Loading />;
