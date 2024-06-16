@@ -52,8 +52,7 @@ html body .Admin {
     flex-wrap: nowrap;
 }
 .formAdminCreate {
-    /* height: 70vh; */
-    /* margin: 15vh 5vw; */
+
     background: white;
     display: flex;
     align-content: center;
@@ -64,9 +63,24 @@ html body .Admin {
     border: 0px;
     padding: 20px;
     border-radius: 30px;
-    /* overflow-x: scroll; */
-    padding: 2p;
+    /* scrollbar-width: thin; */
+
+
 }
+.scrollerFormAdmin::-webkit-scrollbar {
+    width: 5px;
+
+
+}
+.scrollerFormAdmin::-webkit-scrollbar-thumb {
+    background: #00000062;
+    border: 0px solid;
+    border-radius: 100px;
+  }
+  
+
+
+
 .scrollerFormAdmin {
     overflow-y: scroll;
     height: 70vh;
