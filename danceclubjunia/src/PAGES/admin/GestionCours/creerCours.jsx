@@ -63,7 +63,8 @@ function CreerCours() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='Form'>
+        <div className='scrollerFormAdmin'>
+        <form onSubmit={handleSubmit} className='formAdminCreate'>
             <label htmlFor="image">Image:</label>
             <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
@@ -114,6 +115,7 @@ function CreerCours() {
 
             <button type="submit">Créer un cours</button>
         </form>
+        </div>
     );
 }
 

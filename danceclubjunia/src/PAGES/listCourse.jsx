@@ -16,6 +16,8 @@ const CoursesList = () => {
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data.courses);
+
                     // Filtrer les cours pour exclure ceux dont la date de début est passée
                     const currentDate = new Date();
                     const filteredCourses = data.courses.filter(course => new Date(course.startDate) > currentDate);
@@ -41,6 +43,12 @@ const CoursesList = () => {
     return (
         <div>
             <div>
+            {cours.length===0 ? (
+            <h3 className='coursesCase' >Il n'y a pas de cours à venir</h3>
+        ) : (
+            
+            <></>
+        )}
                 {cours.map(course => (
                     <a href={'/cours/' + course.courseID} className='courseA'>
                     <div class="coursesCase" key={course.courseId}>
