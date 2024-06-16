@@ -18,7 +18,7 @@ function Admin() {
             <Button variant="contained" color="primary"><a href='/admin/prof'>Gestion professeur</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/cours'>Gestion cours</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/eleve'>Gestion Eleve</a><br></br></Button>
-            <Button variant="contained" color="primary"><a href='/admin/credit'>Gestion Credit</a></Button>
+            <Button variant="contained" color="primary"><a href='/admin/credit'>Comptabilité</a></Button>
 
 
         </div>
