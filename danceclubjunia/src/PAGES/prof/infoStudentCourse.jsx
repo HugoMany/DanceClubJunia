@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { URL_DB } from '../const/const';
+import { URL_DB } from '../../const/const';
 
 const InfoStudentCourse = ({ studentId }) => {
     const [courses, setCourses] = useState([]);

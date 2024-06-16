@@ -29,8 +29,8 @@ import Loading from './elements/loading';
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
 import GetStudentID from './PAGES/getStudentID';
 import AjoutCredits from './PAGES/ajoutCredits';
-import Prof from './PAGES/prof';
-import Appel from './PAGES/appel';
+import Prof from './PAGES/prof/prof';
+import Appel from './PAGES/prof/appel';
 import CreerProf from './PAGES/admin/GestionProf/creerProf';
 import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 import ErreurNotAccess from './PAGES/erreurNotAccess';
@@ -42,9 +42,9 @@ import ModifEleve from './PAGES/admin/GestionEleve/modifEleve';
 import SupprimerEleve from './PAGES/admin/GestionEleve/supprimerEleve';
 import SupprimerProf from './PAGES/admin/GestionProf/supprimerProf';
 
-import InfoStudent from './PAGES/infoStudent';
-import InfoStudentCourse from './PAGES/infoStudentCourse';
-import InfoStudentForProf from './PAGES/infoStudentForProf';
+import InfoStudent from './PAGES/prof/infoStudent';
+import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
+import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 
 
 function App() {

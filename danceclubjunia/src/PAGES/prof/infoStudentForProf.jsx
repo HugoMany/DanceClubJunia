@@ -1,7 +1,7 @@
-import GetStudentID from "./getStudentID";
+import GetStudentID from "../getStudentID";
 import InfoStudent from "./infoStudent";
 import InfoStudentCourse from "./infoStudentCourse";
-import Header from "../elements/header";
+import Header from "../../elements/header";
 import React, { useState } from 'react';
 
 
