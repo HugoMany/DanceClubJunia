@@ -7,6 +7,7 @@ import Profil from './PAGES/profil';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './PAGES/home';
+import "./css/prof.css"
 
 import AdminProf from './PAGES/admin/GestionProf/adminProf';
 import AdminCours from './PAGES/admin/GestionCours/adminCours';
@@ -45,7 +46,7 @@ import SupprimerProf from './PAGES/admin/GestionProf/supprimerProf';
 import InfoStudent from './PAGES/prof/infoStudent';
 import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
-
+import AddTagToACours from './PAGES/prof/addTagToACours';
 
 function App() {
   return (
@@ -79,6 +80,8 @@ function App() {
 
           <Route path="/admin/" element={<Admin />} />
           <Route path="/cours/:courseId" element={<CoursDynamique />} />
+
+          <Route path='addTagToACours' element={<AddTagToACours/>}/>
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />
