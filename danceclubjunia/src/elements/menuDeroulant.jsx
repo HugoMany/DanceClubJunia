@@ -33,7 +33,7 @@ const MenuDeroulant = () => {
   };
 
 
-  function testValidyAndTypeOfToken(redirect = true) {
+  function testValidyAndTypeOfToken() {
     const token = localStorage.getItem('token');
     if (!token) return { valid: false };
     const url = `${URL_DB}auth/verifyToken`;
@@ -68,9 +68,6 @@ const MenuDeroulant = () => {
           setIsConnected(false);
           setIsAdmin(false);
           setIsTeacher(false);
-          if (redirect) {
-            window.location.replace("/connexion");
-          }
         }
       })
       .catch(error => {

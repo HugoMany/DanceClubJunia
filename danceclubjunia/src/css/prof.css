@@ -8,3 +8,7 @@ html body .addAndDeleteTag {
     align-content: center;
     flex-wrap: wrap;
 }
+.ProfPage {
+    overflow-y: scroll;
+    padding-top: 5vh;
+}
