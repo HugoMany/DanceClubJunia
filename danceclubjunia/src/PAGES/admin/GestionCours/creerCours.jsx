@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import {URL_DB} from '../../../const/const';
+import { URL_DB } from '../../../const/const';
 
-function CreerCours() {
+const CreerCours = () => {
     const [image, setImage] = useState('');
     const [title, setTitle] = useState('');
     const [type, setType] = useState('');
@@ -11,8 +11,6 @@ function CreerCours() {
     const [location, setLocation] = useState('');
     const [maxParticipants, setMaxParticipants] = useState('');
     const [paymentType, setPaymentType] = useState('');
-    const [price, setPrice] = useState('');
-    const [paymentOptions, setPaymentOptions] = useState('');
     const [isEvening, setIsEvening] = useState(false);
     const [recurrence, setRecurrence] = useState('');
     const [teachers, setTeachers] = useState('');
@@ -22,108 +20,213 @@ function CreerCours() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('handleSubmit called');
 
-        const json = {
+        const formData = {
             image,
             title,
             type,
-            duration,
+            duration: parseInt(duration),
             startDate,
             startTime,
             location,
-            maxParticipants,
+            maxParticipants: parseInt(maxParticipants),
             paymentType,
-            price,
-            paymentOptions: paymentOptions.split(','), // Assume paymentOptions is a comma-separated string
-            isEvening,
-            recurrence,
-            teachers, // Assume teachers is a JSON string
-            links, // Assume links is a JSON string
-            students: [], // Assume students is a JSON string
-            tags: tags.split(',') // Assume tags is a comma-separated string
+            isEvening: isEvening === 'true' || isEvening === true,
+            recurrence: parseInt(recurrence),
+            teachers: teachers.split(',').map(teacher => teacher.trim()),
+            links: links ? links.split(',').map(link => link.trim()) : [],
+            students: students ? students.split(',').map(student => student.trim()) : [],
+            tags
         };
 
-        console.log('Form Data:', json);
+        console.log('FormData:', formData);
 
+        const fetchCours = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return { valid: false };
+                }
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found');
-            return { valid: false };
-        }
-        // Add logic to save course data
-        fetch( URL_DB+'admin/createCourse', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(json)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+                console.log('Token:', token);
+
+                const response = await fetch(URL_DB + 'admin/createCourse', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Response:', data);
+
+            } catch (error) {
+                console.error('Erreur lors de la création du cours', error);
+            }
+        };
+
+        fetchCours();
     };
 
     return (
         <div className='scrollerFormAdmin'>
-        <form onSubmit={handleSubmit} className='formAdminCreate'>
-            <label htmlFor="image">Image:</label>
-            <input type="file" id="image" value={image} onChange={(e) => setImage(e.target.value)} />
 
-            <label htmlFor="title">Title:</label>
-            <input type="text" id="title" required="required" value={title} onChange={(e) => setTitle(e.target.value)} />
-
-            <label htmlFor="type">Type:</label>
-            <input type="text" id="type" required="required" value={type} onChange={(e) => setType(e.target.value)} />
-
-            <label htmlFor="duration">Duration:</label>
-            <input type="number" id="duration" required="required" value={duration} onChange={(e) => setDuration(e.target.value)} />
-
-            <label htmlFor="startDate">Start Date:</label>
-            <input type="date" id="startDate" required="required" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-
-            <label htmlFor="startTime">Start Time:</label>
-            <input type="time" id="startTime" required="required" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-
-            <label htmlFor="location">Location:</label>
-            <input type="text" id="location" required="required" value={location} onChange={(e) => setLocation(e.target.value)} />
-
-            <label htmlFor="maxParticipants">Max Participants:</label>
-            <input type="number" id="maxParticipants" required="required" value={maxParticipants} onChange={(e) => setMaxParticipants(e.target.value)} />
-
-            <label htmlFor="paymentType">Payment Type:</label>
-            <input type="text" id="paymentType" value={paymentType} onChange={(e) => setPaymentType(e.target.value)} />
-
-            <label htmlFor="price">Price:</label>
-            <input type="number" id="price" required="required" value={price} onChange={(e) => setPrice(e.target.value)} />
-
-            <label htmlFor="paymentOptions">Payment Options (comma separated):</label>
-            <input type="text" id="paymentOptions" value={paymentOptions} onChange={(e) => setPaymentOptions(e.target.value)} />
-
-            <label htmlFor="isEvening">Is Evening:</label>
-            <input type="checkbox" id="isEvening" checked={isEvening} onChange={(e) => setIsEvening(e.target.checked)} />
-
-            <label htmlFor="recurrence">Recurrence:</label>
-            <input type="text" id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} />
-
-            <label htmlFor="teachers">Teachers :</label>
-            <input type="text" id="teachers" required="required" value={teachers} onChange={(e) => setTeachers(e.target.value)} />
-
-            <label htmlFor="links">Links :</label>
-            <input type="text" id="links" value={links} onChange={(e) => setLinks(e.target.value)} />
-
-            <label htmlFor="tags">Tags (comma separated):</label>
-            <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} />
-
-            <button type="submit">Créer un cours</button>
-        </form>
+            <form onSubmit={handleSubmit} className='formAdminCreate'>
+                {/* <Header /> */}
+                <label>
+                    Image:
+                </label>
+                <input
+                    type="file"
+                    required
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                />
+                <br />
+                <label>
+                    Title:
+                </label>
+                <input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <br />
+                <label>
+                    Type:
+                </label>
+                <input
+                    type="text"
+                    required
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                />
+                <br />
+                <label>
+                    Duration:
+                </label>
+                <input
+                    type="number"
+                    required
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                />
+                <br />
+                <label>
+                    Start Date:
+                </label>
+                <input
+                    type="date"
+                    required
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                />
+                <br />
+                <label>
+                    Start Time:
+                </label>
+                <input
+                    type="time"
+                    required
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                />
+                <br />
+                <label>
+                    Location:
+                </label>
+                <input
+                    type="text"
+                    required
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                />
+                <br />
+                <label>
+                    Max Participants:
+                </label>
+                <input
+                    type="number"
+                    required
+                    value={maxParticipants}
+                    onChange={(e) => setMaxParticipants(e.target.value)}
+                />
+                <br />
+                <label>
+                    Payment Type:
+                </label>
+                <input
+                    type="text"
+                    required
+                    value={paymentType}
+                    onChange={(e) => setPaymentType(e.target.value)}
+                />
+                <br />
+                <label>
+                    Is Evening:
+                </label>
+                <input
+                    type="checkbox"
+                    value={isEvening}
+                    onChange={(e) => setIsEvening(e.target.checked)}
+                />
+                <br />
+                <label>
+                    Recurrence:
+                </label>
+                <input
+                    type="number"
+                    required
+                    value={recurrence}
+                    onChange={(e) => setRecurrence(e.target.value)}
+                />
+                <br />
+                <label>
+                    Teachers:
+                </label>
+                <input
+                    type="text"
+                    required
+                    value={teachers}
+                    onChange={(e) => setTeachers(e.target.value)}
+                />
+                <br />
+                <label>
+                    Links:
+                </label>
+                <input
+                    type="text"
+                    value={links}
+                    onChange={(e) => setLinks(e.target.value)}
+                />
+                <br />
+                <label>
+                    Students:
+                </label>
+                <input
+                    type="text"
+                    value={students}
+                    onChange={(e) => setStudents(e.target.value)}
+                />
+                <br />
+                <label>
+                    Tags:
+                </label>
+                <input
+                    type="text"
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                />
+                <br />
+                <button type="submit">Créer le prof</button>
+            </form>
         </div>
     );
-}
+};
 
 export default CreerCours;
