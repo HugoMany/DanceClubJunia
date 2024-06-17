@@ -80,6 +80,8 @@ const AddTagToACours = (idCoursSelected="10") => {
             .then(data => {
                 // Handle the response data
                 console.log(data);
+                // Refresh the course data to reflect the added tag
+                window.location.reload();
             })
             .catch(error => {
                 // Handle any errors
