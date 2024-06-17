@@ -15,7 +15,7 @@ function Achat() {
           'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
         },
         body: JSON.stringify({
-          "amount": 10,
+          "amount": 0,
           "currency": "EUR",
           "description": "cours de danse",
           "cardNumber": "1234567890",
