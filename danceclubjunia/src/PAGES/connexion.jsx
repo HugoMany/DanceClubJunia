@@ -70,32 +70,33 @@ function Connexion() {
         }
     };
     const handleRecaptcha = value => {
-        console.log("Captcha value:", value);        
-        fetch('http://localhost:4000/upload', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              response: value
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.captchaSuccess) {
-              console.log('Captcha validation successful');
-              setCapchaReady(true)
-              // Continue with form submission
-            } else {
-              console.log('Captcha validation failed');
-              // Show an error message
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            // Show an error message
-          });
-      };
+        console.log("Captcha value:", value);    
+        setCapchaReady(true)
+    //     fetch('http://localhost:4000/upload', {
+    //         method: 'POST',
+    //         headers: {
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //           response: value
+    //         })
+    //       })
+    //       .then(res => res.json())
+    //       .then(data => {
+    //         if (data.captchaSuccess) {
+    //           console.log('Captcha validation successful');
+    //           setCapchaReady(true)
+    //           // Continue with form submission
+    //         } else {
+    //           console.log('Captcha validation failed');
+    //           // Show an error message
+    //         }
+    //       })
+    //       .catch(err => {
+    //         console.error(err);
+    //         // Show an error message
+    //       });
+    //   };
     return (
         <div>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
