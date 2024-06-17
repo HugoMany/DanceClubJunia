@@ -17,6 +17,7 @@ import { Pagination } from 'swiper/modules';
 
 
 import ListeFuturCours from '../elements/listeFuturCours';
+import { Button } from '@mui/material';
 
 function Home() {
     const h1Style = {
@@ -63,49 +64,63 @@ function Home() {
                     <h3>Jazz</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Dance</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Jazz</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Moderne</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Jazz</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Classique</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
                 <SwiperSlide><div className="cours">
                     <h3>Rock</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <button>Acheter</button>
+                    <Button variant="contained" href="">
+  Info
+</Button>
 
                 </div></SwiperSlide>
             </Swiper>

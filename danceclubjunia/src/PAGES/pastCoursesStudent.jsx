@@ -51,8 +51,8 @@ const PastCoursesStudent = ({ studentId }) => {
     return (
         <div>
             {pastCourses.map(course => (
-                    <a href={'/cours/' + course.courseId + '/1/'} className='courseA'>
-                    <div class="coursesCase" key={course.courseId}>
+                    <a href={'/cours/' + course.courseID} className='courseA'>
+                    <div class="coursesCase" key={course.courseID}>
                         <div className='divImageCoursSuivanteHomePage'>
                         <div className='imageCoursSuivanteHomePage'><img src={"https://gap.asptt.com/files/2021/08/salsa.png"} alt={course.title} /></div>
                         </div>

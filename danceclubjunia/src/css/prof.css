@@ -12,3 +12,16 @@ html body .addAndDeleteTag {
     overflow-y: scroll;
     padding-top: 5vh;
 }
+html .coursDynamique {
+    display: flex;
+    height: 50vh;
+    margin: 25vh 10vw;
+    width: 80vw;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 20px;
+}
