@@ -1,0 +1,8 @@
+cd /danceclubjunia
+npm start 
+
+cd /danceclubjunia/src/capcha/server/
+
+npm install 
+
+node app.js
