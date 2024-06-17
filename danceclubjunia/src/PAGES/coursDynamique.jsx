@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Header from '../elements/header';
 import {URL_DB} from '../const/const';
 import Loading from '../elements/loading';
+import ConnexionRequire from '../elements/requireConnexion';
 
 const CoursDynamique = () => {
    const { courseId } = useParams();
@@ -43,9 +44,13 @@ const CoursDynamique = () => {
    },[courseId] );
         
     console.log(courseId+'ID cours');
+    ConnexionRequire()
+
+    
+    if (course === null) return <div>No course found</div>;
 
     if (loading) return <Loading></Loading>;
-    // if (error) return <div>Error loading courses: {error.message}</div>;
+
 else{
         return (
     

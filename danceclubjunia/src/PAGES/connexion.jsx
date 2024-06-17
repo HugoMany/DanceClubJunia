@@ -28,7 +28,7 @@ function Connexion() {
             password
         };
         
-        if (!capchaReady) {
+        if (capchaReady) {
         console.log('Starting fetch...');
         fetch(URL_DB + 'guest/login', {
             method: 'POST',
