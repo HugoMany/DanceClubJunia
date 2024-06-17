@@ -223,7 +223,7 @@ const CreerCours = () => {
                     onChange={(e) => setTags(e.target.value)}
                 />
                 <br />
-                <button type="submit">Créer le prof</button>
+                <button type="submit">Créer le cours</button>
             </form>
         </div>
     );
