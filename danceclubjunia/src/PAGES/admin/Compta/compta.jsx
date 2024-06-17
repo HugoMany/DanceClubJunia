@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -17,59 +16,43 @@ import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 import Header from '../../../elements/header';
 
-const getJson = (apiRef: React.MutableRefObject<GridApi>) => {
-  // Select rows and columns
-  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
-  const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
+// Define your columns
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'courseID', headerName: 'Course ID', width: 130 },
+  { field: 'title', headerName: 'Course Title', width: 130 },
+  { field: 'type', headerName: 'Course Type', width: 130 },
+  { field: 'duration', headerName: 'Duration', width: 130 },
+  { field: 'startDate', headerName: 'Start Date', width: 130 },
+  { field: 'paymentType', headerName: 'Payment Type', width: 130 },
+  { field: 'paymentOptions', headerName: 'Payment Options', width: 130 },
+];
 
-  // Format the data. Here we only keep the value
-  const data = filteredSortedRowIds.map((id) => {
-    const row: Record<string, any> = {};
-    visibleColumnsField.forEach((field) => {
-      row[field] = apiRef.current.getCellParams(id, field).value;
-    });
-    return row;
-  });
+// Define your rows
+const rows = [
+  {
+    id: 1,
+    courseID: 'COURSE_001',
+    title: 'Accounting Basics',
+    type: 'Online',
+    duration: '30 hours',
+    startDate: '2022-01-01',
+    paymentType: 'Credit Card',
+    paymentOptions: 'Installments',
+  },
+  // Add more rows as needed
+];
 
-  // Stringify with some indentation
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#parameters
-  return JSON.stringify(data, null, 2);
-};
+// The rest of your code remains the same...
 
-const exportBlob = (blob: Blob, filename: string) => {
-  // Save the blob in a json file
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  });
-};
-
-function JsonExportMenuItem(props: GridExportMenuItemProps<{}>) {
-  const apiRef = useGridApiContext();
-
-  const { hideMenu } = props;
-
+export default function CustomExport() {
   return (
-    <MenuItem
-      onClick={() => {
-        const jsonString = getJson(apiRef);
-        const blob = new Blob([jsonString], {
-          type: 'text/json',
-        });
-        exportBlob(blob, 'DataGrid_demo.json');
-
-        // Hide the export menu after the export
-        hideMenu?.();
-      }}
-    >
-      Export JSON
-    </MenuItem>
+    <div>
+      <Header></Header>
+      <div style={{ width: '100%' }}>
+        <DataGrid rows={rows} columns={columns} slots={{ toolbar: CustomToolbar }} />
+      </div>
+    </div>
   );
 }
 
@@ -79,7 +62,7 @@ function CustomExportButton(props: ButtonProps) {
   return (
     <GridToolbarExportContainer {...props}>
       <GridCsvExportMenuItem options={csvOptions} />
-      <JsonExportMenuItem />
+      {/* <JsonExportMenuItem /> */}
     </GridToolbarExportContainer>
   );
 }
@@ -92,19 +75,3 @@ function CustomToolbar(props: GridToolbarContainerProps) {
   );
 }
 
-export default function CustomExport() {
-  const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 4,
-    maxColumns: 6,
-  });
-
-  return (
-    <div>
-    <Header></Header>
-    <div style={{ width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
-    </div>
-    </div>
-  );
-}
