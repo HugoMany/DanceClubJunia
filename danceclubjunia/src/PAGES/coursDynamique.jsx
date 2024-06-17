@@ -56,7 +56,7 @@ else{
       <p>Start Date: {new Date(course.startDate).toDateString()}</p>
       <p>Start Time: {course.startTime}</p>
       <p>Location: {course.location}</p>
-      <p>Duration: {course.duration}</p>
+      <p>Duration: {course.duration} minutes</p>
       <p>Teachers: {course.teacher}</p>
       {/* Render course details based on the fetched data */}
     </div>
