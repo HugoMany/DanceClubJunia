@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../elements/header';
 import {URL_DB} from '../const/const';
+import Loading from '../elements/loading';
 
 const CoursDynamique = () => {
    const { courseId } = useParams();
@@ -43,13 +44,14 @@ const CoursDynamique = () => {
         
     console.log(courseId+'ID cours');
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading courses: {error.message}</div>;
-    if (!course) return <div>Aucun cours trouvé</div>;
-  return (
+    if (loading) return <Loading></Loading>;
+    // if (error) return <div>Error loading courses: {error.message}</div>;
+else{
+        return (
     
-    <div>
-      <Header></Header>
+    <div className='coursDynamique'>
+      <Header title={course.title}></Header>
+      <h1>{course.title}</h1>
       <p>Type: {course.type}</p>
       <p>Start Date: {new Date(course.startDate).toDateString()}</p>
       <p>Start Time: {course.startTime}</p>
@@ -60,5 +62,6 @@ const CoursDynamique = () => {
     </div>
   );
 };
+}
 
 export default CoursDynamique;

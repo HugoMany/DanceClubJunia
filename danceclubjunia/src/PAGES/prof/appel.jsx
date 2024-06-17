@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../elements/header';
-import { URL_DB } from '../const/const';
-import "../css/appel.css";
+import Header from '../../elements/header';
+import { URL_DB } from '../../const/const';
+import "../../css/appel.css";
 
 const Appel = () => {
     const [cours, setCours] = useState([]);

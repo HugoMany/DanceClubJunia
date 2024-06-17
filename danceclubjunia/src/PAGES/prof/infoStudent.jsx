@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import Loading from '../elements/loading';
+import Loading from '../../elements/loading';
 
 const InfoStudent = ({ userID }) => {
     const [student, setStudent] = useState([]);

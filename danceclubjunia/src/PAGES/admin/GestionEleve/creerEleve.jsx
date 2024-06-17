@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-//import Header from '../elements/header';
-//import '../css/login.css';
+// import Header from '../elements/header';
+// import '../css/login.css';
 import { URL_DB } from '../../../const/const';
+
 function CreerEleve() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
@@ -25,7 +26,7 @@ function CreerEleve() {
         };
         console.log('Form Data:', formData);
 
-        const fetchProf = async () => {
+        const fetchEleve = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
@@ -44,77 +45,90 @@ function CreerEleve() {
                     body: JSON.stringify(formData)
                 });
 
-                const data = await response.json();
-                console.log('Response:', data);
+                // Vérifiez si le statut de la réponse est 204
+                if (response.status === 204) {
+                    console.warn('No content returned from the server');
+                } else {
+                    const data = await response.json();
+                    console.log('Response:', data);
+                }
 
             } catch (error) {
                 console.error('Erreur lors de la création du student', error);
             }
         };
 
-        fetchProf();
+        fetchEleve();
     };
 
     return (
-        <div className='Form'>
-            <form onSubmit={handleSubmit}>
+        <div className='scrollerFormAdmin'>
+
+
+            <form onSubmit={handleSubmit}  className='formAdminCreate'>
                 <label>
                     firstname:
-                    <input
+                    
+                </label>
+                <input
                         type="text"
                         required
                         value={firstname}
                         onChange={(e) => setFirstname(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     surname:
-                    <input
+                    
+                </label>
+                <input
                         type="text"
                         required
                         value={surname}
                         onChange={(e) => setSurname(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     mail:
-                    <input
+                   
+                </label>
+                <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     password:
-                    <input
+                   
+                </label>
+                <input
                         type="password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     connectionMethod:
-                    <input
+                   
+                </label>
+                <input
                         type="text"
                         required
                         value={connectionMethod}
                         onChange={(e) => setConnectionMethod(e.target.value)}
                     />
-                </label>
                 <br />
                 <label>
                     photo:
-                    <input
+                    
+                </label>
+                <input
                         type="file"
                         onChange={(e) => setPhoto(e.target.files[0]?.name || '')}
                     />
-                </label>
                 <br />
                 <button type="submit">Créer le student</button>
             </form>

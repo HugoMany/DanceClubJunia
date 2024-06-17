@@ -1,15 +1,16 @@
-import PlanningProf from '../PAGES/planningProf';
-import Header from '../elements/header';
+import PlanningProf from '../planningProf';
+import Header from '../../elements/header';
 import Appel from './appel';
-import GetStudentID from './getStudentID';
-import AjoutCredits from './ajoutCredits';
+import GetStudentID from '../getStudentID';
+import AjoutCredits from '../ajoutCredits';
 import React, { useState } from 'react';
+import AddTagToACours from './addTagToACours';
 // import TeacherRequire from '../elements/teacherRequire.jsx';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
     // TeacherRequire()
     return(
-    <div>
+    <div className='ProfPage'>
         
         <Header title="Profil"></Header>
         <div>
@@ -19,10 +20,13 @@ const Prof = ()=>{
 
 
         <div>
-            <PlanningProf teacherId="Teacher 1"></PlanningProf>
+            <PlanningProf teacherId="1"></PlanningProf>
         </div>
         <div>
             <Appel></Appel>
+        </div>
+        <div>
+            <AddTagToACours></AddTagToACours>
         </div>
     </div>
 

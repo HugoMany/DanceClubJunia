@@ -7,6 +7,7 @@ import Profil from './PAGES/profil';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './PAGES/home';
+import "./css/prof.css"
 
 import AdminProf from './PAGES/admin/GestionProf/adminProf';
 import AdminCours from './PAGES/admin/GestionCours/adminCours';
@@ -29,8 +30,8 @@ import Loading from './elements/loading';
 import ModifCours from './PAGES/admin/GestionCours/modifCours';
 import GetStudentID from './PAGES/getStudentID';
 import AjoutCredits from './PAGES/ajoutCredits';
-import Prof from './PAGES/prof';
-import Appel from './PAGES/appel';
+import Prof from './PAGES/prof/prof';
+import Appel from './PAGES/prof/appel';
 import CreerProf from './PAGES/admin/GestionProf/creerProf';
 import CreditEleve from './PAGES/admin/GestionEleve/creditEleve';
 import ErreurNotAccess from './PAGES/erreurNotAccess';
@@ -42,10 +43,10 @@ import ModifEleve from './PAGES/admin/GestionEleve/modifEleve';
 import SupprimerEleve from './PAGES/admin/GestionEleve/supprimerEleve';
 import SupprimerProf from './PAGES/admin/GestionProf/supprimerProf';
 
-import InfoStudent from './PAGES/infoStudent';
-import InfoStudentCourse from './PAGES/infoStudentCourse';
-import InfoStudentForProf from './PAGES/infoStudentForProf';
-
+import InfoStudent from './PAGES/prof/infoStudent';
+import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
+import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
+import AddTagToACours from './PAGES/prof/addTagToACours';
 
 function App() {
   return (
@@ -79,6 +80,8 @@ function App() {
 
           <Route path="/admin/" element={<Admin />} />
           <Route path="/cours/:courseId" element={<CoursDynamique />} />
+
+          <Route path='addTagToACours' element={<AddTagToACours/>}/>
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />

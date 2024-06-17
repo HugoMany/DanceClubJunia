@@ -1,0 +1,27 @@
+html body .addAndDeleteTag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+}
+.ProfPage {
+    overflow-y: scroll;
+    padding-top: 5vh;
+}
+html .coursDynamique {
+    display: flex;
+    height: 50vh;
+    margin: 25vh 10vw;
+    width: 80vw;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 20px;
+}

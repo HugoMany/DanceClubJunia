@@ -97,7 +97,9 @@ h1 p{
 .footer div{
   width: 33.333vw;
 }
-
+html .header {
+  font-size: 18px;
+}
 html .swiper-slide {
   display: flex;
   flex-wrap: nowrap;
