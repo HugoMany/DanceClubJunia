@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import GetStudentID from './getStudentID';
+import GetStudentID from '../getStudentID';
 const URL = 'http://90.110.227.143/'
 
 const PlanningProf = ({ teacherId }) => {

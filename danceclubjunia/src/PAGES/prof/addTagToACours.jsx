@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { URL_DB } from '../../const/const';
 import Loading from '../../elements/loading';
-
+import { Button } from '@mui/material';
 
 // const cours = {
 //     "courseID": 15,
@@ -88,6 +88,34 @@ const AddTagToACours = (idCoursSelected="10") => {
 
         setNewTag('');
     };
+    const handleRemoveTag = (tagToRemove) => {
+        const token = localStorage.getItem('token');
+        if (!token) return { valid: false };
+    
+        fetch(URL_DB + 'teacher/removeTag', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userID: 1,
+                courseID: cours.courseID,
+                tag: tagToRemove.replace(/[^a-zA-Z0-9]/g, ''),
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+                // Refresh the course data to reflect the removed tag
+                fetchCoursesById();
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    };
     useEffect(() => {
         fetchCoursesById();
     }, []); 
@@ -104,12 +132,12 @@ const AddTagToACours = (idCoursSelected="10") => {
                 {tags.map((tag, index) => (
                     <React.Fragment key={index}>
                         {tag}
-                        <button value={tag}>Supprimer ce tag</button> <br />
+                        <Button variant="contained" value={tag} onClick={() => handleRemoveTag(tag)}>Supprimer ce tag</Button> <br />
                     </React.Fragment>
                 ))}
 
                 <input type="text" placeholder="New Tag" value={newTag} onChange={handleTagChange} />
-                <button onClick={handleAddTag}>Add Tag</button>
+                <Button variant="contained" onClick={handleAddTag}>Add Tag</Button>
             </div>
         </div>
     );
