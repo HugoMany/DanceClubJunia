@@ -96,7 +96,8 @@ function Connexion() {
     //         console.error(err);
     //         // Show an error message
     //       });
-    //   };
+    //   
+};
     return (
         <div>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
