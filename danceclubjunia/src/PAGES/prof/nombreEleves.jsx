@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Header from '../elements/header';
-import { URL_DB } from '../const/const';
+import Header from '../../elements/header';
+import { URL_DB } from '../../const/const';
 
 const NombreEleve = () => {
     const userID = "1";

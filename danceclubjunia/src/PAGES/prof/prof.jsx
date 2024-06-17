@@ -1,4 +1,4 @@
-import PlanningProf from '../planningProf';
+import PlanningProf from './planningProf';
 import Header from '../../elements/header';
 import Appel from './appel';
 import GetStudentID from '../getStudentID';
@@ -15,7 +15,7 @@ const Prof = ()=>{
         <Header title="Profil"></Header>
         <div>
             <GetStudentID setUserID={setUserID} />
-            {userID && <AjoutCredits userID={userID} />}
+           
         </div>
 
 

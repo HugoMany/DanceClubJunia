@@ -17,7 +17,7 @@ import { Helmet } from 'react-helmet';
 
 import Admin from './PAGES/admin/admin';
 import CoursDynamique from './PAGES/coursDynamique';
-import PlanningProf from './PAGES/planningProf';
+import PlanningProf from './PAGES/prof/planningProf';
 import PlanningEleve from './PAGES/planningEleve';
 import CoursesList from './PAGES/listCourse';
 import ConnexionEtInscriptionSlider from './elements/connexionEtInscriptionSlider';

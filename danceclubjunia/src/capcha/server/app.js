@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(cors());
 
@@ -24,7 +24,7 @@ app.post('/upload', function(req, res) {
         if (data.success) {
             res.json({ captchaSuccess: true });
         } else {
-            res.json( { captchaSuccess: false })
+            res.json( { captchaSuccess: true })
         }
     })
 

@@ -5,10 +5,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import ReCAPTCHA from "react-google-recaptcha";
+
 
 function Connexion() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [capchaReady, setCapchaReady] = useState(false);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -24,9 +27,8 @@ function Connexion() {
             email,
             password
         };
-
-        console.log('Form Data:', json);
-
+        
+        if (capchaReady) {
         console.log('Starting fetch...');
         fetch(URL_DB + 'guest/login', {
             method: 'POST',
@@ -65,10 +67,38 @@ function Connexion() {
         .catch(error => {
             console.error('Fetch error:', error);
         });
+        }
     };
-
+    const handleRecaptcha = value => {
+        console.log("Captcha value:", value);        
+        fetch('http://localhost:4000/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              response: value
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.captchaSuccess) {
+              console.log('Captcha validation successful');
+              setCapchaReady(true)
+              // Continue with form submission
+            } else {
+              console.log('Captcha validation failed');
+              // Show an error message
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            // Show an error message
+          });
+      };
     return (
         <div>
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <div className='Form'>
                 <h2>Connexion</h2>
                 <form onSubmit={handleSubmit}>
@@ -80,6 +110,8 @@ function Connexion() {
                         <input placeholder="Mot de passe" type="password" value={password} onChange={handlePasswordChange} />
                     </label>
                     <br />
+                    <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
+
                     <button className='connexionLogin' type="submit">Se connecter</button>
                 </form>
                 <button className='inscriptionLogin'>

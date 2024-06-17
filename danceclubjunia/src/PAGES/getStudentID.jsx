@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-
+import AjoutCredits from './ajoutCredits';
 const API_URL = 'http://90.110.227.143/api/teacher/searchStudent';
 
 const GetStudentID = () => {
   const [email, setEmail] = useState('');
   const [userID, setUserID] = useState(null);
-
+  const [dataUserFound,setDataUserFound] = useState(true);
   const searchStudent = async () => {
     try {
         const token = localStorage.getItem('token');
@@ -20,6 +20,7 @@ const GetStudentID = () => {
       const data = await response.json();
       if (data.success && data.students.length > 0) {
         setUserID(data.students[0].userID);
+        setDataUserFound(data.students[0])
       } else {
         setUserID(null);
       }
@@ -37,7 +38,12 @@ const GetStudentID = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       <button onClick={searchStudent}>Search</button>
-      {userID && <p>User ID: {userID}</p>}
+      {userID && <div>
+      <p>User ID: {dataUserFound.userID}</p>
+      <p>Surname: {dataUserFound.surname}</p>
+      <p>Firstname: {dataUserFound.firstname}</p>
+      <AjoutCredits id={userID} userID={userID} />
+      </div>}
     </div>
   );
 };
