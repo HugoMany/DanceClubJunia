@@ -47,7 +47,7 @@ import InfoStudent from './PAGES/prof/infoStudent';
 import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 import AddTagToACours from './PAGES/prof/addTagToACours';
-
+import Compta from './PAGES/admin/Compta/compta';
 function App() {
   return (
     <div className="App">
@@ -82,6 +82,8 @@ function App() {
           <Route path="/cours/:courseId" element={<CoursDynamique />} />
 
           <Route path='addTagToACours' element={<AddTagToACours/>}/>
+
+          <Route path="/admin/compta" element={<Compta/>}/>
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />
