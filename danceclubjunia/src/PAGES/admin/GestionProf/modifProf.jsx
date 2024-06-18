@@ -1,116 +1,175 @@
 import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
+import { useParams } from 'react-router-dom';
 
-const showLoading = () => {
-    // Placeholder for actual showLoading implementation
-    console.log('Loading...');
-};
-
-const hideLoading = () => {
-    // Placeholder for actual hideLoading implementation
-    console.log('Loading complete.');
-};
-
-// Start loading
-showLoading();
-
-const ModifProf = ({ idProf }) => {
+const ModifProf = () => {
+    const { idParam } = useParams();
+    const profId = idParam;
     const [loading, setLoading] = useState(true);
-    const [courseData, setCourseData] = useState(null);
+    const [error, setError] = useState(null);
+    const [teachersData, setTeachersData] = useState(null);
+    const [formData, setFormData] = useState({
+        teacherID: profId,
+        firstname: '',
+        surname: '',
+        email: '',
+        password: '',
+        connectionMethod: '',
+        credit: 0,
+        photo: '',
+        description: ''
+    });
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
-        const fetchProf = async () => {
+        const fetchEleve = async () => {
             try {
                 const token = localStorage.getItem('token');
-                if (!token) return { valid: false };
-                console.log(token)
-                const response = await fetch(URL_DB + 'user/searchTeacher?teacherID=' + idProf, {
+                if (!token) return;
+
+                const response = await fetch(`http://90.110.227.143/api/admin/getAllTeachers`, {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-                const data = await response.json();
-                setCourseData(data);
-                setLoading(false);
-                hideLoading();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.courses) {
+                        const filteredTeachers = data.courses.find(teacher => teacher.userID === parseInt(profId, 10));
+                        if (filteredTeachers) {
+                            setTeachersData(data);
+                            setFormData({
+                                teacherID: filteredTeachers.userID,
+                                firstname: filteredTeachers.firstname,
+                                surname: filteredTeachers.surname,
+                                email: filteredTeachers.email,
+                                password: '',
+                                connectionMethod: filteredTeachers.connectionMethod,
+                                credit: filteredTeachers.credit,
+                                photo: filteredTeachers.photo,
+                                description: filteredTeachers.description || '',
+                            });
+                        }
+                    }
+                } else {
+                    throw new Error('Error fetching teacher');
+                }
             } catch (error) {
-                console.error('Erreur lors de la récupération des info du prof', error);
-                hideLoading();
+                console.error('Error fetching teacher:', error);
+                setError(error);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchProf();
-    }, [idProf]);
+
+        fetchEleve();
+    }, [profId]);
 
     const handleSubmit = async (event) => {
-        console.log("ooooo")
         event.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            if (!token) return { valid: false };
+            if (!token) return;
 
-            console.log(token)
-            console.log(courseData)
-            let courseDataModify = {
-                ...courseData.courses[0]
-            };
+            const formDataToSubmit = new FormData();
+            formDataToSubmit.append('teacherID', formData.teacherID);
+            formDataToSubmit.append('firstname', formData.firstname);
+            formDataToSubmit.append('surname', formData.surname);
+            formDataToSubmit.append('email', formData.email);
+            formDataToSubmit.append('password', formData.password);
+            formDataToSubmit.append('connectionMethod', formData.connectionMethod);
+            formDataToSubmit.append('credit', formData.credit);
+            formDataToSubmit.append('photo', imageFile ? imageFile : formData.photo);
+            formDataToSubmit.append('description', formData.description);
 
-            
-            console.log(courseDataModify)
-
-            const response = await fetch(URL_DB + `teacher/modifyTeacher`, {
+            const response = await fetch(`${URL_DB}teacher/modifyTeacher`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(courseDataModify),
+                body: formDataToSubmit,
             });
+
             if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour du prof');
+                throw new Error('Erreur lors de la mise à jour du professeur');
             }
-            alert('Prof mis à jour avec succès');
+            alert('Professeur mis à jour avec succès');
         } catch (error) {
-            console.error('Erreur lors de la mise à jour du prof', error);
+            console.error('Erreur lors de la mise à jour du professeur', error);
         }
     };
 
     const handleChange = (event) => {
-        setCourseData(prevState => ({
+        const { name, value } = event.target;
+        setFormData(prevState => ({
             ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setImageFile(file);
+        setFormData(prevState => ({
+            ...prevState,
+            photo: URL.createObjectURL(file)
         }));
     };
 
     if (loading) {
-        return <Loading></Loading>;
+        return <Loading />;
     }
+
+    if (error) {
+        return <div>Error loading teacher: {error.message}</div>;
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
-
-            <label htmlFor="firsname">Firsname:</label>
-            <input type="text" name="firstname" placeholder={courseData.firstname} onChange={handleChange} />
-
-            <label htmlFor="surname">Surname:</label>
-            <input type="text" name="surname" placeholder={courseData.surname} onChange={handleChange} />
-
-            <label htmlFor="email">Email:</label>
-            <input type="email" name="email" placeholder={courseData.email} onChange={handleChange} />
-
-            <label htmlFor="connectionMethod">Connection Method:</label>
-            <input type="text" name="connectionMethod" placeholder={courseData.connectionMethod} onChange={handleChange} />
-
-            <label htmlFor="photo">Photo:</label>
-            <input type="file" name="photo" placeholder={courseData.photo} onChange={handleChange} />
-
-            <label htmlFor="description">Description:</label>
-            <input type="text" name="description" placeholder={courseData.descrition} onChange={handleChange} />
-
-            <button type="submit">Submit</button>
-        </form>
+        <div className='ModalAdminGrid'>
+            <div>
+                <h1>Modifier le professeur N°{profId}</h1>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Image du professeur:
+                        <input type="file" name="photo" accept="image/*" onChange={handleImageChange} />
+                    </label>
+                    <label>
+                        Prénom:
+                        <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Nom:
+                        <input type="text" name="surname" value={formData.surname} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Email:
+                        <input type="text" name="email" value={formData.email} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Mot de passe:
+                        <input type="password" name="password" value={formData.password} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Méthode de connexion:
+                        <input type="text" name="connectionMethod" value={formData.connectionMethod} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Crédit:
+                        <input type="number" name="credit" value={formData.credit} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Description:
+                        <textarea name="description" value={formData.description} onChange={handleChange} />
+                    </label>
+                    
+                    <button type="submit">Mettre à jour</button>
+                </form>
+            </div>
+        </div>
     );
 };
-
-
-
 
 export default ModifProf;
