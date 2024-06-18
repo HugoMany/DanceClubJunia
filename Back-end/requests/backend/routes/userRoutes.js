@@ -128,10 +128,6 @@ router.post('/resetPassword', userController.resetPassword);
  *           schema:
  *             type: object
  *             properties:
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur auquel ajouter le lien.
- *                 example: 123
  *               courseID:
  *                 type: integer
  *                 description: ID du cours auquel ajouter le lien.
@@ -455,17 +451,9 @@ router.get('/getContactsStudents', userController.getContactsStudents);
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"
@@ -473,9 +461,13 @@ router.get('/getContactsStudents', userController.getContactsStudents);
  *         description: Champ userID manquant.
  *       401:
  *         description: L'ID de l'utilisateur n'est pas un entier positif.
+ *       402:
+ *         description: Le userID et le token ne correspondent pas
  *       501:
- *         description: Erreur lors de la récupération du profil.
+ *         description: Erreur lors de la récupération du type d'utilisateur.
  *       502:
+ *         description: Erreur lors de la récupération du profil.
+ *       50:
  *         description: L'utilisateur n'existe pas.
  *       500:
  *         description: Erreur SQL
@@ -551,17 +543,9 @@ router.get('/getProfile', userController.getProfile);
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"

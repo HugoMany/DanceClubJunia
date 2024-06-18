@@ -21,7 +21,7 @@ exports.getAllCourses = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, captcha } = req.body;
 
     console.log(`login | email, password: ${email}, XXXXXXX`);
 
@@ -30,6 +30,9 @@ exports.login = async (req, res) => {
     }
     if (!password) {
         return res.status(401).json({ error: 'Mot de passe manquant.' });
+    }
+    if (!captcha) {
+        return res.status(404).json({ error: 'Captcha manquant.' });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -40,10 +43,14 @@ exports.login = async (req, res) => {
     }
 
     try {
-        const user = await guestService.login(email, password);
+        const user = await guestService.login(email, password, captcha);
+
+        if (!user || user.length === 0) {
+            throw new Error("Identifiants invalides.");
+        }
 
         // Génération du token jwt pour garantir l'identité de l'utilisateur pour les prochaines requêtes
-        const token = jwt.sign({ id: user.userID, userType: user[0].userType }, config.jwtSecret, {
+        const token = jwt.sign({ id: user[0].userID, userType: user[0].userType }, config.jwtSecret, {
             expiresIn: '1h' // Expire in 1 hour
         });
 
@@ -56,11 +63,18 @@ exports.login = async (req, res) => {
             case "Identifiants invalides.":
                 res.status(501).json({ success: false, message: error.message });
                 break;
+            case "Échec de la vérification reCAPTCHA.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la vérification reCAPTCHA.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
         }
     }
 };
+
 
 exports.registerStudent = async (req, res) => {
     const { firstname, surname, email, password, connectionMethod, photo } = req.body;
@@ -95,6 +109,12 @@ exports.registerStudent = async (req, res) => {
                 break;
             case "Erreur lors de la création du compte.":
                 res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Échec de la vérification reCAPTCHA.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la vérification reCAPTCHA.":
+                res.status(505).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -144,26 +164,6 @@ exports.getTicketPrice = async (req, res) => {
                 res.status(501).json({ success: false, message: error.message });
                 break;
             case "Le prix du ticket n'a pas été trouvé.":
-                res.status(502).json({ success: false, message: error.message });
-                break;
-            default:
-                res.status(500).json({ success: false, message: 'Erreur SQL' });
-        }
-    }
-};
-
-exports.getSubscriptionPrice = async (req, res) => {
-    try {
-        const subscriptionPrice = await guestService.getSubscriptionPrice();
-        res.status(200).json({ success: true, subscriptionPrice });
-    } catch (error) {
-        console.error('getSubscriptionPrice | error:', error);
-
-        switch (error.message) {
-            case "Erreur lors de la récupération du prix de l'abonnement.":
-                res.status(501).json({ success: false, message: error.message });
-                break;
-            case "Le prix de l'abonnement n'a pas été trouvé.":
                 res.status(502).json({ success: false, message: error.message });
                 break;
             default:

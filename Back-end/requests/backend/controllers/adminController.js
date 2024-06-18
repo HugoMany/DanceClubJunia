@@ -15,8 +15,7 @@ exports.getAllStudents = async (req, res) => {
 exports.getAllTeachers = async (req, res) => {
     try {
         console.log(`getAllTeachers`);
-
-        console.log("getAllTeachers");
+        
         const teachers = await adminService.getAllTeachers();
         res.status(200).json({ success: true, teachers: teachers });
     } catch (error) {
@@ -29,7 +28,6 @@ exports.getAllAdmins = async (req, res) => {
     try {
         console.log(`getAllAdmins`);
 
-        console.log("getAllAdmins");
         const admins = await adminService.getAllAdmins();
         res.status(200).json({ success: true, admins: admins });
     } catch (error) {
@@ -42,7 +40,6 @@ exports.getAllUsers = async (req, res) => {
     try {
         console.log(`getAllUsers`);
 
-        console.log("getAllUsers");
         const users = await adminService.getAllUsers();
         res.status(200).json({ success: true, users: users });
     } catch (error) {
@@ -175,8 +172,8 @@ exports.modifyPlacePrice = async (req, res) => {
         if (!type || !price) {
             return res.status(400).json({ error: 'Les paramètres type et price sont requis.' });
         }
-        if (type !== 'ticket' && type !== 'subscription' && !type.startsWith('card')) {
-            return res.status(401).json({ error: 'Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".' });
+        if (type !== 'ticket' && !type.startsWith('card')) {
+            return res.status(401).json({ error: 'Type de place non valide. Utilisez "ticket" ou "cardN".' });
         }
         if (type.startsWith('card') && !/card\d+/.test(type)) {
             return res.status(402).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
@@ -444,9 +441,9 @@ exports.deleteStudent = async (req, res) => {
 
 exports.modifyTeacher = async (req, res) => {
     try {
-      const { teacherID, firstname, surname, email, password, connectionMethod, credit, photo, description} = req.body;
+      const { teacherID, firstname, surname, email, password, connectionMethod, photo, description} = req.body;
   
-      console.log("modifyStudent | teacherID, firstname, surname, email, password, connectionMethod, credit, description : " + teacherID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo + ", " + description);
+      console.log("modifyStudent | teacherID, firstname, surname, email, password, connectionMethod, description : " + teacherID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo + ", " + description);
   
       if (!teacherID) {
         return res.status(400).json({ error: 'teacherID manquant.' });
@@ -490,14 +487,6 @@ exports.modifyTeacher = async (req, res) => {
         values.push(connectionMethod);
       }
   
-      if (credit) {
-        if (credit < 0) {
-          return res.status(404).json({ error: 'Credit invalide.' });
-        }
-        fieldsToUpdate.push('credit = ?');
-        values.push(credit);
-      }
-  
       if (photo) {
         fieldsToUpdate.push('photo = ?');
         values.push(photo);
@@ -509,7 +498,7 @@ exports.modifyTeacher = async (req, res) => {
       }
   
       if (fieldsToUpdate.length === 0) {
-        return res.status(405).json({ error: 'Aucun champ à mettre à jour.' });
+        return res.status(404).json({ error: 'Aucun champ à mettre à jour.' });
       }
   
       values.push(teacherID);
