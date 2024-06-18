@@ -5,6 +5,7 @@ import GetStudentID from '../getStudentID';
 import AjoutCredits from '../ajoutCredits';
 import React, { useState } from 'react';
 import AddTagToACours from './addTagToACours';
+import AddlinkToACours from './addLinkToACours';
 // import TeacherRequire from '../elements/teacherRequire.jsx';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
@@ -25,9 +26,7 @@ const Prof = ()=>{
         <div>
             <Appel></Appel>
         </div>
-        <div>
-            <AddTagToACours></AddTagToACours>
-        </div>
+        
     </div>
 
 
