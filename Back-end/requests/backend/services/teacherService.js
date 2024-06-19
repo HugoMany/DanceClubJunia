@@ -4,7 +4,7 @@ class TeacherService {
   async getStudent(studentID) {
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
+        SELECT userID, firstname, surname, email, connectionMethod, tickets, photo FROM Users 
         WHERE userID = ? AND userType = 'student'
       `;
 
@@ -20,15 +20,15 @@ class TeacherService {
     });
   }
 
-  async newStudent(firstname, surname, email, password, connectionMethod, credit, photo) {
+  async newStudent(firstname, surname, email, password, connectionMethod, photo) {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, credit, photo)
+        INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo)
         VALUES (?, ?, ?, ?, ?, 'student', ?, ?)
       `;
 
-      console.log("newStudent service | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);
-      db.query(sql, [firstname, surname, email, password, connectionMethod, credit, photo], (err, result) => {
+      console.log("newStudent service | firstname, surname, email, password, connectionMethod : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo);
+      db.query(sql, [firstname, surname, email, password, connectionMethod, photo], (err, result) => {
         if (err) {
           return reject(new Error("Erreur lors de la création de l'élève."));
         }
@@ -37,7 +37,7 @@ class TeacherService {
         const newUserID = result.insertId;
 
         // Sélectionner les informations complètes de l'utilisateur nouvellement inséré
-        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
+        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, tickets, photo FROM Users WHERE userID = ?';
         db.query(selectSql, [newUserID], (err, rows) => {
           if (err) {
             return reject(new Error("Erreur lors de la récupération de l'élève."));
@@ -67,7 +67,7 @@ class TeacherService {
         if (result.affectedRows == 0) {
           return reject(new Error("Il n'existe pas d'élève avec cet ID."));
         }
-        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users WHERE userID = ?';
+        const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, tickets, photo FROM Users WHERE userID = ?';
         db.query(selectSql, [studentID], (err, rows) => {
           if (err) {
             return reject(new Error("Erreur lors de la récupération de l'élève."));
@@ -79,9 +79,9 @@ class TeacherService {
     });
   }
 
-  async removeStudent(userID, courseID, studentID) {
+  async removeStudent(userID,userType, courseID, studentID) {
     return new Promise((resolve, reject) => {
-      const selectSql = 'SELECT studentsID FROM Courses WHERE courseID = ?';
+      const selectSql = 'SELECT studentsID, teachersID FROM Courses WHERE courseID = ?';
       db.query(selectSql, [courseID], (err, rows) => {
         if (err) {
           return reject(new Error("Erreur lors de la récupération des élèves du cours."));
@@ -91,8 +91,14 @@ class TeacherService {
         }
 
         let studentsID = [];
+        let teachersID = [];
         if (rows.length > 0) {
           studentsID = JSON.parse(rows[0].studentsID);
+          teachersID = JSON.parse(rows[0].teachersID);
+        }
+
+        if(!teachersID.includes(parseInt(userID)) && userType == "teacher") {
+          return reject(new Error("Le professeur ne fais pas parti du cours (token)"));
         }
 
         // Retirer l'étudiant de la liste
@@ -117,7 +123,7 @@ class TeacherService {
     });
   }
 
-  async affectStudent(teacherID, studentID, courseID) {
+  async affectStudent(userID,userType, studentID, courseID) {
     return new Promise((resolve, reject) => {
       const selectSql = 'SELECT studentsID, teachersID FROM Courses WHERE courseID = ?';
       db.query(selectSql, [courseID], (err, rows) => {
@@ -136,8 +142,8 @@ class TeacherService {
         }
 
         // Vérifier si le teacherID est dans la liste des teachersID
-        if (!teachersID.includes(parseInt(teacherID))) {
-          return reject(new Error('Le professeur n\'est pas autorisé à modifier ce cours.'));
+        if(!teachersID.includes(parseInt(userID)) && userType == "teacher") {
+          return reject(new Error('Le professeur n\'est pas autorisé à modifier ce cours. (token)'));
         }
 
         // Vérifier si l'étudiant est déjà dans la liste
@@ -185,7 +191,7 @@ class TeacherService {
 
       const whereClause = conditions.join(' AND ');
       const sql = `
-            SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo 
+            SELECT userID, firstname, surname, email, connectionMethod, tickets, photo 
             FROM Users 
             WHERE ${whereClause}
         `;
@@ -202,15 +208,20 @@ class TeacherService {
     });
   }
 
-  async cancelCourse(courseID, teacherID) {
+  async cancelCourse(courseID, userID, userType) {
     return new Promise((resolve, reject) => {
-      const selectSql = 'DELETE FROM Courses WHERE startDate > CURRENT_DATE AND courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON));';
-      db.query(selectSql, [courseID, teacherID], (err, result) => {
+      let selectSql = 'DELETE FROM Courses WHERE startDate > CURRENT_DATE AND courseID = ?';
+      let values = [courseID];
+      if(userType == "teacher") {
+        selectSql += " AND JSON_CONTAINS(teachersID, CAST(? AS JSON));";
+        values.push(userID)
+      }
+      db.query(selectSql, values, (err, result) => {
         if (err) {
           return reject(new Error('Erreur lors de la suppression.'));
         }
         if (result.affectedRows === 0) {
-          return reject(new Error("Le cours n'existe pas."));
+          return reject(new Error("Le cours n'existe pas ou le professeur n'est pas dans le cours."));
         }
         resolve(result);
       });
@@ -230,17 +241,22 @@ class TeacherService {
     });
   }
 
-  async modifyCourse(teacherID, courseID, values, fieldsToUpdate, teachers, students, links, tags) {
+  async modifyCourse(userID,userType, courseID, values, fieldsToUpdate, teachers, students, links, tags) {
     return new Promise((resolve, reject) => {
-      const verifyTeacherSql = 'SELECT COUNT(*) AS count FROM Courses WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))';
-      db.query(verifyTeacherSql, [courseID, teacherID], (err, rows) => {
+      const verifyTeacherSql = 'SELECT COUNT(*) AS count FROM Courses WHERE courseID = ?';
+      let valuesTmp = [courseID];
+      if(userType == "teacher") {
+        selectSql += "AND JSON_CONTAINS(teachersID, CAST(? AS JSON));";
+        valuesTmp.push(userID)
+      }
+      db.query(verifyTeacherSql, values, (err, rows) => {
         if (err) {
           return reject(new Error("La récupération du nombre de cours du professeur a échoué."));
         }
 
-        // Vérifier si le teacherID est autorisé à modifier ce cours
+        // Vérifier si le userID est autorisé à modifier ce cours
         if (rows[0].count === 0) {
-          return reject(new Error("Le professeur n'est pas autorisé à modifier ce cours."));
+          return reject(new Error("Le professeur n'est pas autorisé à modifier ce cours ou le cours n'existe pas."));
         }
 
         // Obtenez les IDs des étudiants et des professeurs à partir des adresses e-mail fournies
@@ -461,19 +477,6 @@ class TeacherService {
             db.query(sql, [studentID, number], (err, result) => {
               if (err) {
                 return reject(new Error("Erreur lors de l'ajout de la carte à l'utilisateur."));
-              }
-              if (result.affectedRows === 0) {
-                return reject(new Error("L'utilisateur n'existe pas."));
-              }
-              resolve(result);
-            });
-            break;
-          case 'subscription':
-            const days = number * 30; // Nombre de jours proportionnel au nombre de mois
-            sql = 'UPDATE Users SET subscriptionEnd = DATE_ADD(subscriptionEnd, INTERVAL ? DAY) WHERE userID = ?';
-            db.query(sql, [days, studentID], (err, result) => {
-              if (err) {
-                return reject(new Error("Erreur lors de la modification de la date de fin de l'abonnement de l'utilisateur."));
               }
               if (result.affectedRows === 0) {
                 return reject(new Error("L'utilisateur n'existe pas."));

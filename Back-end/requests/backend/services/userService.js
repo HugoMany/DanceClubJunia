@@ -309,22 +309,65 @@ class UserService {
 
   async getProfile(userID) {
     return new Promise((resolve, reject) => {
-      const sql = `
-      SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
-      WHERE userID = ?
-    `;
-
-      db.query(sql, [userID], (err, result) => {
+      const getUserTypeSql = `
+        SELECT userType 
+        FROM Users 
+        WHERE userID = ?
+      `;
+  
+      db.query(getUserTypeSql, [userID], (err, userTypeResult) => {
         if (err) {
-          return reject(new Error("Erreur lors de la récupération du profil."));
+          return reject(new Error("Erreur lors de la récupération du type d'utilisateur."));
         }
-        if (result.length === 0) {
+        if (userTypeResult.length === 0) {
           return reject(new Error("L'utilisateur n'existe pas."));
         }
-        resolve(result);
+  
+        const userType = userTypeResult[0].userType;
+  
+        let getProfileSql = `
+          SELECT userID, firstname, surname, email, connectionMethod, tickets, photo 
+          FROM Users 
+          WHERE userID = ?
+        `;
+  
+        // On récupère aussi la description si c'est un teacher ou un admin
+        if (userType === 'teacher' || userType === 'admin') {
+          getProfileSql = `
+            SELECT userID, firstname, surname, email, connectionMethod, photo, description 
+            FROM Users 
+            WHERE userID = ?
+          `;
+        }
+  
+        db.query(getProfileSql, [userID], (err, result) => {
+          if (err) {
+            return reject(new Error("Erreur lors de la récupération du profil."));
+          }
+          if (result.length === 0) {
+            return reject(new Error("L'utilisateur n'existe pas."));
+          }
+  
+          if (userType === 'student') {
+            const getCardsSql = `
+              SELECT cardID, number, maxNumber 
+              FROM Cards 
+              WHERE userID = ?
+            `;
+            db.query(getCardsSql, [userID], (err, cardsResult) => {
+              if (err) {
+                return reject(new Error("Erreur lors de la récupération des cartes."));
+              }
+              result[0].cards = cardsResult;
+              resolve(result);
+            });
+          } else {
+            resolve(result);
+          }
+        });
       });
     });
-  }
+  }  
 
   async modifyProfile(userID, values, fieldsToUpdate, description) {
     return new Promise((resolve, reject) => {

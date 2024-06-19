@@ -49,17 +49,9 @@ const { authorize } = require('../middlewares/auth');
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
- *                       credit:
- *                         type: integer
- *                         example: 0
  *                       tickets:
  *                         type: integer
  *                         example: 2
- *                       subscriptionEnd:
- *                         type: string
- *                         format: date
- *                         nullable: true
- *                         example: null
  *                       photo:
  *                         type: string
  *                         example: "https://picsum.photos/200/200"
@@ -212,17 +204,9 @@ router.get('/getAllAdmins', adminController.getAllAdmins);
  *                       userType:
  *                         type: string
  *                         example: "student"
- *                       credit:
- *                         type: integer
- *                         example: 0
  *                       tickets:
  *                         type: integer
  *                         example: 2
- *                       subscriptionEnd:
- *                         type: string
- *                         format: date
- *                         nullable: true
- *                         example: null
  *                       photo:
  *                         type: string
  *                         example: "https://picsum.photos/200/200"
@@ -301,7 +285,7 @@ router.delete('/deleteCourse', adminController.deleteCourse);
  *                 example: 10
  *               price:
  *                 type: integer
- *                 description: Prix en credits
+ *                 description: Prix en euros
  *                 example: 12
  *     responses:
  *       200:
@@ -395,11 +379,11 @@ router.delete('/deleteCard', adminController.deleteCard);
  *             properties:
  *               type:
  *                 type: string
- *                 description: Type de place ("ticket", "subscription" ou "cardN" avec N le nombre d'utilisations).
+ *                 description: Type de place ("ticket" ou "cardN" avec N le nombre d'utilisations).
  *                 example: "ticket"
  *               price:
  *                 type: integer
- *                 description: Prix en credits.
+ *                 description: Prix en euros.
  *                 example: 100
  *     responses:
  *       200:
@@ -415,7 +399,7 @@ router.delete('/deleteCard', adminController.deleteCard);
  *       400:
  *         description: Les paramètres type et price sont requis.
  *       401:
- *         description: Type de place non valide. Utilisez "ticket", "subscription" ou "cardN".
+ *         description: Type de place non valide. Utilisez "ticket" ou "cardN".
  *       402:
  *         description: Format de carte invalide. Utilisez "cardN" où N est un entier.
  *       403:
@@ -488,7 +472,7 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *               paymentType:
  *                 type: string
  *                 description: Types de paiements acceptes (separes par une virgule).
- *                 example: "ticket,subscription,card"
+ *                 example: "ticket,card"
  *               isEvening:
  *                 type: boolean
  *                 description: Statut de soiree du cours (true si c'est une soiree).
@@ -564,7 +548,7 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                       example: 20
  *                     paymentType:
  *                       type: string
- *                       example: "ticket,subscription,card"
+ *                       example: "ticket,card"
  *                     isEvening:
  *                       type: boolean
  *                       example: false
@@ -936,10 +920,6 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                 type: string
  *                 description: Methode de connexion du professeur.
  *                 example: "email"
- *               credit:
- *                 type: integer
- *                 description: Credit du professeur.
- *                 example: 0
  *               photo:
  *                 type: string
  *                 description: Photo du professeur.
@@ -977,17 +957,9 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"
@@ -1004,8 +976,6 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *       403:
  *         description: Mot de passe trop court (minimum 8 caractères).
  *       404:
- *         description: Crédit invalide.
- *       405:
  *         description: Aucun champ à mettre à jour.
  *       501:
  *         description: Erreur lors de la modification du professeur.

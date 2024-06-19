@@ -55,17 +55,9 @@ const { authorize } = require('../middlewares/auth');
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"
@@ -118,10 +110,6 @@ router.get('/getStudent', teacherController.getStudent);
  *                 type: string
  *                 description: Methode de connexion de l'etudiant.
  *                 example: "email"
- *               credit:
- *                 type: integer
- *                 description: Credit initial de l'etudiant.
- *                 example: 0
  *               photo:
  *                 type: string
  *                 description: Photo de l'etudiant.
@@ -155,17 +143,9 @@ router.get('/getStudent', teacherController.getStudent);
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"
@@ -174,8 +154,6 @@ router.get('/getStudent', teacherController.getStudent);
  *       401:
  *         description: Mot de passe trop court (minimum 8 caractères).
  *       402:
- *         description: Le champ credit doit être un entier positif.
- *       403:
  *         description: Email invalide.
  *       501:
  *         description: Erreur lors de la création de l'élève.
@@ -228,10 +206,6 @@ router.post('/newStudent', teacherController.newStudent);
  *                 type: string
  *                 description: Methode de connexion de l'etudiant.
  *                 example: "email"
- *               credit:
- *                 type: integer
- *                 description: Credit de l'etudiant.
- *                 example: 0
  *               photo:
  *                 type: string
  *                 description: Photo de l'etudiant.
@@ -265,17 +239,9 @@ router.post('/newStudent', teacherController.newStudent);
  *                     connectionMethod:
  *                       type: string
  *                       example: "email"
- *                     credit:
- *                       type: integer
- *                       example: 0
  *                     tickets:
  *                       type: integer
  *                       example: 2
- *                     subscriptionEnd:
- *                       type: string
- *                       format: date
- *                       nullable: true
- *                       example: null
  *                     photo:
  *                       type: string
  *                       example: "photo.png"
@@ -288,8 +254,6 @@ router.post('/newStudent', teacherController.newStudent);
  *       403:
  *         description: Mot de passe trop court (minimum 8 caractères).
  *       404:
- *         description: Credit invalide.
- *       405:
  *         description: Aucun champ à mettre à jour.
  *       501:
  *         description: Erreur lors de la modification de l'élève.
@@ -317,10 +281,6 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *           schema:
  *             type: object
  *             properties:
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur faisant la demande
- *                 example: 16
  *               courseID:
  *                 type: integer
  *                 description: ID du cours duquel retirer l'etudiant
@@ -345,9 +305,7 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *       401:
  *         description: Mot de passe trop court (minimum 8 caractères).
  *       402:
- *         description: Le champ credit doit être un entier positif.
- *       403:
- *         description: Email invalide.
+ *         description: L'ID du cours n\'est pas un entier positif.
  *       501:
  *         description: Erreur lors de la récupération de l'élève.
  *       502:
@@ -356,6 +314,8 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *         description: Erreur lors de la modification de l'élève.
  *       504:
  *         description: Erreur lors de la récupération des élèves du cours.
+ *       505:
+ *         description: Le professeur ne fais pas parti du cours (token)
  *       500:
  *         description: Erreur SQL
  */
@@ -376,10 +336,6 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *           schema:
  *             type: object
  *             properties:
- *               teacherID:
- *                 type: integer
- *                 description: ID du professeur responsable de l'affectation.
- *                 example: 1
  *               studentID:
  *                 type: integer
  *                 description: ID de l'etudiant a affecter.
@@ -405,15 +361,15 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *         description: L'ID de l'étudiant n'est pas un entier positif.
  *       402:
  *         description: L'ID du cours n'est pas un entier positif.
- *       403:
- *         description: L'ID de l'utilisateur n'est pas un entier positif.
  *       501:
- *         description: Erreur lors de la récupération de l'élève.
+ *         description: Erreur lors de la récupération des élèves et des professeurs.
  *       502:
- *         description: L'élève n'existe pas.
+ *         description: Le cours n'existe pas.
  *       503:
- *         description: Erreur lors de la récupération de l'élève.
+ *         description: Le professeur n\'est pas autorisé à modifier ce cours. (token)
  *       504:
+ *         description: L'élève est déjà dans le cours.
+ *       505:
  *         description: Erreur lors de la modification du cours.
  *       500:
  *         description: Erreur SQL
@@ -478,17 +434,9 @@ router.patch('/affectStudent', teacherController.affectStudent);
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
- *                       credit:
- *                         type: integer
- *                         example: 0
  *                       tickets:
  *                         type: integer
  *                         example: 2
- *                       subscriptionEnd:
- *                         type: string
- *                         format: date
- *                         nullable: true
- *                         example: null
  *       400:
  *         description: Au moins un critère de recherche doit être fourni.
  *       401:
@@ -517,10 +465,6 @@ router.get('/searchStudent', teacherController.searchStudent);
  *           schema:
  *             type: object
  *             properties:
- *               teacherID:
- *                 type: integer
- *                 description: ID du professeur qui annule le cours.
- *                 example: 1
  *               courseID:
  *                 type: integer
  *                 description: ID du cours a annuler.
@@ -539,15 +483,11 @@ router.get('/searchStudent', teacherController.searchStudent);
  *       400:
  *         description: courseID manquant.
  *       401:
- *         description: teacherID manquant.
- *       402:
- *         description: L'ID du professeur n'est pas un entier positif.
- *       403:
  *         description: L'ID du cours n'est pas un entier positif.
  *       501:
  *         description: Erreur lors de la suppression.
  *       502:
- *         description: Le cours n'existe pas.
+ *         description: Le cours n'existe pas ou le professeur n'est pas dans le cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -605,6 +545,8 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *         description: La date de début du cours doit être au format YYYY-MM-DD.
  *       403:
  *         description: La date de fin du cours doit être au format YYYY-MM-DD.
+ *       404:
+ *         description: Le teacherID et le token ne correspondent pas
  *       501:
  *         description: Erreur lors de la récupération du nombre d'élèves.
  *       500:
@@ -627,10 +569,6 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *           schema:
  *             type: object
  *             properties:
- *               teacherID:
- *                 type: integer
- *                 description: ID du professeur
- *                 example: 1
  *               courseID:
  *                 type: integer
  *                 description: ID du cours a modifier
@@ -671,7 +609,7 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *               paymentType:
  *                 type: string
  *                 description: Types de paiements acceptes (separes par une virgule)
- *                 example: "ticket,subscription,card"
+ *                 example: "ticket,card"
  *               isEvening:
  *                 type: boolean
  *                 description: Indique si c'est une soiree
@@ -747,7 +685,7 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                       example: 20
  *                     paymentType:
  *                       type: string
- *                       example: "ticket,subscription,card"
+ *                       example: "ticket,card"
  *                     isEvening:
  *                       type: boolean
  *                       example: true
@@ -775,25 +713,23 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *       400:
  *         description: Les champs teacherID et courseID sont obligatoires.
  *       401:
- *         description: L'ID du professeur n'est pas un entier positif.
- *       402:
  *         description: L'ID du cours n'est pas un entier positif.
- *       403:
+ *       402:
  *         description: La durée doit être positive.
- *       404:
+ *       403:
  *         description: Les dates de début et de fin doident être au format YYYY-MM-DD.
- *       405:
+ *       404:
  *         description: Le nombre maximal d'apprenants doit être positif.
- *       406:
+ *       405:
  *         description: Une soirée ne peut pas avoir de professeur.
- *       407:
+ *       406:
  *         description: La récurrence doit être positive ou nulle.
- *       408:
+ *       407:
  *         description: Aucun champ à mettre à jour.
  *       501:
  *         description: La récupération du nombre de cours du professeur a échoué.
  *       502:
- *         description: Le professeur n'est pas autorisé à modifier ce cours.
+ *         description: Le professeur n'est pas autorisé à modifier ce cours ou le cours n'existe pas.
  *       503:
  *         description: Erreur lors de la récupération des ID avec les emails fournis
  *       504:
@@ -814,13 +750,6 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *     summary: Recupere les informations des etudiants d'un cours
  *     tags: [Teachers]
  *     parameters:
- *       - in: query
- *         name: userID
- *         schema:
- *           type: integer
- *           example: 1
- *         required: true
- *         description: ID de l'utilisateur faisant la demande
  *       - in: query
  *         name: courseID
  *         schema:
@@ -899,10 +828,6 @@ router.get('/getStudentsInCourse', teacherController.getStudentsInCourse);
  *           schema:
  *             type: object
  *             properties:
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur faisant l'ajout
- *                 example: 2
  *               studentID:
  *                 type: integer
  *                 description: ID de l'etudiant
@@ -934,7 +859,7 @@ router.get('/getStudentsInCourse', teacherController.getStudentsInCourse);
  *       401:
  *         description: L'ID de l'utilisateur n'est pas un entier positif.
  *       402:
- *         description: L'ID du cours n'est pas un entier positif.
+ *         description: L'ID de l'élève n'est pas un entier positif.
  *       403:
  *         description: number n'est pas un entier positif.
  *       501:
@@ -975,10 +900,6 @@ router.post('/addPlaceStudent', teacherController.addPlaceStudent);
  *                 type: integer
  *                 description: ID du cours duquel retirer l'etudiant.
  *                 example: 6
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur executant l'action.
- *                 example: 2
  *               link:
  *                 type: string
  *                 description: lien a retirer
@@ -1042,10 +963,6 @@ router.patch('/removeLink', teacherController.removeLink);
  *           schema:
  *             type: object
  *             properties:
- *               userID:
- *                 type: integer
- *                 description: ID du professeur
- *                 example: 1
  *               courseID:
  *                 type: integer
  *                 description: ID du cours
@@ -1113,10 +1030,6 @@ router.post('/addTag', teacherController.addTag);
  *                 type: integer
  *                 description: ID du cours duquel retirer le tag.
  *                 example: 4
- *               userID:
- *                 type: integer
- *                 description: ID de l'utilisateur executant l'action.
- *                 example: 2
  *               tag:
  *                 type: string
  *                 description: tag a retirer

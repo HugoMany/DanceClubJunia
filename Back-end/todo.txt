@@ -1,0 +1,32 @@
+Nous :
+FAIT --- Adam - faire une requête pour réserver un cours (Student)
+FAIT --- Paul - Ajouter vérification via token que c'est bien la même id qui fait la requête pour ceux qui ont besoin
+FAIT --- Adam - requête pour se désinscrire d'un cours (gérer remboursement)
+Paul - Hachage Mot de passe
+FAIT --- Adam - Supprimer les crédits
+Paul - Email reset mdp
+Paul - Token de raffraichissement
+FAIT --- Adam - getProfile : rajouter la description si teacher ou admin + renvoyer carte de l'utilisateur
+Adam - Requête captcha
+Changer fonctionnement de buyPlace et supprimer addCredit
+Ajouter colonne dans courses pour faire appel + requête
+Mettre les trucs de reset MDP dans guest
+changer les isNaN
+Vérifier les réponses swagger (searchCourse etc...)
+faire des tests
+Faire un getAllData
+
+addTag removeTag : ban la virgule "," ou ajouter/supprimer plusieurs à la fois 
+getCourseByPeriod : mettre startDate et enddate en optionel
+createTeacher : pas de retour en cas d'email déjà utilisé
+newStudent :  pas de retour en cas d'email déjà utilisé
+getTeacherPlaces : mettre les périodes en optionel
+searchCoursesTeacher : période optionel
+
+Eux :
+Hello asso
+Captcha (Code déjà fait)
+
+Trucs mort :
+connexion google
+chat de discussion

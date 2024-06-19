@@ -7,13 +7,13 @@ const verifyToken = (req, res, next) => {
     token = req.cookies.token;
   }
   if (!token) {
-    return res.status(601).json({ message: 'No token provided' });
+    return res.status(401).json({ message: 'No token provided' });
   }
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
     if (err) {
-      return res.status(600).json({ message: 'Failed to authenticate token' });
+      return res.status(401).json({ message: 'Failed to authenticate token' });
     }
-    req.userId = decoded.id;
+    req.userID = decoded.id || decoded.userId || decoded.userID; // Utiliser les différents noms de clé possibles
     req.userType = decoded.userType;
     next();
   });
@@ -27,7 +27,7 @@ const authorize = (roles = []) => {
     verifyToken,
     (req, res, next) => {
       if (roles.length && !roles.includes(req.userType)) {
-        return res.status(602).json({ message: 'Unauthorized' });
+        return res.status(403).json({ message: 'Unauthorized' });
       }
       next();
     }

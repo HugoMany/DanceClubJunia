@@ -58,7 +58,7 @@ const guestController = require('../controllers/guestController');
  *                     example: 20
  *                   paymentType:
  *                     type: string
- *                     example: "ticket,subscription,card"
+ *                     example: "ticket,card"
  *                   isEvening:
  *                     type: boolean
  *                     example: true
@@ -112,6 +112,9 @@ router.get('/getAllCourses', guestController.getAllCourses);
  *                 type: string
  *                 format: password
  *                 example: "password123"
+ *               captcha:
+ *                 type: string
+ *                 format: password
  *     responses:
  *       200:
  *         description: Utilisateur connecté avec succès
@@ -134,8 +137,14 @@ router.get('/getAllCourses', guestController.getAllCourses);
  *         description: Email invalide.
  *       403:
  *         description: Mot de passe trop court (minimum 8 caractères).
+ *       404:
+ *         description: Captcha manquant.
  *       501:
  *         description: Identifiants invalides.
+ *       502:
+ *         description: Échec de la vérification reCAPTCHA.
+ *       503:
+ *         description: Erreur lors de la vérification reCAPTCHA.
  *       500:
  *         description: Erreur SQL
  */
@@ -175,6 +184,9 @@ router.post('/login', guestController.login);
  *               connectionMethod:
  *                 type: string
  *                 example: "email"
+ *               captcha:
+ *                 type: string
+ *                 format: password
  *     responses:
  *       200:
  *         description: Inscription réussie
@@ -201,6 +213,10 @@ router.post('/login', guestController.login);
  *         description: Email déjà utilisé.
  *       503:
  *         description: Erreur lors de la création du compte.
+ *       504:
+ *         description: Échec de la vérification reCAPTCHA.
+ *       505:
+ *         description: Erreur lors de la vérification reCAPTCHA.
  *       500:
  *         description: Erreur SQL
  */
@@ -305,37 +321,6 @@ router.get('/getCoursesByPeriod', guestController.getCoursesByPeriod);
  *         description: Erreur SQL
  */
 router.get('/getTicketPrice', guestController.getTicketPrice);
-
-/**
- * @swagger
- * /api/guest/getSubscriptionPrice:
- *   get:
- *     summary: Récupère le prix de l'abonnement
- *     tags: [Guest]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Prix de l'abonnement
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 subscriptionPrice:
- *                   type: integer
- *                   example: 35
- *       501:
- *         description: Erreur lors de la récupération du prix de l'abonnement.
- *       502:
- *         description: Le prix de l'abonnement n'a pas été trouvé.
- *       500:
- *         description: Erreur SQL
- */
-router.get('/getSubscriptionPrice', guestController.getSubscriptionPrice);
 
 /**
  * @swagger

@@ -35,27 +35,24 @@ exports.getStudent = async (req, res) => {
 
 exports.newStudent = async (req, res) => {
   try {
-    const { firstname, surname, email, password, connectionMethod, credit, photo } = req.body;
+    const { firstname, surname, email, password, connectionMethod, photo } = req.body;
 
-    console.log("newStudent | firstname, surname, email, password, connectionMethod, credit : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);
+    console.log("newStudent | firstname, surname, email, password, connectionMethod, photo : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo);
 
-    if (!firstname || !surname || !email || !password || !connectionMethod || !photo) {
+    if (!firstname || !surname || !email || !password || !connectionMethod) {
       return res.status(400).json({ error: 'Tous les champs doivent être remplis.' });
     }
     if (password.length <= 8) {
       return res.status(401).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
     }
-    if (isNaN(credit) || credit < 0) {
-      return res.status(402).json({ error: 'Le champ credit doit être un entier positif.' });
-    }
 
     // Vérification de la validité de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(403).json({ error: 'Email invalide.' });
+      return res.status(402).json({ error: 'Email invalide.' });
     }
 
-    const result = await teacherService.newStudent(firstname, surname, email, password, connectionMethod, credit, photo);
+    const result = await teacherService.newStudent(firstname, surname, email, password, connectionMethod, photo);
 
     return res.status(200).json({ success: true, student: result[0] });
 
@@ -80,9 +77,9 @@ exports.newStudent = async (req, res) => {
 
 exports.modifyStudent = async (req, res) => {
   try {
-    const { studentID, firstname, surname, email, password, connectionMethod, credit, photo } = req.body;
+    const { studentID, firstname, surname, email, password, connectionMethod, photo } = req.body;
 
-    console.log("modifyStudent | studentID, firstname, surname, email, password, connectionMethod, credit : " + studentID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + credit + ", " + photo);
+    console.log("modifyStudent | studentID, firstname, surname, email, password, connectionMethod : " + studentID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo);
 
     if (!studentID) {
       return res.status(400).json({ error: 'studentID manquant' });
@@ -126,21 +123,13 @@ exports.modifyStudent = async (req, res) => {
       values.push(connectionMethod);
     }
 
-    if (credit) {
-      if (credit < 0) {
-        return res.status(404).json({ error: 'Credit invalide.' });
-      }
-      fieldsToUpdate.push('credit = ?');
-      values.push(credit);
-    }
-
     if (photo) {
       fieldsToUpdate.push('photo = ?');
       values.push(photo);
     }
 
     if (fieldsToUpdate.length === 0) {
-      return res.status(405).json({ error: 'Aucun champ à mettre à jour.' });
+      return res.status(404).json({ error: 'Aucun champ à mettre à jour.' });
     }
 
     values.push(studentID);
@@ -170,13 +159,14 @@ exports.modifyStudent = async (req, res) => {
 
 exports.removeStudent = async (req, res) => {
   try {
-    const { userID, courseID, studentID } = req.body;
-
-    console.log("removeStudent | userID, courseID, studentID : " + userID + ", " + courseID + ", " + studentID);
+    const {courseID, studentID } = req.body;
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    console.log("removeStudent | courseID, studentID : " + courseID + ", " + studentID);
 
     // Vérifier si les champs sont remplis
-    if (!userID || !courseID || !studentID) {
-      return res.status(400).json({ error: 'Les champs userID, courseID et studentID doivent être fournis.' });
+    if (!courseID || !studentID) {
+      return res.status(400).json({ error: 'Les champs courseID et studentID doivent être fournis.' });
     }
 
     if (isNaN(studentID) || studentID <= 0) {
@@ -185,11 +175,8 @@ exports.removeStudent = async (req, res) => {
     if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
-    if (isNaN(userID) || userID <= 0) {
-      return res.status(403).json({ error: 'L\'ID de l\'utilisateur n\'est pas un entier positif.' });
-    }
 
-    await teacherService.removeStudent(userID, courseID, studentID);
+    await teacherService.removeStudent(userIDFromToken, userTypeFromToken, courseID, studentID);
 
     res.status(200).json({ success: true });
 
@@ -209,6 +196,9 @@ exports.removeStudent = async (req, res) => {
       case "Erreur lors de la récupération des élèves du cours.":
         res.status(504).json({ success: false, message: error.message });
         break;
+      case "Le professeur ne fais pas parti du cours (token)":
+        res.status(505).json({ success: false, message: error.message });
+        break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
     }
@@ -218,13 +208,15 @@ exports.removeStudent = async (req, res) => {
 
 exports.affectStudent = async (req, res) => {
   try {
-    const { teacherID, studentID, courseID } = req.body;
+    const {studentID, courseID } = req.body;
+    
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
 
-    console.log("affectStudent reqbody : ", req.body);
-    console.log("affectStudent | teacherID, studentID, courseID : " + teacherID + ", " + studentID + ", " + courseID);
+    console.log("affectStudent | studentID, courseID : "+ studentID + ", " + courseID);
 
     // Vérifier si les champs sont remplis
-    if (!teacherID || !studentID || !courseID) {
+    if (!studentID || !courseID) {
       return res.status(400).json({ error: 'affectStudent | Les champs teacherID, studentID et courseID doivent être fournis.' });
     }
 
@@ -234,11 +226,8 @@ exports.affectStudent = async (req, res) => {
     if (isNaN(courseID) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
-    if (isNaN(teacherID) || teacherID <= 0) {
-      return res.status(403).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
-    }
 
-    await teacherService.affectStudent(teacherID, studentID, courseID);
+    await teacherService.affectStudent(userIDFromToken, userTypeFromToken, studentID, courseID);
 
     res.status(200).json({ success: true });
 
@@ -252,14 +241,14 @@ exports.affectStudent = async (req, res) => {
       case "Le cours n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
         break;
-      case "Le professeur n\'est pas autorisé à modifier ce cours.":
-        res.status(502).json({ success: false, message: error.message });
-        break;
-      case "L'élève est déjà dans le cours.":
+      case "Le professeur n\'est pas autorisé à modifier ce cours. (token)":
         res.status(503).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la modification du cours.":
+      case "L'élève est déjà dans le cours.":
         res.status(504).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la modification du cours.":
+        res.status(505).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -307,24 +296,21 @@ exports.searchStudent = async (req, res) => {
 
 exports.cancelCourse = async (req, res) => {
   try {
-    const { courseID, teacherID } = req.body;
+    const { courseID } = req.body;
 
-    console.log("cancelCourse | courseID, teacherID : " + courseID, teacherID);
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+
+    console.log("cancelCourse | courseID : " + courseID);
 
     if (!courseID) {
       return res.status(400).json({ error: 'courseID manquant.' });
     }
-    if (!teacherID) {
-      return res.status(401).json({ error: 'teacherID manquant.' });
-    }
-    if (isNaN(teacherID) || teacherID <= 0) {
-      return res.status(402).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
-    }
     if (isNaN(courseID) || courseID <= 0) {
-      return res.status(403).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
+      return res.status(401).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
 
-    await teacherService.cancelCourse(courseID, teacherID);
+    await teacherService.cancelCourse(courseID, userIDFromToken, userTypeFromToken);
 
     res.status(200).json({ success: true });
 
@@ -335,7 +321,7 @@ exports.cancelCourse = async (req, res) => {
       case "Erreur lors de la suppression.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Le cours n'existe pas.":
+      case "Le cours n'existe pas ou le professeur n'est pas dans le cours.":
         res.status(502).json({ success: false, message: error.message });
         break;
       default:
@@ -348,7 +334,17 @@ exports.getTeacherPlaces = async (req, res) => {
   try {
     const { teacherID, startDate, endDate } = req.query;
 
+    
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+
     console.log("getTeacherPlaces | teacherID, startDate, endDate : " + teacherID + ", " + startDate + ", " + endDate);
+
+    if(userTypeFromToken == "teacher"){
+      if (userIDFromToken != teacherID) {
+        return res.status(404).json({ success: false, message: 'Le teacherID et le token ne correspondent pas' });
+      }
+    }
 
     if (!teacherID || !startDate || !endDate) {
       return res.status(400).json({ error: 'Les champs teacherID, startDate et endDate doivent être fournis.' });
@@ -382,20 +378,19 @@ exports.getTeacherPlaces = async (req, res) => {
 
 exports.modifyCourse = async (req, res) => {
   try {
-    const { teacherID, courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags } = req.body;
+    const { courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags } = req.body;
 
-    console.log("modifyCourse | teacherID, courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags : " + teacherID + ", " + courseID + ", " + image + ", " + title + ", " + type + ", " + duration + ", " + startDate + ", " + startTime + ", " + location + ", " + maxParticipants + ", " + paymentType + ", " + isEvening + ", " + recurrence + ", " + teachers + ", " + links + ", " + students + ", " + tags);
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+
+    console.log("modifyCourse | courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags : " + courseID + ", " + image + ", " + title + ", " + type + ", " + duration + ", " + startDate + ", " + startTime + ", " + location + ", " + maxParticipants + ", " + paymentType + ", " + isEvening + ", " + recurrence + ", " + teachers + ", " + links + ", " + students + ", " + tags);
 
     // Vérifier si les champs obligatoires sont remplis
-    if (!teacherID || !courseID) {
-      return res.status(400).json({ error: 'Les champs teacherID et courseID sont obligatoires.' });
-    }
-
-    if (isNaN(teacherID) || teacherID <= 0) {
-      return res.status(401).json({ error: "L'ID du professeur n'est pas un entier positif." });
+    if (!courseID) {
+      return res.status(400).json({ error: 'Le champ courseID est obligatoire.' });
     }
     if (isNaN(courseID) || courseID <= 0) {
-      return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
+      return res.status(401).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 
     const fieldsToUpdate = [];
@@ -419,7 +414,7 @@ exports.modifyCourse = async (req, res) => {
 
     if (duration) {
       if (duration < 0) {
-        return res.status(403).json({ error: "La durée doit être positive." });
+        return res.status(402).json({ error: "La durée doit être positive." });
       }
       fieldsToUpdate.push('duration = ?');
       values.push(duration);
@@ -427,7 +422,7 @@ exports.modifyCourse = async (req, res) => {
 
     if (startDate && startTime) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime)) {
-        return res.status(404).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
+        return res.status(403).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
       }
       fieldsToUpdate.push('startDate = ?');
       const startDateTime = new Date(`${startDate} ${startTime}`);
@@ -441,7 +436,7 @@ exports.modifyCourse = async (req, res) => {
 
     if (maxParticipants) {
       if (maxParticipants <= 0) {
-        return res.status(405).json({ error: "Le nombre maximal d'apprenants doit être positif." });
+        return res.status(404).json({ error: "Le nombre maximal d'apprenants doit être positif." });
       }
       fieldsToUpdate.push('maxParticipants = ?');
       values.push(maxParticipants);
@@ -454,7 +449,7 @@ exports.modifyCourse = async (req, res) => {
 
     if (isEvening) {
       if (teachers) {
-        return res.status(406).json({ error: "Une soirée ne peut pas avoir de professeur." });
+        return res.status(405).json({ error: "Une soirée ne peut pas avoir de professeur." });
       }
       fieldsToUpdate.push('isEvening = ?');
       values.push(isEvening);
@@ -462,17 +457,17 @@ exports.modifyCourse = async (req, res) => {
 
     if (recurrence) {
       if (recurrence < 0) {
-        return res.status(407).json({ error: "La récurrence doit être positive ou nulle." });
+        return res.status(406).json({ error: "La récurrence doit être positive ou nulle." });
       }
       fieldsToUpdate.push('recurrence = ?');
       values.push(recurrence);
     }
 
     if (fieldsToUpdate.length === 0) {
-      return res.status(408).json({ error: 'Aucun champ à mettre à jour.' });
+      return res.status(407).json({ error: 'Aucun champ à mettre à jour.' });
     }
 
-    const result = await teacherService.modifyCourse(teacherID, courseID, values, fieldsToUpdate, teachers, students, links, tags);
+    const result = await teacherService.modifyCourse(userIDFromToken, userTypeFromToken, courseID, values, fieldsToUpdate, teachers, students, links, tags);
 
     res.status(200).json({ success: true, course: result });
 
@@ -483,7 +478,7 @@ exports.modifyCourse = async (req, res) => {
       case "La récupération du nombre de cours du professeur a échoué.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Le professeur n'est pas autorisé à modifier ce cours.":
+      case "Le professeur n'est pas autorisé à modifier ce cours ou le cours n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
         break;
       case "Erreur lors de la récupération des ID avec les emails fournis":
@@ -507,7 +502,9 @@ exports.modifyCourse = async (req, res) => {
 
 exports.getStudentsInCourse = async (req, res) => {
   try {
-    const { userID, courseID } = req.query;
+    const { courseID } = req.query;
+
+    const userID = req.userID;
 
     console.log("getStudentsInCourse |  courseID, userID : " + courseID, userID);
 
@@ -563,18 +560,20 @@ exports.getStudentsInCourse = async (req, res) => {
 };
 
 exports.addPlaceStudent = async (req, res) => {
-  const { userID, studentID, type, number } = req.body;
+  const { studentID, type, number } = req.body;
+
+  const userID = req.userID;
 
   console.log(`addPlaceStudent | UserID, studentID, type, number:${userID}, ${studentID}, ${type}, ${number}`);
 
-  if (!courseID || !studentID || !type || !number) {
+  if (!userID || !studentID || !type || !number) {
     return res.status(400).json({ error: 'Le champs courseID et userID doivent être fournis.' });
   }
   if (isNaN(userID) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (isNaN(courseID) || courseID <= 0) {
-    return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
+  if (isNaN(studentID) || studentID <= 0) {
+    return res.status(402).json({ error: "L'ID de l'élève n'est pas un entier positif." });
   }
   if (isNaN(number) || number <= 0) {
     return res.status(403).json({ success: false, message: 'number n\'est pas un entier positif.' });
@@ -617,7 +616,9 @@ exports.addPlaceStudent = async (req, res) => {
 
 exports.removeLink = async (req, res) => {
   try {
-    const { courseID, userID, link } = req.body;
+    const { courseID, link } = req.body;
+
+    const userID = req.userID;
 
     console.log("removeLink | courseID, userID : " + courseID + ", " + userID);
 
@@ -679,7 +680,9 @@ exports.removeLink = async (req, res) => {
 };
 
 exports.addTag = async (req, res) => {
-  const { userID, courseID, tag } = req.body;
+  const {courseID, tag } = req.body;
+
+  const userID = req.userID;
 
   console.log(`addTag | userID, courseID, tag: ${userID}, ${courseID}, ${tag}`);
 
@@ -736,8 +739,10 @@ exports.addTag = async (req, res) => {
 
 exports.removeTag = async (req, res) => {
   try {
-    const { courseID, userID, tag } = req.body;
+    const { courseID, tag } = req.body;
 
+    const userID = req.userID;
+    
     console.log("removeTag | courseID, userID : " + courseID + ", " + userID);
 
     if (!courseID || !userID || !tag) {
