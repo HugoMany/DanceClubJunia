@@ -10,7 +10,7 @@ function Admin() {
     return(
         <div>
             
-        <div className='Admin'>
+        <div className='Admin' >
                            <Header title={"Admin"} ></Header>
 
             <h1>Admin</h1>
@@ -19,6 +19,7 @@ function Admin() {
             <Button variant="contained" color="primary"><a href='/admin/cours'>Gestion cours</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/eleve'>Gestion Eleve</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/compta'>Comptabilité</a></Button>
+            <Button variant="contained" color="primary"><a href='/admin/abo'>Abonnement et cartes</a></Button>
 
 
         </div>
