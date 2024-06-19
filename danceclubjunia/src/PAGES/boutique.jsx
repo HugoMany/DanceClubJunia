@@ -63,7 +63,7 @@ const Boutique = () => {
                 <div className="boutique">
 
                 <h3>Numobre de place : {card.number}</h3>
-                <p>Prix {card.price}€ et prix unitaire {card.price/card.number}€ / scéance</p>
+                <p>Prix {card.price}€ et prix unitaire {Math.round((card.price/card.number) * 100) / 100}€ / scéance</p>
                 
                 </div>
                 

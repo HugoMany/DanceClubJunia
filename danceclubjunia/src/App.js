@@ -53,8 +53,10 @@ import InfoRockDance from './PAGES/blog/infoRockDance';
 
 import Boutique from './PAGES/boutique';
 
+import CreateCardPage from './PAGES/admin/GestionAbo/createCardPage.jsx';
 
 import AllContacts from './PAGES/prof/allContacts';
+import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
 function App() {
   return (
     <div className="App">
@@ -72,6 +74,8 @@ function App() {
           <Route path="/admin/prof" element={<AdminProf />} />
           <Route path="/admin/cours" element={<AdminCours />} />
           <Route path="/admin/cours" element={<AdminCours />} />
+          <Route path="/admin/abo" element={<CreateCardPage />} />
+
 
           <Route path="/admin/cours/modifCours/:idParam" element={<ModifCours />} />
           <Route path="/admin/cours/supp/:idParam" element={<SupprimerCours />} />
@@ -121,6 +125,7 @@ function App() {
 
           <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
           <Route path="/blog/rock" element={<InfoRockDance/>}/>
+          <Route path="/blog/classique" element={<InfoClassiqueDance/>}/>
 
 
 
