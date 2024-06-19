@@ -9,16 +9,7 @@ const ModifEleve = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [eleveData, setEleveData] = useState(null);
-    const [formData, setFormData] = useState({
-        studentID: eleveId,
-        firstname: '',
-        surname: '',
-        email: '',
-        password: '',
-        connectionMethod: '',
-        credit: 0,
-        photo: ''
-    });
+    const [formData, setFormData] = useState({});
     const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
@@ -36,17 +27,9 @@ const ModifEleve = () => {
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data)
                     setEleveData(data);
-                    setFormData({
-                        studentID: data.studentID,
-                        firstname: data.firstname,
-                        surname: data.surname,
-                        email: data.email,
-                        password: '',
-                        connectionMethod: data.connectionMethod,
-                        credit: data.credit,
-                        photo: data.photo,
-                    });
+                    setFormData(data);
                 } else {
                     throw new Error('Error fetching eleve');
                 }
@@ -67,24 +50,24 @@ const ModifEleve = () => {
             const token = localStorage.getItem('token');
             if (!token) return { valid: false };
 
-            const formDataToSubmit = {
-                studentID: formData.studentID,
-                firstname: formData.firstname,
-                surname: formData.surname,
-                email: formData.email,
-                password: formData.password,
-                connectionMethod: formData.connectionMethod,
-                credit: formData.credit,
-                photo: formData.photo,
-            };
-
+            const studentDataModify = {
+                studentID:2,
+                firstname:formData.firstname,
+                surname:formData.surname,
+                email:formData.email,
+                password:formData.password,
+                connectionMethod:formData.connectionMethod,
+                credit:formData.credit,
+                photo:formData.photo,
+                description:formData.description,
+                 };
+                console.log(studentDataModify)
             const response = await fetch(URL_DB + `teacher/modifyStudent`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(formDataToSubmit),
+                body: studentDataModify,
             });
 
             if (!response.ok) {
@@ -132,32 +115,28 @@ const ModifEleve = () => {
                     </label>
                     <label>
                         Prénom:
-                        <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} />
+                        <input type="text" name="firstname" placeholder={formData.firstname} onChange={handleChange} />
                     </label>
                     <label>
                         Nom:
-                        <input type="text" name="surname" value={formData.surname} onChange={handleChange} />
+                        <input type="text" name="surname" placeholder={formData.surname} onChange={handleChange} />
                     </label>
                     <label>
                         Email:
-                        <input type="text" name="email" value={formData.email} onChange={handleChange} />
+                        <input type="text" name="email" placeholder={formData.email} onChange={handleChange} />
                     </label>
                     <label>
                         Mot de passe:
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} />
+                        <input type="password" name="password" placeholder="Mot de passe" onChange={handleChange} />
                     </label>
                     <label>
                         Méthode de connexion:
-                        <input type="text" name="connectionMethod" value={formData.connectionMethod} onChange={handleChange} />
+                        <input type="text" name="connectionMethod" placeholder={formData.connectionMethod} onChange={handleChange} />
                     </label>
                     <label>
                         Crédit:
-                        <input type="number" name="credit" value={formData.credit} onChange={handleChange} />
+                        <input type="number" name="credit" placeholder={formData.credit} onChange={handleChange} />
                     </label>
-                    {/* <label>
-                        Ticket:
-                        <input type="number" name="ticket" value={formData.ticket} onChange={handleChange} />
-                    </label> */}
                     <button type="submit">Mettre à jour</button>
                 </form>
             </div>

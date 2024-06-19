@@ -23,8 +23,9 @@ const ModifProf = () => {
     const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
-        const fetchEleve = async () => {
+        const fetchProf = async () => {
             try {
+                console.log('1')
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
@@ -37,9 +38,12 @@ const ModifProf = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.courses) {
-                        const filteredTeachers = data.courses.find(teacher => teacher.userID === parseInt(profId, 10));
+                    console.log(data)
+                    if (data.teachers) {
+                        
+                        const filteredTeachers = data.teachers.find(teacher => teacher.userID === parseInt(profId, 10));
                         if (filteredTeachers) {
+                            console.log(filteredTeachers)
                             setTeachersData(data);
                             setFormData({
                                 teacherID: filteredTeachers.userID,
@@ -65,7 +69,7 @@ const ModifProf = () => {
             }
         };
 
-        fetchEleve();
+        fetchProf();
     }, [profId]);
 
     const handleSubmit = async (event) => {
@@ -74,23 +78,26 @@ const ModifProf = () => {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            const formDataToSubmit = new FormData();
-            formDataToSubmit.append('teacherID', formData.teacherID);
-            formDataToSubmit.append('firstname', formData.firstname);
-            formDataToSubmit.append('surname', formData.surname);
-            formDataToSubmit.append('email', formData.email);
-            formDataToSubmit.append('password', formData.password);
-            formDataToSubmit.append('connectionMethod', formData.connectionMethod);
-            formDataToSubmit.append('credit', formData.credit);
-            formDataToSubmit.append('photo', imageFile ? imageFile : formData.photo);
-            formDataToSubmit.append('description', formData.description);
+            const profDataModify = {
+                teacherID:2,
+                firstname:formData.firstname,
+                surname:formData.surname,
+                email:formData.email,
+                password:formData.password,
+                connectionMethod:formData.connectionMethod,
+                credit:formData.credit,
+                photo:formData.photo,
+                description:formData.description,
+                 };
+            console.log(profDataModify)
 
-            const response = await fetch(`${URL_DB}teacher/modifyTeacher`, {
+
+            const response = await fetch(`${URL_DB}admin/modifyTeacher`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
-                body: formDataToSubmit,
+                body: JSON.stringify(profDataModify),
             });
 
             if (!response.ok) {
@@ -138,31 +145,19 @@ const ModifProf = () => {
                     </label>
                     <label>
                         Prénom:
-                        <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} />
+                        <input type="text" name="firstname" placeholder={formData.firstname} onChange={handleChange} />
                     </label>
                     <label>
                         Nom:
-                        <input type="text" name="surname" value={formData.surname} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Email:
-                        <input type="text" name="email" value={formData.email} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Mot de passe:
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Méthode de connexion:
-                        <input type="text" name="connectionMethod" value={formData.connectionMethod} onChange={handleChange} />
+                        <input type="text" name="surname" placeholder={formData.surname} onChange={handleChange} />
                     </label>
                     <label>
                         Crédit:
-                        <input type="number" name="credit" value={formData.credit} onChange={handleChange} />
+                        <input type="number" name="credit" placeholder={formData.credit} onChange={handleChange} />
                     </label>
                     <label>
                         Description:
-                        <textarea name="description" value={formData.description} onChange={handleChange} />
+                        <textarea name="description" placeholder={formData.description} onChange={handleChange} />
                     </label>
                     
                     <button type="submit">Mettre à jour</button>
