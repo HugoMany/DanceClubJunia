@@ -50,6 +50,10 @@ import AddTagToACours from './PAGES/prof/addTagToACours';
 import Compta from './PAGES/admin/Compta/compta';
 import InfoModerneDance from './PAGES/blog/infoModerneDance';
 import InfoRockDance from './PAGES/blog/infoRockDance';
+
+import Boutique from './PAGES/boutique';
+
+
 import AllContacts from './PAGES/prof/allContacts';
 function App() {
   return (
@@ -120,6 +124,8 @@ function App() {
 
 
 
+
+          <Route path="/boutique" element={<Boutique/>}/>
         </Routes>
       </Router>
     </div>
