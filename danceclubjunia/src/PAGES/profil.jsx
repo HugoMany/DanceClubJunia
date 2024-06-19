@@ -56,7 +56,6 @@ const Profil = () => {
             if (response.ok) {
                 const data = await response.json();
                 setUserData(data);
-                fetchPaymentHistory();
 
 
             } else {
