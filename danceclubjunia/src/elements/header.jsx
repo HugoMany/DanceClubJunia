@@ -3,6 +3,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuDeroulant from "./menuDeroulant";
 import { IS_ADMIN, IS_CONNECT } from "../const/const";
+import ReturnNbOfTicketStudent from "./returnNbOfTicketStudent";
 function Header({ title }) {
 
 
@@ -27,7 +28,7 @@ function Header({ title }) {
             </div>
             <div id="Credit"><a href='/'><span class="material-symbols-outlined">
                 confirmation_number
-                </span>5</a></div>
+                </span><ReturnNbOfTicketStudent></ReturnNbOfTicketStudent></a></div>
         </div>
     );
 }

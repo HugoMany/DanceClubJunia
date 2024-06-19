@@ -65,7 +65,6 @@ const ReturnNbOfTicketStudent = () => {
 
   return (
       <div>
-          <h2>Nombre de tickets</h2>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           {tickets !== null ? <p>{tickets}</p> : <p>Chargement...</p>}
       </div>
