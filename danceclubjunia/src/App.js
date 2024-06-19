@@ -55,6 +55,7 @@ import Boutique from './PAGES/boutique';
 
 
 import AllContacts from './PAGES/prof/allContacts';
+import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
 function App() {
   return (
     <div className="App">
@@ -121,6 +122,7 @@ function App() {
 
           <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
           <Route path="/blog/rock" element={<InfoRockDance/>}/>
+          <Route path="/blog/classique" element={<InfoClassiqueDance/>}/>
 
 
 

@@ -27,7 +27,7 @@ function Home() {
     const IMAGE_URL_ROCK = "https://atoutdanses44.fr/wp-content/uploads/2020/07/Rock-1.jpg";
     const IMAGE_URL_MODERNE = "https://i.pinimg.com/originals/7e/b8/b6/7eb8b6d2528dedade01925bb40bc8a9b.jpg";
     const IMAGE_URL_JAZZ = "https://th.bing.com/th/id/R.7955d0fea6ddd73a5f47f204a1a7e2aa?rik=YHnFz4OZNiAI3Q&riu=http%3a%2f%2fwww.dancexplosion.com.au%2fstatic%2fuploads%2fimages%2fmtgambier-d-2016-08838-wfrbkhqkgodt.jpg%3fmode%3dmax%26upscale%3dtrue%26width%3d768&ehk=NHcVNQ6kbCoKuFXkuanNaQqJo5CL26SX%2f7FWAX2xLws%3d&risl=&pid=ImgRaw&r=0";
-    const IMAGE_URL_DANCE = "https://th.bing.com/th/id/R.2087faea2811c14d059c287f101c7dd4?rik=m%2b9b%2b4O2STI03Q&pid=ImgRaw&r=0";
+    const IMAGE_URL_DANCE = "https://th.bing.com/th/id/R.9e51b6de6ba2706a47e90ad2d1dece24?rik=6UebFvcPX%2fQqwQ&pid=ImgRaw&r=0";
 
 
 
@@ -91,12 +91,12 @@ function Home() {
                     <h3>Dance</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <Button variant="contained" href="">
+                    <Button variant="contained" href="/blog/classique">
                         Info
                     </Button>
 
                 </div></SwiperSlide>
-                <SwiperSlide>                   
+                {/* <SwiperSlide>                   
                 <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_DANCE})` }}>
 
                     <h3>Jazz</h3>
@@ -140,7 +140,7 @@ function Home() {
                         Info
                     </Button>
 
-                </div></SwiperSlide>
+                </div></SwiperSlide> */}
             </Swiper>
             <ListeFuturCours></ListeFuturCours>
 
