@@ -21,12 +21,16 @@ const Prof = ()=>{
         </div>
 
 
-        <div>
+        {/* <div>
             <PlanningProf teacherId="1"></PlanningProf>
-        </div>
+        </div> */}
+                      <hr  id='traitProf'/>
+
         <div>
             <Appel></Appel>
         </div>
+              <hr  id='traitProf'/>
+
         <Button Button variant="contained" color="primary" href='/prof/allContact'> Tout les contacts des students</Button>
 
     </div>

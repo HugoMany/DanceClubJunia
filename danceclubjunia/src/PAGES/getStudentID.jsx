@@ -32,6 +32,7 @@ const GetStudentID = () => {
 
   return (
     <div>
+      <h2>Recherche d'utilisateur par email</h2>
       <input
         type="text"
         placeholder="Email"

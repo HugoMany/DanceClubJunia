@@ -9,7 +9,7 @@ html body .addAndDeleteTag {
     flex-wrap: wrap;
 }
 .ProfPage {
-    overflow-y: scroll;
+    /* overflow-x: scroll; */
     padding-top: 5vh;
 }
 html .coursDynamique {
@@ -24,4 +24,8 @@ html .coursDynamique {
     flex-direction: column;
     background-color: white;
     border-radius: 20px;
+}
+hr#traitProf {
+    border: 2px solid black;
+    width: 100%;
 }
