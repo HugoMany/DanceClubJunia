@@ -15,7 +15,7 @@ const Profil = () => {
     const [userData, setUserData] = useState(null);
     const [userPaymentHistory, setPaymentHistory] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [idStudent, setIdStudent] = useState(null);
 
 
     const fetchID = async () => {
@@ -55,6 +55,7 @@ const Profil = () => {
             if (response.ok) {
                 const data = await response.json();
                 setUserData(data);
+                setIdStudent(idUser);
                 fetchPaymentHistory(idUser);
 
             } else {
@@ -130,7 +131,7 @@ if (loading) {
     <div >
       <h2>Vos anciens cours</h2>
       <div className='studentPastCourses'>
-      <PastCoursesStudent studentId={10}></PastCoursesStudent>
+      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
     </div>  
 
