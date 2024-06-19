@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ADD_CREDIT_API_URL = 'http://90.110.227.143/api/student/addCredit';
+const ADD_CREDIT_API_URL = 'http://90.110.227.143/api/student/buyPlace';
 
 const AjoutCredits = ({ userID }) => {
   const [creditAmount, setCreditAmount] = useState('');
@@ -16,7 +16,8 @@ const AjoutCredits = ({ userID }) => {
         },
         body: JSON.stringify({
           studentID: userID, // Utilisation de userID ici
-          credit: parseInt(creditAmount)
+          type: "ticket",
+          number: 1
         })
       });
       const data = await response.json();

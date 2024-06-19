@@ -48,6 +48,8 @@ import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 import AddTagToACours from './PAGES/prof/addTagToACours';
 import Compta from './PAGES/admin/Compta/compta';
+import InfoModerneDance from './PAGES/blog/infoModerneDance';
+import InfoRockDance from './PAGES/blog/infoRockDance';
 function App() {
   return (
     <div className="App">
@@ -108,6 +110,12 @@ function App() {
           <Route path="/infoStudent" element={<InfoStudent/>}/>
           <Route path="/infoStudentCourse" element={<InfoStudentCourse/>}/>
           <Route path="/infoStudentForProf" element={<InfoStudentForProf/>}/>
+
+          <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
+          <Route path="/blog/rock" element={<InfoRockDance/>}/>
+
+
+
         </Routes>
       </Router>
     </div>
