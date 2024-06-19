@@ -1,5 +1,8 @@
 const db = require('../config/database');
 const axios = require('axios');
+const bcrypt = require('bcrypt');
+const config = require('../config/config');
+const saltRounds = 10;
 
 class GuestService {
   async getAllCourses() {
@@ -21,9 +24,9 @@ class GuestService {
   }
 
   async verifyCaptcha(captchaToken) {
-    const secretKey = '6LevBOUpAAAAAGtJUxvDNGi5ZlrUSeWNxfwh9ZNa';
+    const secretKey = config.secretKey;
     const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
-  
+
     return new Promise((resolve, reject) => {
       axios.post(verificationUrl)
         .then(response => {
@@ -41,10 +44,10 @@ class GuestService {
 
   async login(email, password, captcha) {
     return new Promise((resolve, reject) => {
-      verifyCaptcha(captcha)
+      this.verifyCaptcha(captcha)
         .then(() => {
-          const sql = "SELECT userID, userType FROM Users WHERE email = ? and password = ?";
-          db.query(sql, [email, password], (err, result) => {
+          const sql = "SELECT userID, userType, password FROM Users WHERE email = ?";
+          db.query(sql, [email, password], async (err, result) => {
             if (err) {
               return reject(err);
             }
@@ -53,7 +56,14 @@ class GuestService {
               return reject(new Error('Identifiants invalides.'));
             }
 
-            resolve(result);
+            const user = result[0];
+            const isMatch = await bcrypt.compare(password, user.password);
+
+            if (!isMatch) {
+              return reject(new Error('Identifiants invalides.'));
+            }
+
+            resolve(user);
           });
         })
         .catch(error => {
@@ -62,12 +72,37 @@ class GuestService {
     });
   }
 
+  async saveRefreshToken(userID, refreshToken) {
+    return new Promise((resolve, reject) => {
+        const sql = "INSERT INTO refreshToken (userID, token) VALUES (?, ?)";
+        db.query(sql, [userID, refreshToken], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    
+}
+
+async verifyRefreshToken(userId, refreshToken) {
+  return new Promise((resolve, reject) => {
+      const sql = "SELECT * FROM refreshToken WHERE userID = ? AND token = ?";
+      db.query(sql, [userId, refreshToken], (err, result) => {
+          if (err) {
+              return reject(err);
+          }
+          resolve(result.length > 0);
+      });
+  });
+}
+
   async registerStudent(firstname, surname, email, password, connectionMethod, photo, captcha) {
     return new Promise((resolve, reject) => {
-      verifyCaptcha(captcha)
+      this.verifyCaptcha(captcha)
         .then(() => {
           const checkEmailSql = "SELECT userID FROM Users WHERE email = ?";
-          db.query(checkEmailSql, [email], (err, result) => {
+          db.query(checkEmailSql, [email], async (err, result) => {
             if (err) {
               return reject(new Error("Erreur lors de la vérification de l'existence de l'email."));
             }
@@ -75,19 +110,25 @@ class GuestService {
             if (result.length > 0) {
               return reject(new Error('Email déjà utilisé.'));
             }
+            try {
+              const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-            const sql = `
+              const sql = `
               INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, tickets, photo)
               VALUES (?, ?, ?, ?, ?, 'student', 0, ?)
             `;
 
-            db.query(sql, [firstname, surname, email, password, connectionMethod, photo], (err, result) => {
-              if (err || result.affectedRows == 0) {
-                return reject(new Error("Erreur lors de la création du compte."));
-              }
-              const studentID = result.insertId;
-              resolve(studentID);
-            });
+              db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo], (err, result) => {
+                if (err || result.affectedRows == 0) {
+                  return reject(new Error("Erreur lors de la création du compte."));
+                }
+                const studentID = result.insertId;
+                resolve(studentID);
+              });
+            }
+            catch (hashErr) {
+              reject(new Error("Erreur lors du hachage du mot de passe."));
+            };
           });
         })
         .catch(error => {
@@ -175,7 +216,116 @@ class GuestService {
       });
     });
   }
+
+  async generateResetToken(email) {
+    return new Promise((resolve, reject) => {
+      const generateToken = () => Math.floor(100000 + Math.random() * 900000); // Génère un nombre à 6 chiffres
+
+      let token = generateToken();
+
+      const checkTokenUnique = (token) => {
+        return new Promise((resolve, reject) => {
+          const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
+          db.query(sql, [token], (err, result) => {
+            if (err) return reject(new Error("Erreur lors de la vérification de l'existence du token."));
+            resolve(result.length === 0);
+          });
+        });
+      };
+
+      const insertToken = (email, token) => {
+        const sql = 'INSERT INTO ResetPassword (token, email, date) VALUES (?, ?, NOW())';
+        return new Promise((resolve, reject) => {
+          db.query(sql, [token, email], (err, result) => {
+            if (err || result.affectedRows == 0) return reject(new Error("Erreur lors de l'insertion du token dans la base de données."));
+            resolve(result);
+          });
+        });
+      };
+
+      const userExist = (email) => {
+        const sql = 'SELECT * FROM Users WHERE UserID = ?';
+        return new Promise((resolve, reject) => {
+          db.query(sql, [token, email], (err, result) => {
+            if (err) return reject(new Error("Erreur lors de la vérification de l'existence de l'utilisateur."));
+            resolve(result.length > 0);
+          });
+        });
+      };
+
+      (async () => {
+        if (!userExist(email)) {
+          return reject(new Error("L'utilisateur n'existe pas."));
+        }
+
+        let isUnique = await checkTokenUnique(token);
+        while (!isUnique) {
+          token = generateToken();
+          isUnique = await checkTokenUnique(token);
+        }
+        await insertToken(email, token);
+        resolve(token);
+      })();
+    });
+  }
+
+  async resetPassword(token, newPassword) {
+    return new Promise((resolve, reject) => {
+      const getTokenInfo = (token) => {
+        return new Promise((resolve, reject) => {
+          const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
+          db.query(sql, [token], (err, result) => {
+            if (err) return reject(new Error('Token expiré.'));
+            if (result.length == 0) return reject(new Error('Token introuvable.'));
+            resolve(result[0]);
+          });
+        });
+      };
+
+      const updatePassword = (userID, newPassword) => {
+        const sql = 'UPDATE Users SET password = ? WHERE userID = ?';
+        return new Promise((resolve, reject) => {
+          db.query(sql, [newPassword, userID], (err, result) => {
+            if (err || resolve.affectedRows == 0) return reject(new Error("Erreur lors de la modification du mot de passe."));
+            resolve(result);
+          });
+        });
+      };
+
+      const deleteToken = (token) => {
+        const sql = 'DELETE FROM ResetPassword WHERE token = ?';
+        return new Promise((resolve, reject) => {
+          db.query(sql, [token], (err, result) => {
+            if (err || result.affectedRows == 0) return reject(new Error("Le token n'existe pas."));
+            resolve(result);
+          });
+        });
+      };
+
+      (async () => {
+        const tokenInfo = await getTokenInfo(token);
+        if (!tokenInfo) {
+          return reject(new Error('Token invalide.'));
+        }
+
+        const tokenDate = new Date(tokenInfo.date);
+        const currentDate = new Date();
+        const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
+
+        if (diffMinutes > 5) {
+          return reject(new Error('Token expiré.'));
+        }
+
+        await updatePassword(tokenInfo.userID, newPassword);
+        await deleteToken(token);
+        resolve();
+      })();
+    });
+  }
+
 }
+
+
 
 
 module.exports = new GuestService();

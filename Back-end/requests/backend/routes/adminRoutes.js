@@ -503,6 +503,10 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                 type: string
  *                 description: Tags du cours (separes par une virgule).
  *                 example: "danse,salsa,debutant"
+ *               roomPrice:
+ *                 type: number
+ *                 description: Prix de la salle de cours.
+ *                 example: 100
  *     responses:
  *       200:
  *         description: Cours cree avec succes
@@ -564,15 +568,23 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                       type: array
  *                       items:
  *                         type: string
- *                       example: ["http://example.com"]
+ *                         example: ["http://example.com"]
  *                     students:
  *                       type: array
  *                       items:
  *                         type: string
- *                       example: ["test@example.com"]
+ *                         example: ["test@example.com"]
  *                     tags:
  *                       type: string
  *                       example: "danse,salsa,debutant"
+ *                     call:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                         example: [7]
+ *                     roomPrice:
+ *                      type: number
+ *                      example: 100
  *       400:
  *         description: Certains champs obligatoires sont manquants ou invalides.
  *       401:
@@ -708,7 +720,7 @@ router.post('/createTeacher', adminController.createTeacher);
  *           format: date
  *         required: false
  *         description: Date de début
- *         example : "2024-1-6"
+ *         example : "2024-01-06"
  *       - in: query
  *         name: endDate
  *         schema:
@@ -716,7 +728,7 @@ router.post('/createTeacher', adminController.createTeacher);
  *           format: date
  *         required: false
  *         description: Date de fin
- *         example : "2024-5-01"
+ *         example : "2024-05-01"
  *     responses:
  *       200:
  *         description: Liste des paiements
@@ -988,5 +1000,81 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  */
 router.patch('/modifyTeacher', adminController.modifyTeacher);
 
+/**
+ * @swagger
+ * tags:
+ *   name: Admin
+ *   description: Admin related endpoints
+ */
+
+/**
+ * @swagger
+ * /api/admin/calculateRevenue:
+ *   get:
+ *     summary: Calcule les revenus sur une période donnée.
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example : "2024-01-06"
+ *           required: false
+ *         description: Date de début
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example : "2024-12-06"
+ *           required: false
+ *         description: Date de fin
+ *     responses:
+ *       200:
+ *         description: Revenu calculé avec succès.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 revenueDetails:
+ *                   type: object
+ *                   properties:
+ *                     totalProfit:
+ *                       type: number
+ *                       example: 100
+ *                     assoPart:
+ *                       type: number
+ *                       example: 30
+ *                     teachersPart:
+ *                       type: number
+ *                       example: 70
+ *                     teachersRevenue:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           teacherID:
+ *                             type: number
+ *                             example: 1
+ *                           revenue:
+ *                             type: number
+ *                             example: 70
+ *       400:
+ *         description: Les dates de début et de fin doivent être au format YYYY-MM-DD.
+ *       501:
+ *         description: Erreur lors du calcul des revenus.
+ *       502:
+ *         description: Aucun paiement trouvé.
+ *       500:
+ *         description: Erreur SQL.
+ */
+router.get('/calculateRevenue', adminController.calculateRevenue);
 
 module.exports = router;

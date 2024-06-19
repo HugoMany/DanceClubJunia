@@ -1,4 +1,6 @@
 const db = require('../config/database');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 class TeacherService {
   async getStudent(studentID) {
@@ -21,14 +23,14 @@ class TeacherService {
   }
 
   async newStudent(firstname, surname, email, password, connectionMethod, photo) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
       const sql = `
         INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo)
         VALUES (?, ?, ?, ?, ?, 'student', ?, ?)
       `;
-
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
       console.log("newStudent service | firstname, surname, email, password, connectionMethod : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo);
-      db.query(sql, [firstname, surname, email, password, connectionMethod, photo], (err, result) => {
+      db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo], (err, result) => {
         if (err) {
           return reject(new Error("Erreur lors de la création de l'élève."));
         }
@@ -249,7 +251,7 @@ class TeacherService {
         selectSql += "AND JSON_CONTAINS(teachersID, CAST(? AS JSON));";
         valuesTmp.push(userID)
       }
-      db.query(verifyTeacherSql, values, (err, rows) => {
+      db.query(verifyTeacherSql, valuesTmp, (err, rows) => {
         if (err) {
           return reject(new Error("La récupération du nombre de cours du professeur a échoué."));
         }

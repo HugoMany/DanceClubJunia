@@ -640,6 +640,10 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                 type: string
  *                 description: Tags associes au cours (separes par une virgule)
  *                 example: "danse,salsa,debutant"
+ *               roomPrice:
+ *                 type: number
+ *                 description: Prix de la salle de cours.
+ *                 example: 100
  *     responses:
  *       200:
  *         description: Cours modifie avec succes
@@ -726,6 +730,8 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *         description: La récurrence doit être positive ou nulle.
  *       407:
  *         description: Aucun champ à mettre à jour.
+ *       408:
+ *         description: Le prix de la salle doit être positif ou nul.
  *       501:
  *         description: La récupération du nombre de cours du professeur a échoué.
  *       502:

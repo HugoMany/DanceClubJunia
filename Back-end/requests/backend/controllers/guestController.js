@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const guestService = require('../services/guestService');
+const { sendMail } = require('../utility/mailer');
 
 exports.getAllCourses = async (req, res) => {
     try {
@@ -45,17 +46,22 @@ exports.login = async (req, res) => {
     try {
         const user = await guestService.login(email, password, captcha);
 
-        if (!user || user.length === 0) {
-            throw new Error("Identifiants invalides.");
-        }
-
-        // Génération du token jwt pour garantir l'identité de l'utilisateur pour les prochaines requêtes
-        const token = jwt.sign({ id: user[0].userID, userType: user[0].userType }, config.jwtSecret, {
-            expiresIn: '1h' // Expire in 1 hour
+        // Génération du jeton d'accès
+        const accessToken = jwt.sign({ id: user.userID, userType: user.userType }, config.jwtSecret, {
+            expiresIn: config.accessTokenLife // Durée de vie du jeton d'accès
         });
 
-        res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'strict' }); //  secure: true  si https
-        res.status(200).json({ success: true, userID: user[0].userID, userType: user[0].userType, token: token });
+        // Génération du jeton de rafraîchissement
+        const refreshToken = jwt.sign({ id: user.userID, userType: user.userType }, config.jwtRefreshSecret, {
+            expiresIn: config.refreshTokenLife // Durée de vie du jeton de rafraîchissement
+        });
+
+        // Stocker le jeton de rafraîchissement en base de données ou en cache
+        await guestService.saveRefreshToken(user.userID, refreshToken);
+
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'strict' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' });
+        res.status(200).json({ success: true, userID: user.userID, userType: user.userType, accessToken: accessToken,refreshToken: refreshToken   });
     } catch (error) {
         console.error('login | error:', error);
 
@@ -77,7 +83,7 @@ exports.login = async (req, res) => {
 
 
 exports.registerStudent = async (req, res) => {
-    const { firstname, surname, email, password, connectionMethod, photo } = req.body;
+    const { firstname, surname, email, password, connectionMethod, photo, captcha } = req.body;
 
     console.log(`registerStudent | firstname, surname, email, connectionMethod, photo: ${firstname}, ${surname}, ${email}, ${connectionMethod}, ${photo}`);
 
@@ -94,8 +100,12 @@ exports.registerStudent = async (req, res) => {
         return res.status(402).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
     }
 
+    if (!captcha) {
+        return res.status(403).json({ error: 'Captcha manquant.' });
+    }
+
     try {
-        const studentID = await guestService.registerStudent(firstname, surname, email, password, connectionMethod, photo);
+        const studentID = await guestService.registerStudent(firstname, surname, email, password, connectionMethod, photo, captcha);
         res.status(200).json({ success: true, studentID });
     } catch (error) {
         console.error('registerStudent | error:', error);
@@ -115,6 +125,9 @@ exports.registerStudent = async (req, res) => {
                 break;
             case "Erreur lors de la vérification reCAPTCHA.":
                 res.status(505).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors du hachage du mot de passe.":
+                res.status(506).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -212,3 +225,91 @@ exports.getContactsTeachers = async (req, res) => {
         }
     }
 };
+
+exports.generateResetToken = async (req, res) => {
+    const { email } = req.body;
+  
+    console.log(`generateResetToken | email: ${email}`);
+  
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email manquant." });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(401).json({ error: 'Email invalide.' });
+    }
+  
+    try {
+      const token = await guestService.generateResetToken(email);
+  
+      const resetUrl = `http://yourfrontend.com/reset-password/token/${token}`;
+          const message = `
+              <h1>Vous avez demandé une réinitialisation de mot de passe</h1>
+              <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>
+              <a href="${resetUrl}">Réinitialiser le mot de passe</a>
+          `;
+  
+          await sendMail(email, 'Réinitialisation de mot de passe', '', message);
+  
+      res.status(200).json({ success: true, message: "Token généré et stocké." });
+    } catch (error) {
+      console.error('generateResetToken | error:', error);
+  
+      switch (error.message) {
+        case "Erreur lors de la vérification de l'existence du token.":
+          res.status(501).json({ success: false, message: error.message });
+          break;
+        case "Erreur lors de l'insertion du token dans la base de données.":
+          res.status(502).json({ success: false, message: error.message });
+          break;
+        case "Erreur lors de la vérification de l'existence de l'utilisateur.":
+          res.status(503).json({ success: false, message: error.message });
+          break;
+        case "L'utilisateur n'existe pas.":
+          res.status(504).json({ success: false, message: error.message });
+          break;
+        default:
+          res.status(500).json({ success: false, message: 'Erreur SQL' });
+      }
+    }
+  };
+  
+  exports.resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+  
+    console.log(`resetPassword | token: ${token}, newPassword: ${newPassword}`);
+  
+    if (!token || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
+    }
+    if (newPassword.lengh < 8) {
+      return res.status(401).json({ success: false, message: 'Le mot de passe est trop court.' });
+    }
+  
+    try {
+      await guestService.resetPassword(token, newPassword);
+      res.status(200).json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+      console.error('resetPassword | error:', error);
+  
+      switch (error.message) {
+        case "Token expiré.":
+          res.status(501).json({ success: false, message: error.message });
+          break;
+        case "Token introuvable.":
+          res.status(502).json({ success: false, message: error.message });
+          break;
+        case "Erreur lors de la modification du mot de passe.":
+          res.status(503).json({ success: false, message: error.message });
+          break;
+        case "Le token n'existe pas.":
+          res.status(504).json({ success: false, message: error.message });
+          break;
+        case "Token invalide.":
+          res.status(505).json({ success: false, message: error.message });
+          break;
+        default:
+          res.status(500).json({ success: false, message: 'Erreur SQL' });
+      }
+    }
+  };
