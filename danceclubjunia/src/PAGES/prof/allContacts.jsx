@@ -47,7 +47,7 @@ const AllContacts = () => {
                 <div style={{ width: '100%' }}>
                     {student.map((contact) => (
                         <div key={contact.id}>
-                            <p>{contact.contact}</p>
+                            <a href={`mailto:${contact.contact}`}>{contact.contact}</a>
                         </div>
                     ))}
                 </div>

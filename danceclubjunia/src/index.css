@@ -131,9 +131,11 @@ html .swiper-slide {
   right: 10vw;
   color: white;
   font-size: 20px;
+  font-weight: 400;
+  margin: 0px;
 }
 #Credit a {
-
+  font: 400;
   color: black;
   text-decoration: none;
 }
