@@ -79,12 +79,8 @@ function App() {
           <Route path="/admin/teacher/modif/:idParam" element={<ModifProf />} />
           <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
 
-<<<<<<< Updated upstream
 
           <Route path="/admin/student/modifEleve/:idParam" element={<ModifEleve />} />
-=======
-          <Route path="/admin/student/modif/:idParam" element={<ModifEleve />} />
->>>>>>> Stashed changes
           <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
 
 
