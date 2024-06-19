@@ -25,9 +25,9 @@ function Header({ title }) {
 
                 
             </div>
-            <div id="Credit"><a href='/'><span class="material-symbols-outlined">
+            <div id="Credit"><button><a href='/boutique/'><span class="material-symbols-outlined">
                 confirmation_number
-                </span>5</a></div>
+                </span>5</a></button></div>
         </div>
     );
 }
