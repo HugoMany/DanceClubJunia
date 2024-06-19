@@ -8,7 +8,8 @@ function Inscription() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [connectionMethod, setConnectionMethod] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const connectionMethod = "mail";
     const [photo, setPhoto] = useState('');
     const [captchaReady, setCaptchaReady] = useState(false);
     const [captcha, setCaptcha] = useState();
@@ -62,6 +63,13 @@ function Inscription() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Vérification des mots de passe
+        if (password !== confirmPassword) {
+            setErrorMessage('Les mots de passe ne correspondent pas.');
+            return;
+        }
+
         const json = {
             firstname,
             surname,
@@ -141,6 +149,16 @@ function Inscription() {
                     />
                 </div>
                 <div>
+                    <label htmlFor="confirmMotDePasse"></label>
+                    <input
+                        placeholder='Confirmation Password'
+                        type="password"
+                        id="confirmMotDePasse"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                </div>
+                <div>
                     <label htmlFor="email"></label>
                     <input
                         placeholder='E-mail'
@@ -148,16 +166,6 @@ function Inscription() {
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="connection"></label>
-                    <input
-                        placeholder='Connection Method'
-                        type="text"
-                        id="connectionMethod"
-                        value={connectionMethod}
-                        onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 </div>
                 <div>

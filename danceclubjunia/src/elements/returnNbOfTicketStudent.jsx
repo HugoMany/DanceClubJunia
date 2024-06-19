@@ -24,7 +24,6 @@ const ReturnNbOfTicketStudent = () => {
               const data = await response.json();
               return data.userId; // Supposons que la réponse contienne userId
           } catch (error) {
-              setErrorMessage('Erreur lors de la vérification du token.');
               console.error('Error:', error);
           }
       };
@@ -47,7 +46,8 @@ const ReturnNbOfTicketStudent = () => {
               }
 
               const data = await response.json();
-              return data.user.tickets; // Supposons que la réponse contienne les tickets
+              console.log(data)
+              return data.student.tickets; // Supposons que la réponse contienne les tickets
           } catch (error) {
               setErrorMessage('Erreur lors de la récupération du profil utilisateur.');
               console.error('Error:', error);
