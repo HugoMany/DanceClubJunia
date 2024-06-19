@@ -14,8 +14,7 @@ import PastCoursesStudent from './pastCoursesStudent';
 const Profil = () => {
     const [userData, setUserData] = useState(null);
     const [userPaymentHistory, setPaymentHistory] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [idUser, setIdUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -34,13 +33,13 @@ const Profil = () => {
         if (response1.ok) {
             const data = await response1.json();
             console.log(data.userId);
-            setIdUser(data.userId);
+            fetchUser(data.userId);
         } else {
             console.error('Erreur');
         }
     };
 
-    const fetchUser = async () => {
+    const fetchUser = async (idUser) => {
         try {
             //Recup TOKEN dans le local storage
             const token = localStorage.getItem('token');
@@ -56,7 +55,7 @@ const Profil = () => {
             if (response.ok) {
                 const data = await response.json();
                 setUserData(data);
-
+                fetchPaymentHistory(idUser);
 
             } else {
                 console.error('Erreur lors de la récupération des info du compte');
@@ -67,7 +66,7 @@ const Profil = () => {
         finally {
         }
     };
-    const fetchPaymentHistory = async () => {
+    const fetchPaymentHistory = async (idUser) => {
                             
 
             const token = localStorage.getItem('token');
@@ -91,11 +90,6 @@ const Profil = () => {
    
     useEffect(() => {
         fetchID();
-        if (idUser) {
-            console.log(idUser);
-            fetchUser();
-            fetchPaymentHistory();
-          }
     }, []);
 
 
