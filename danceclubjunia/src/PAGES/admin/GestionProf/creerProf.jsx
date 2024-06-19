@@ -8,13 +8,13 @@ function CreerProf() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [connectionMethod, setConnectionMethod] = useState('');
+    const connectionMethod = "mail";
     const [photo, setPhoto] = useState('');
     const [description, setDescription] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Ajoutez ici la logique pour traiter les données d'inscription
+
         const formData = {
             firstname,
             surname,
@@ -24,48 +24,43 @@ function CreerProf() {
             photo,
             description
         };
+
         console.log('Form Data:', formData);
 
-        const fetchProf = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('No token found');
-                    return { valid: false };
-                }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found');
+            window.alert('Aucun token trouvé');
+            return;
+        }
 
-                console.log('Token:', token);
+        console.log('Token:', token);
 
-                const response = await fetch(URL_DB + 'admin/createTeacher', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
+        try {
+            const response = await fetch(URL_DB + 'admin/createTeacher', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
 
-                // Vérifiez si le statut de la réponse est 204
-                if (response.status === 204) {
-                    console.warn('No content returned from the server');
-                } else {
-                    const data = await response.json();
-                    console.log('Response:', data);
-                }
-
-            } catch (error) {
-                console.error('Erreur lors de la création du student', error);
+            if (response.ok) {
+                window.alert('Professeur créé avec succès.');
+            } else {
+                const data = await response.json();
+                window.alert(data.message);
             }
-        };
-
-        fetchProf();
+        } catch (error) {
+            console.error('Erreur:', error);
+            window.alert('Erreur lors de la création du professeur.');
+        }
     };
 
     return (
         <div className='scrollerFormAdmin'>
-
-
-            <form onSubmit={handleSubmit}  className='formAdminCreate'>
+            <form onSubmit={handleSubmit} className='formAdminCreate'>
                 <label>
                     firstname:
                     
@@ -108,17 +103,6 @@ function CreerProf() {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    />
-                <br />
-                <label>
-                    connectionMethod:
-                   
-                </label>
-                <input
-                        type="text"
-                        required
-                        value={connectionMethod}
-                        onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 <br />
                 <label>
