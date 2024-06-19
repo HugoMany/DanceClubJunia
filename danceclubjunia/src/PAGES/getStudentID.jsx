@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AjoutCredits from './ajoutCredits';
 import Button from '@mui/material/Button';
-const API_URL = 'http://90.110.227.143/api/teacher/searchStudent';
+import { URL_DB } from '../const/const';
 
 const GetStudentID = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ const GetStudentID = () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) return { valid: false };
-      const response = await fetch(`${API_URL}?email=${email}`, {
+      const response = await fetch(URL_DB+`teacher/searchStudent?email=${email}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,

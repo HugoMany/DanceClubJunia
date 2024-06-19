@@ -16,7 +16,7 @@ const Prof = ()=>{
         
         <Header title="Profil"></Header>
         <div>
-            <GetStudentID setUserID={setUserID} />
+            <GetStudentID setUserID={setUserID}/>
            
         </div>
 
