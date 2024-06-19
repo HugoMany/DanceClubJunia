@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {React,useEffect,useState} from 'react';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -6,16 +6,11 @@ import {
   GridToolbarExportContainer,
   GridCsvExportMenuItem,
   GridCsvExportOptions,
-  GridExportMenuItemProps,
-  useGridApiContext,
-  gridFilteredSortedRowIdsSelector,
-  gridVisibleColumnFieldsSelector,
-  GridApi,
 } from '@mui/x-data-grid';
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 import Header from '../../../elements/header';
-
+import {fetchAllCourses,fetchAllUser,fetchAllProf} from './fetchEverything';
 // Define your columns
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -46,6 +41,12 @@ const rows = [
 // The rest of your code remains the same...
 
 export default function CustomExport() {
+  useEffect(() => {
+    console.log(fetchAllCourses());
+    console.log(fetchAllUser());
+    console.log(fetchAllProf());
+}, []); 
+ 
   return (
     <div>
       <Header></Header>
