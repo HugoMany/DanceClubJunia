@@ -94,8 +94,8 @@ h2{
     margin: 0px;
     font-size: 12px;
 }
-#rock{
-    background-image: url(https://atoutdanses44.fr/wp-content/uploads/2020/07/Rock-1.jpg);
+.cours{
+    /* background-image: url(https://atoutdanses44.fr/wp-content/uploads/2020/07/Rock-1.jpg); */
     background-position: center;
     background-size: contain;
     color: white;
