@@ -1052,9 +1052,6 @@ router.patch('/modifyTeacher', adminController.modifyTeacher);
  *                     assoPart:
  *                       type: number
  *                       example: 30
- *                     teachersPart:
- *                       type: number
- *                       example: 70
  *                     teachersRevenue:
  *                       type: array
  *                       items:
