@@ -27,7 +27,7 @@ const Prof = ()=>{
         <div>
             <Appel></Appel>
         </div>
-        <Button Button variant="contained" color="primary"> Tout les contacts des students</Button>
+        <Button Button variant="contained" color="primary" href='/prof/allContact'> Tout les contacts des students</Button>
 
     </div>
 
