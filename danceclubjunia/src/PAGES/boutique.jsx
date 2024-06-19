@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { URL_DB } from '../const/const';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+// import required modules
+import { Pagination } from 'swiper/modules';
+import Header from '../elements/header';
+import { Button } from '@mui/material';
 
 
 const Boutique = () => {
@@ -39,14 +49,33 @@ const Boutique = () => {
 
   return (
     <div>
+      <Header title="Boutique"></Header>
       <h1>Card Prices</h1>
-      <ul>
-        {cardPrices.map((card, index) => (
-          <li key={index}>
-            Number of Places: {card.number}, Price: ${card.price}
-          </li>
-        ))}
-      </ul>
+      <Swiper
+                pagination={{
+                    dynamicBullets: true,
+                }}
+                modules={[Pagination]}
+                className="mySwiper"
+            >
+                 {cardPrices.map((card, index) => (
+                <SwiperSlide>                    
+                <div className="boutique">
+
+                <h3>Numobre de place : {card.number}</h3>
+                <p>Prix {card.price}€ et prix unitaire {card.price/card.number}€ / scéance</p>
+                
+                </div>
+                
+                </SwiperSlide>
+
+                ))}
+
+              
+                
+      </Swiper>
+       
+        
     </div>
   );
 };

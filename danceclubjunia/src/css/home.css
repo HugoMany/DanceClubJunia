@@ -100,3 +100,9 @@ h2{
     background-size: contain;
     color: white;
 }
+.boutique {
+    border: 0px solid;
+    border-radius: 20px;
+    background-color: white;
+    padding: 20px;
+}
