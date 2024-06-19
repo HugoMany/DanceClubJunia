@@ -4,6 +4,7 @@ import '../css/profil.css';
 import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
 import PastCoursesStudent from './pastCoursesStudent';
+import isTeacher from '../elements/isTeacher';
 // import StudentPastCourses from './studentPastCourses';
 
 
@@ -95,8 +96,14 @@ const Profil = () => {
 
 
 if (loading) {
+    if (isTeacher()){
+        alert("Vous n'êtes pas autorisé à accéder à cette page")
+        window.location.href = "/";
+    }
+
+
         return <Loading></Loading>;
-      }
+}
       else{
   return (
   
