@@ -48,6 +48,9 @@ import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 import AddTagToACours from './PAGES/prof/addTagToACours';
 
+import Boutique from './PAGES/boutique';
+
+
 function App() {
   return (
     <div className="App">
@@ -106,6 +109,8 @@ function App() {
           <Route path="/infoStudent" element={<InfoStudent/>}/>
           <Route path="/infoStudentCourse" element={<InfoStudentCourse/>}/>
           <Route path="/infoStudentForProf" element={<InfoStudentForProf/>}/>
+
+          <Route path="/boutique" element={<Boutique/>}/>
         </Routes>
       </Router>
     </div>
