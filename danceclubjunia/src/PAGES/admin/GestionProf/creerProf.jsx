@@ -50,7 +50,7 @@ function CreerProf() {
                 window.alert('Professeur créé avec succès.');
             } else {
                 const data = await response.json();
-                window.alert(data.message);
+                window.alert('Erreur lors de la création du prof vérifier les info entrées');
             }
         } catch (error) {
             console.error('Erreur:', error);
@@ -100,6 +100,7 @@ function CreerProf() {
                 </label>
                 <input
                         type="password"
+                        placeholder='(9 caractère minimum)'
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
