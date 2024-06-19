@@ -32,15 +32,45 @@ const CreateCardPage = () => {
         }
     };
 
+
+    const deleteCard = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+            const response = await fetch(URL_DB + 'admin/deleteCard', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ place })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setMessage('Card deleted successfully');
+            } else {
+                const error = await response.json();
+                setMessage(error.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setMessage('Error deleting card');
+        }
+    };
+    
     return (
         <div className=''>
-                    <Header></Header>
+            <Header></Header>
             <h1>Create Card Page</h1>
             <h2>Nombre de place</h2>
             <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
             <h2>Prix</h2>
             <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" />
             <button onClick={createCard}>Create Card</button>
+            <p>Saisissez le nombre de place de la carte que vous voulez supprimer</p>
+            <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
+            <button onClick={deleteCard}>Delete Card</button>
             {message && <p>{message}</p>}
         </div>
     );
