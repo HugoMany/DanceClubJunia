@@ -32,10 +32,13 @@ const ReturnNbOfTicketStudent = () => {
       // Fonction pour obtenir le profil de l'utilisateur en utilisant l'ID
       const getUserProfile = async (userId) => {
           try {
-              const response = await fetch(`${URL_DB}/user/getProfile?userID=${userId}`, {
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+              const response = await fetch(`${URL_DB}user/getProfile?userID=${userId}`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
                   },
               });
 
