@@ -6,6 +6,7 @@ import AjoutCredits from '../ajoutCredits';
 import React, { useState } from 'react';
 import AddTagToACours from './addTagToACours';
 import AddlinkToACours from './addLinkToACours';
+import { Button } from '@mui/material';
 // import TeacherRequire from '../elements/teacherRequire.jsx';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
@@ -26,8 +27,10 @@ const Prof = ()=>{
         <div>
             <Appel></Appel>
         </div>
-        
+        <Button Button variant="contained" color="primary"> Tout les contacts des students</Button>
+
     </div>
+
 
 
 )
