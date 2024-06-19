@@ -3,7 +3,7 @@ import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 import { useParams } from 'react-router-dom';
 // import { idID } from '@mui/material/locale';
-
+import Header from '../../../elements/header';
 
 
 const showLoading = () => {
@@ -185,50 +185,61 @@ const ModifCours = () => {
         //     </form>
         //     </div>
         // </div>
-        <div className='ModalAdminGrid'>
-            <div>
+        <div id='modifAdmin' >
+            <Header></Header>
+            <div >
                 <h1>Modifier le cours N°{courseId}</h1>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}  className='formAdminCreate'>
                     <label>
                         Image du cours:
-                        <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
                     </label>
+                    <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
+
                     <label>
                         Titre du cours:
-                        <input type="text" name="title" placeholder={formData.title || ''} onChange={handleChange} />
                     </label>
+                    <input type="text" name="title" placeholder={formData.title || ''} onChange={handleChange} />
+
                     <label>
                         Type de danse:
-                        <input type="text" name="type" placeholder={formData.type || ''} onChange={handleChange} />
                     </label>
+                    <input type="text" name="type" placeholder={formData.type || ''} onChange={handleChange} />
+
                     <label>
                         Durée:
-                        <input type="number" name="duration" placeholder={formData.duration || ''} onChange={handleChange} />
                     </label>
+                    <input type="number" name="duration" placeholder={formData.duration || ''} onChange={handleChange} />
+
                     <label>
                         Jour du cours:
-                        <input type="date" name="startDate" placeholder={formData.startDate || ''} onChange={handleChange} />
                     </label>
+                    <input type="date" name="startDate" placeholder={formData.startDate || ''} onChange={handleChange} />
+
                     <label>
                         Heure du cours:
-                        <input type="time" name="startTime" placeholder={formData.startTime || ''} onChange={handleChange} />
                     </label>
+                    <input type="time" name="startTime" placeholder={formData.startTime || ''} onChange={handleChange} />
+
                     <label>
                         Lieu du cours:
-                        <input type="text" name="location" placeholder={formData.location || ''} onChange={handleChange} />
                     </label>
+                    <input type="text" name="location" placeholder={formData.location || ''} onChange={handleChange} />
+
                     <label>
                         Nombre max de participants:
-                        <input type="number" name="maxParticipants" placeholder={formData.maxParticipants || ''} onChange={handleChange} />
                     </label>
+                    <input type="number" name="maxParticipants" placeholder={formData.maxParticipants || ''} onChange={handleChange} />
+
                     <label>
                         Est-ce une soirée :
-                        <input type="checkbox" name="isEvening" checked={formData.isEvening || false} onChange={(e) => setFormData(prevState => ({ ...prevState, isEvening: e.target.checked }))} />
                     </label>
+                    <input type="checkbox" name="isEvening" checked={formData.isEvening || false} onChange={(e) => setFormData(prevState => ({ ...prevState, isEvening: e.target.checked }))} />
+
                     <label>
                         Récurrence:
-                        <input type="number" name="recurrence" placeholder={formData.recurrence || ''} onChange={handleChange} />
                     </label>
+                    <input type="number" name="recurrence" placeholder={formData.recurrence || ''} onChange={handleChange} />
+
                     <button type="submit">Mettre à jour</button>
                 </form>
             </div>
