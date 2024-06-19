@@ -21,10 +21,10 @@ import { Button } from '@mui/material';
 //     "links": "[\"danse\", \"salsa\", \"debutant\"]"
 //   };
 
-const AddlinkToACours = (idCoursSelected="10") => {
-    if (idCoursSelected===10) {
-        console.error("ERROR ADMIN SELECT OR NOT SELECTED A COURSE ID")
-    }
+const AddlinkToACours = (idCoursSelected) => {
+    console.log("AddlinkToACours");
+    console.log(idCoursSelected);
+
     const [newlink, setNewlink] = useState('');
     const [cours, setCours] = useState({});
     const [loading,setLoading] = useState(true);

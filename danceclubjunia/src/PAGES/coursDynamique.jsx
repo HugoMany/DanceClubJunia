@@ -44,7 +44,7 @@ const CoursDynamique = () => {
    },[courseId] );
         
     console.log(courseId+'ID cours');
-    ConnexionRequire()
+    // ConnexionRequire()
 
     
     if (course === null) return <div>No course found</div>;

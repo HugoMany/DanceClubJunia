@@ -5,6 +5,7 @@ import "../../css/appel.css";
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import AddTagToACours from './addTagToACours';
 import AddlinkToACours from './addLinkToACours';
+import ReturnStudentsProfil from './returnStudentsProfil';
 
 const Appel = () => {
     const [cours, setCours] = useState([]);
@@ -68,6 +69,7 @@ const Appel = () => {
                 <div>
                     <AddTagToACours idCoursSelected={selectedCourseId} />
                     <AddlinkToACours idCoursSelected={selectedCourseId} />
+                    <ReturnStudentsProfil idCoursSelected={selectedCourseId} />
                 </div>
             )}
         </div>

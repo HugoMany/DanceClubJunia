@@ -21,10 +21,10 @@ import { Button } from '@mui/material';
 //     "tags": "[\"danse\", \"salsa\", \"debutant\"]"
 //   };
 
-const AddTagToACours = (idCoursSelected="10") => {
-    if (idCoursSelected===10) {
-        console.error("ERROR ADMIN SELECT OR NOT SELECTED A COURSE ID")
-    }
+const AddTagToACours = (idCoursSelected) => {
+    console.log("AddTagToACours");
+    console.log(idCoursSelected);
+    
     const [newTag, setNewTag] = useState('');
     const [cours, setCours] = useState({});
     const [loading,setLoading] = useState(true);
