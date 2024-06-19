@@ -2,110 +2,132 @@ import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
 import { useParams } from 'react-router-dom';
+// import { idID } from '@mui/material/locale';
+import Header from '../../../elements/header';
 
-const ModifProf = () => {
+
+const showLoading = () => {
+    // Placeholder for actual showLoading implementation
+    console.log('Loading...');
+};
+
+// const hideLoading = () => {
+//     // Placeholder for actual hideLoading implementation
+//     console.log('Loading complete.');
+// };
+
+// Start loading
+showLoading();
+
+const ModifCours = () => {
     const { idParam } = useParams();
-    const profId = idParam;
+    const teacherId = idParam;
+    console.log(teacherId+'test ID')
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [teachersData, setTeachersData] = useState(null);
-    const [formData, setFormData] = useState({
-        teacherID: profId,
-        firstname: '',
-        surname: '',
-        email: '',
-        password: '',
-        connectionMethod: '',
-        credit: 0,
-        photo: '',
-        description: ''
-    });
+    const [formData, setFormData] = useState({});
     const [imageFile, setImageFile] = useState(null);
-
+    //const [teacherID, setTeacherID] = useState(null);
     useEffect(() => {
-        const fetchProf = async () => {
-            try {
-                console.log('1')
-                const token = localStorage.getItem('token');
-                if (!token) return;
-
-                const response = await fetch(`http://90.110.227.143/api/admin/getAllTeachers`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
+       const Fetchteacher = async () => {
+           try {
+           const token = localStorage.getItem('token');
+           if (!token) return { valid: false };
+           
+           const response = await fetch(URL_DB+`admin/getAllTeachers`, {
+               method: 'GET',
+               headers: {
+                   'Authorization': `Bearer ${token}`,
+               },
+               });
+               console.log(response);
+               if (response.ok) {
+                const data = await response.json();
+                console.log(data)
+                const filteredTeacher = data.teachers.find(teachers => teachers.userID ===  parseInt(teacherId, 10));
+                console.log(filteredTeacher.teachersID);
+                setFormData({ 
+                    ...filteredTeacher, 
                 });
+                //setTeacherID(filteredCourse.teacherID);
+                console.log(filteredTeacher)
+               } else {
+                   throw new Error('Error fetching teacher 101');
+               }
+           } catch (error) {
+               console.error('Error fetching teacher:', error);
+               setError(error);
+           } finally {
+               setLoading(false);
+           }
+       };
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(data)
-                    if (data.teachers) {
-                        
-                        const filteredTeachers = data.teachers.find(teacher => teacher.userID === parseInt(profId, 10));
-                        if (filteredTeachers) {
-                            console.log(filteredTeachers)
-                            setTeachersData(data);
-                            setFormData({
-                                teacherID: filteredTeachers.userID,
-                                firstname: filteredTeachers.firstname,
-                                surname: filteredTeachers.surname,
-                                email: filteredTeachers.email,
-                                password: '',
-                                connectionMethod: filteredTeachers.connectionMethod,
-                                credit: filteredTeachers.credit,
-                                photo: filteredTeachers.photo,
-                                description: filteredTeachers.description || '',
-                            });
-                        }
-                    }
-                } else {
-                    throw new Error('Error fetching teacher');
-                }
-            } catch (error) {
-                console.error('Error fetching teacher:', error);
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
+       Fetchteacher();
+   },[teacherId]);
+   console.log(formData);
 
-        fetchProf();
-    }, [profId]);
+
+    // useEffect(() => {
+    //     const fetchCours = async () => {
+    //         try {
+    //             const token = localStorage.getItem('token');
+    //             if (!token) return { valid: false };
+    //             console.log(token)
+    //             const response = await fetch(URL_DB + 'user/searchCourse?courseID=' + idCours, {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                 },
+    //             });
+    //             const data = await response.json();
+    //             setCourseData(data);
+    //             setLoading(false);
+    //             hideLoading();
+    //         } catch (error) {
+    //             console.error('Erreur lors de la récupération des info du cours', error);
+    //             hideLoading();
+    //         }
+    //     };
+    //     fetchCours();
+    // }, [idCours]);
 
     const handleSubmit = async (event) => {
+        console.log("ooooo")
         event.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            if (!token) return;
+            if (!token) return { valid: false };
 
-            const profDataModify = {
-                teacherID:2,
-                firstname:formData.firstname,
-                surname:formData.surname,
-                email:formData.email,
-                password:formData.password,
-                connectionMethod:formData.connectionMethod,
-                credit:formData.credit,
-                photo:formData.photo,
-                description:formData.description,
-                 };
-            console.log(profDataModify)
+            const teacherDataModify = {
+            
+            teacherID: teacherId,
+            firstname: formData.firstname,
+            surname: formData.surname,
+            email: formData.email,
+            password: formData.password,
+            connectionMethod: formData.connectionMethod,
+            credit: formData.credit,
+            photo: formData.photo,
+            descritption : formData.descritption,
+            };
 
-
-            const response = await fetch(`${URL_DB}admin/modifyTeacher`, {
+            
+            const response = await fetch(URL_DB + `admin/modifyTeacher`, {
                 method: 'PATCH',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(profDataModify),
+                body: 
+                    JSON.stringify(teacherDataModify)
+                    
+                ,
             });
-
             if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour du professeur');
+                throw new Error('Erreur lors de la mise à jour du prof');
             }
-            alert('Professeur mis à jour avec succès');
+            alert('professeur mis à jour avec succès');
         } catch (error) {
-            console.error('Erreur lors de la mise à jour du professeur', error);
+            console.error('Erreur lors de la mise à jour du prof', error);
         }
     };
 
@@ -127,38 +149,62 @@ const ModifProf = () => {
     };
 
     if (loading) {
-        return <Loading />;
+        return <Loading/>;
     }
-
-    if (error) {
-        return <div>Error loading teacher: {error.message}</div>;
-    }
+    
+    
+    if (loading){}
+    if (error) return <div>Error loading teacher: {error.message}</div>;
 
     return (
-        <div className='ModalAdminGrid'>
-            <div>
-                <h1>Modifier le professeur N°{profId}</h1>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Image du professeur:
-                        <input type="file" name="photo" accept="image/*" onChange={handleImageChange} />
+        // <div className='ModalAdminGrid'>
+        //     <div>
+        //     <h1>Modifier le cours N°{idCours}</h1>
+        //     <form onSubmit={handleSubmit}>
+        //         <label>
+        //             Type de danse:
+        //             <input type="text" name="type" placeholder={courseData.type} onChange={handleChange} />
+        //         </label>
+        //         {/* Ajoutez d'autres champs de formulaire ici pour les autres propriétés du cours */}
+        //         <button type="submit">Mettre à jour</button>
+        //     </form>
+        //     </div>
+        // </div>
+        <div id='modifAdmin' >
+            <Header></Header>
+            <div >
+                <h1>Modifier le professeur N°{teacherId}</h1>
+                <form onSubmit={handleSubmit}  className='formAdminCreate'>
+                <label>
+                        Photo:
                     </label>
+                    <input type="file" name="photo" accept="image/*" onChange={handleImageChange} />
+
                     <label>
-                        Prénom:
-                        <input type="text" name="firstname" placeholder={formData.firstname} onChange={handleChange} />
+                        Préom du professeur:
                     </label>
+                    <input type="text" name="firstname" placeholder={formData.firstname || ''} onChange={handleChange} />
+
                     <label>
-                        Nom:
-                        <input type="text" name="surname" placeholder={formData.surname} onChange={handleChange} />
+                        Nom du professeur:
                     </label>
+                    <input type="text" name="surname" placeholder={formData.surname || ''} onChange={handleChange} />
+
+                    <label>
+                        email:
+                    </label>
+                    <input type="texte" name="email" placeholder={formData.email || ''} onChange={handleChange} />
+
                     <label>
                         Crédit:
-                        <input type="number" name="credit" placeholder={formData.credit} onChange={handleChange} />
                     </label>
+                    <input type="number" name="credit" placeholder={formData.credit || ''} onChange={handleChange} />
+            
                     <label>
-                        Description:
-                        <textarea name="description" placeholder={formData.description} onChange={handleChange} />
+                        descritption:
                     </label>
+                    <input type="texte" name="email" placeholder={formData.descritption || ''} onChange={handleChange} />
+
                     
                     <button type="submit">Mettre à jour</button>
                 </form>
@@ -167,4 +213,4 @@ const ModifProf = () => {
     );
 };
 
-export default ModifProf;
+export default ModifCours;

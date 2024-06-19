@@ -1,4 +1,6 @@
 const db = require('../config/database');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 class AdminService {
     async getAllStudents() {
@@ -198,43 +200,48 @@ class AdminService {
         });
     }
 
-    async createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags) {
+    async createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags, roomPrice) {
         return new Promise((resolve, reject) => {
             // Vérification si c'est une soirée et s'il y a des enseignants
             if (isEvening && teachers && teachers.length > 0) {
                 return reject(new Error("Impossible de spécifier des enseignants pour un cours en soirée."));
             }
-
+    
             // Conversion de la chaîne de tags en tableau
             const tagArray = tags ? tags.split(",").map(tag => tag.trim()) : [];
-
+    
             // Obtention des IDs des enseignants et des étudiants à partir de leurs adresses e-mail
             Promise.all([
                 this.getUserIDsByEmails(teachers),
                 this.getUserIDsByEmails(students)
             ])
-                .then(([teacherIDs, studentIDs]) => {
-                    const sql = `
-                        INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    `;
-
-                    db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray)], (err, result) => {
-                        if (err) {
-                            return reject(new Error("Erreur lors de la création du cours."));
+            .then(([teacherIDs, studentIDs]) => {
+                const sql = `
+                    INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags, roomPrice, \`call\`)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `;
+    
+                // Pour `call`, une liste vide est insérée en tant que chaîne JSON
+                const callList = JSON.stringify([]);
+    
+                db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, callList], (err, result) => {
+                    if (err) {
+                        return reject(new Error("Erreur lors de la création du cours."));
+                    }
+    
+                    const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
+                    db.query(selectSql, [result.insertId], (err, rows) => {
+                        if (err || !rows[0]) {
+                            return reject(new Error("Erreur lors de la récupération du cours."));
                         }
-
-                        const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
-                        db.query(selectSql, [result.insertId], (err, rows) => {
-                            if (err || !rows[0]) {
-                                return reject(new Error("Erreur lors de la récupération du cours."));
-                            }
-
-                            resolve(rows[0]);
-                        });
+    
+                        resolve(rows[0]);
                     });
-                })
-                .catch(reject);
+                });
+            })
+            .catch(error => {
+                reject(new Error("Erreur lors de la création du cours: " + error.message));
+            });
         });
     }
 
@@ -264,13 +271,14 @@ class AdminService {
     
 
     async createTeacher(firstname, surname, email, password, connectionMethod, photo, description) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
             const sql = `
                 INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
                 VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
             `;
 
-            db.query(sql, [firstname, surname, email, password, connectionMethod, photo, description], (err, result) => {
+            db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo, description], (err, result) => {
                 if (err || result.affectedRows == 0) {
                     return reject(new Error("Erreur lors de la création du professeur."));
                 }
@@ -479,8 +487,90 @@ class AdminService {
           });
         });
       }
+
+      async calculateRevenue(startDate = '1970-01-01', endDate = new Date().toISOString().slice(0, 10)) {
+        return new Promise((resolve, reject) => {
+          const query = `
+            SELECT c.courseID, c.roomPrice, p.userID, p.price, p.date, c.teachersID
+            FROM Payments p
+            JOIN (
+              SELECT userID, itemID, MAX(date) as latestDate 
+              FROM Payments 
+              WHERE date BETWEEN ? AND ? 
+              GROUP BY userID, itemID
+            ) as latestPayments
+            ON p.userID = latestPayments.userID 
+            AND p.itemID = latestPayments.itemID 
+            AND p.date = latestPayments.latestDate
+            JOIN Courses c ON p.itemID = c.courseID
+            WHERE p.price > 0
+          `;
+      
+          db.query(query, [startDate, endDate], (err, results) => {
+            if (err) {
+              return reject(new Error("Erreur lors du calcul des revenus."));
+            }
+            if (results.length === 0) {
+              return reject(new Error("Aucun paiement trouvé."));
+            }
+      
+            const courses = {};
+            const assoPercentage = 0.30; // Pourcentage des revenus destinés à l'association
+            const teacherPercentage = 0.70; // Pourcentage des revenus destinés aux professeurs
+            let totalProfit = 0;
+            let assoPart = 0;
+            const teachersRevenue = {};
+            results.forEach(payment => {
+              const courseId = payment.courseID;
+      
+              if (!courses[courseId]) {
+                courses[courseId] = {
+                  courseID: courseId,
+                  roomPrice: payment.roomPrice
+                };
+              }
+      
+              // Calcul du profit net pour le cours en soustrayant le prix de la salle
+              const courseProfit = payment.price - payment.roomPrice;
+              courses[courseId].totalProfit += courseProfit;
+      
+              // Calcul des parts pour ce paiement
+              assoPart += courseProfit * assoPercentage;
+              const teachersPart = courseProfit * teacherPercentage;
+      
+              // Calcul de la part individuelle des professeurs
+              const teacherIDs = JSON.parse(payment.teachersID);
+              const individualTeacherPart = teachersPart / teacherIDs.length;
+      
+              teacherIDs.forEach(teacherID => {
+                if (!teachersRevenue[teacherID]) {
+                  teachersRevenue[teacherID] = 0;
+                }
+                if (courseProfit > 0){
+                    teachersRevenue[teacherID] += individualTeacherPart;
+                }
+              });
+      
+              // Ajouter le profit net du cours au revenu total
+              totalProfit += courseProfit;
+            });
+
+            const teachersRevenueList = Object.entries(teachersRevenue).map(([teacherID, revenue]) => ({
+              teacherID,
+              revenue
+            }));
+      
+            resolve({
+              totalProfit: totalProfit,
+              assoPart: assoPart,
+              teachersRevenue: teachersRevenueList
+            });
+          });
+        });
+      }
     
 }
+
 
 
 

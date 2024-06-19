@@ -35,7 +35,7 @@ const ModifCours = () => {
            const token = localStorage.getItem('token');
            if (!token) return { valid: false };
            
-           const response = await fetch(`http://90.110.227.143/api/guest/getAllCourses`, {
+           const response = await fetch(URL_DB+`guest/getAllCourses`, {
                method: 'GET',
                headers: {
                    'Authorization': `Bearer ${token}`,
