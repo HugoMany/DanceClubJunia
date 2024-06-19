@@ -18,23 +18,23 @@ import { Button } from '@mui/material';
 //     "teachersID": "[1]",
 //     "links": "[\"http://example.com\"]",
 //     "studentsID": "[10]",
-//     "tags": "[\"danse\", \"salsa\", \"debutant\"]"
+//     "links": "[\"danse\", \"salsa\", \"debutant\"]"
 //   };
 
-const AddTagToACours = (idCoursSelected) => {
-    console.log("AddTagToACours");
+const AddlinkToACours = (idCoursSelected) => {
+    console.log("AddlinkToACours");
     console.log(idCoursSelected);
-    
-    const [newTag, setNewTag] = useState('');
+
+    const [newlink, setNewlink] = useState('');
     const [cours, setCours] = useState({});
     const [loading,setLoading] = useState(true);
-    const handleTagChange = (e) => {
-        setNewTag(e.target.value);
+    const handlelinkChange = (e) => {
+        setNewlink(e.target.value);
     };
     //http://90.110.227.143/api/user/searchCourse?courseID=3
 
     const fetchCoursesById = () => {
-        // console.log('Add tag:', newTag);
+        // console.log('Add link:', newlink);
         const token = localStorage.getItem('token');
         if (!token) return { valid: false };
 
@@ -57,44 +57,14 @@ const AddTagToACours = (idCoursSelected) => {
                 console.error(error);
             });
 
-        setNewTag('');
+        setNewlink('');
     };
-    const handleAddTag = () => {
-        // console.log('Add tag:', newTag);
+    const handleAddlink = () => {
+        // console.log('Add link:', newlink);
         const token = localStorage.getItem('token');
         if (!token) return { valid: false };
 
-        fetch(URL_DB + 'teacher/addTag', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                userID: 1,
-                courseID: cours.courseID,
-                tag: newTag,
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response data
-                console.log(data);
-                // Refresh the course data to reflect the added tag
-                window.location.reload();
-            })
-            .catch(error => {
-                // Handle any errors
-                console.error(error);
-            });
-
-        setNewTag('');
-    };
-    const handleRemoveTag = (tagToRemove) => {
-        const token = localStorage.getItem('token');
-        if (!token) return { valid: false };
-    
-        fetch(URL_DB + 'teacher/removeTag', {
+        fetch(URL_DB + 'user/addlink', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,14 +73,44 @@ const AddTagToACours = (idCoursSelected) => {
             body: JSON.stringify({
                 userID: 1,
                 courseID: cours.courseID,
-                tag: tagToRemove.replace(/[^a-zA-Z0-9]/g, ''),
+                link: newlink,
             })
         })
             .then(response => response.json())
             .then(data => {
                 // Handle the response data
                 console.log(data);
-                // Refresh the course data to reflect the removed tag
+                // Refresh the course data to reflect the added link
+                window.location.reload();
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+
+        setNewlink('');
+    };
+    const handleRemovelink = (linkToRemove) => {
+        const token = localStorage.getItem('token');
+        if (!token) return { valid: false };
+    
+        fetch(URL_DB + 'teacher/removelink', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userID: 1,
+                courseID: cours.courseID,
+                link: linkToRemove,//.replace(/[^a-zA-Z0-9]/g, '')
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+                // Refresh the course data to reflect the removed link
                 fetchCoursesById();
             })
             .catch(error => {
@@ -124,27 +124,27 @@ const AddTagToACours = (idCoursSelected) => {
     if (loading) {
         return <Loading></Loading>
     } else {
-        const tags = cours.tags.split(',');
+        const links = cours.links.split(',');
     return (
         <div>
-            <h1>Add Tag to a Course</h1>
+            <h1>Add link to a Course</h1>
             <p>Id cours selectionné: {cours.courseID}</p>
             <div className='addAndDeleteTag'>
-                TAGS: <br />
-                {tags.map((tag, index) => (
+                linkS: <br />
+                {links.map((link, index) => (
                     <React.Fragment key={index}>
-                        {tag}
-                        <Button variant="contained" value={tag} onClick={() => handleRemoveTag(tag)}>Supprimer ce tag</Button> <br />
+                        {link}
+                        <Button variant="contained" value={link} onClick={() => handleRemovelink(link)}>Supprimer ce link</Button> <br />
                     </React.Fragment>
                 ))}
 
-                <input type="text" placeholder="New Tag" value={newTag} onChange={handleTagChange} />
-                <Button variant="contained" onClick={handleAddTag}>Add Tag</Button>
+                <input type="text" placeholder="New link" value={newlink} onChange={handlelinkChange} />
+                <Button variant="contained" onClick={handleAddlink}>Add link</Button>
             </div>
         </div>
     );
 }
 };
 
-export default AddTagToACours;
+export default AddlinkToACours;
 

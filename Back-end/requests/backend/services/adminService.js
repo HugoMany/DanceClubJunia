@@ -4,7 +4,7 @@ class AdminService {
     async getAllStudents() {
         return new Promise((resolve, reject) => {
             const sql = `
-          SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo FROM Users 
+          SELECT userID, firstname, surname, email, connectionMethod, tickets, photo FROM Users 
           WHERE userType = 'student'
         `;
 
@@ -61,7 +61,7 @@ class AdminService {
     async getAllUsers() {
         return new Promise((resolve, reject) => {
             const sql = `
-            SELECT userID, firstname, surname, email, connectionMethod, userType, credit, tickets, subscriptionEnd, photo, description FROM Users 
+            SELECT userID, firstname, surname, email, connectionMethod, userType, tickets, photo, description FROM Users 
           `;
 
             db.query(sql, (err, result) => {
@@ -92,7 +92,7 @@ class AdminService {
                 // Procéder à sa suppression
                 const sql = 'DELETE FROM Courses WHERE courseID = ?';
                 db.query(sql, [courseID], (err, result) => {
-                    if (err || result.affectedRows > 0) {
+                    if (err || result.affectedRows == 0) {
                         return reject(new Error("Erreur lors de la suppression du cours."));
                     }
                     resolve(true);
@@ -112,7 +112,7 @@ class AdminService {
 
                 // Vérifier si une carte de N places existe déjà
                 if (rows[0].count > 0) {
-                    return reject(new Error('La carte existe déjà.'));
+                    return reject(new Error("La carte existe déjà."));
                 }
 
                 const insertCardSql = `INSERT INTO Places (type, price, number) VALUES ('card', ?, ?)`;
@@ -182,8 +182,8 @@ class AdminService {
                         resolve(true);
                     });
                 });
-            } // Ticket ou subscription
-            else if (type === 'ticket' || type === 'subscription') {
+            } // Ticket
+            else if (type === 'ticket') {
                 const updateSql = `UPDATE Places SET price = ? WHERE type = ?`;
                 db.query(updateSql, [price, type], (err, result) => {
                     if (err || result.affectedRows == 0) {
@@ -240,13 +240,14 @@ class AdminService {
 
     async getUserIDsByEmails(emails) {
         return new Promise((resolve, reject) => {
-            if (!emails) {
-                return resolve();
+            if (!emails || emails.length === 0) {
+                return resolve([]);
             }
             // Sélectionner les IDs correspondant aux adresses e-mail fournies
-            const selectSql = 'SELECT userID FROM Users WHERE email IN (?)';
+            const selectSql = 'SELECT userID FROM Users WHERE email IN (?);';
             db.query(selectSql, [emails], (err, rows) => {
                 if (err) {
+                    console.log(err.message)
                     return reject(new Error("Erreur lors de la récupération des ID."));
                 }
                 if (rows.count == 0) {
@@ -260,6 +261,7 @@ class AdminService {
             });
         });
     }
+    
 
     async createTeacher(firstname, surname, email, password, connectionMethod, photo, description) {
         return new Promise((resolve, reject) => {
@@ -466,7 +468,7 @@ class AdminService {
             if (result.affectedRows == 0) {
               return reject(new Error("Il n'existe pas de professeur avec cet ID."));
             }
-            const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, credit, tickets, subscriptionEnd, photo, description FROM Users WHERE userID = ?';
+            const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, tickets, photo, description FROM Users WHERE userID = ?';
             db.query(selectSql, [teacherID], (err, rows) => {
               if (err) {
                 return reject(new Error("Erreur lors de la récupération du professeur."));

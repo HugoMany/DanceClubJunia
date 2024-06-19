@@ -1,34 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { URL_DB } from '../../../const/const';
 import Loading from '../../../elements/loading';
-import { idID } from '@mui/material/locale';
+import { useParams } from 'react-router-dom';
+// import { idID } from '@mui/material/locale';
+import Header from '../../../elements/header';
+
 
 const showLoading = () => {
     // Placeholder for actual showLoading implementation
     console.log('Loading...');
 };
 
-const hideLoading = () => {
-    // Placeholder for actual hideLoading implementation
-    console.log('Loading complete.');
-};
+// const hideLoading = () => {
+//     // Placeholder for actual hideLoading implementation
+//     console.log('Loading complete.');
+// };
 
 // Start loading
 showLoading();
 
-const ModifCours = ({ idCours }) => {
-    
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
+const ModifCours = () => {
+    const { idParam } = useParams();
+    const courseId = idParam;
+    console.log(courseId+'test ID')
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [courseData, setCourseData] = useState(null);
     const [formData, setFormData] = useState({});
+    const [imageFile, setImageFile] = useState(null);
+    //const [teacherID, setTeacherID] = useState(null);
     useEffect(() => {
-       const fetchCourses = async () => {
+       const FetchCourses = async () => {
            try {
            const token = localStorage.getItem('token');
            if (!token) return { valid: false };
            
-           const response = await fetch(`${URL_DB}guest/getAllCourses`, {
+           const response = await fetch(`http://90.110.227.143/api/guest/getAllCourses`, {
                method: 'GET',
                headers: {
                    'Authorization': `Bearer ${token}`,
@@ -36,12 +43,20 @@ const ModifCours = ({ idCours }) => {
                });
                console.log(response);
                if (response.ok) {
-                   const data = await response.json();
-                   console.log(data);
-                   const filteredCourse = data.courses.find(course => course.courseID ===  parseInt(idCours, 10));
-                   console.log(idCours+'OO')
-                   console.log(filteredCourse);
-                   setCourseData(filteredCourse);
+                const data = await response.json();
+                console.log(data)
+                const filteredCourse = data.courses.find(course => course.courseID ===  parseInt(courseId, 10));
+                setCourseData(filteredCourse);
+                console.log(filteredCourse.teachersID);
+                setFormData({ 
+                    ...filteredCourse, 
+                    teacherID: filteredCourse.teachersID,
+                    teachers: filteredCourse.teachers, // Placeholder, you need to replace this with actual data
+                    links: filteredCourse.link, // Placeholder, you need to replace this with actual data
+                    students: filteredCourse.students, // Placeholder, you need to replace this with actual data
+                });
+                //setTeacherID(filteredCourse.teacherID);
+                console.log(filteredCourse)
                } else {
                    throw new Error('Error fetching courses 101');
                }
@@ -53,9 +68,9 @@ const ModifCours = ({ idCours }) => {
            }
        };
 
-       fetchCourses();
-   },[idCours]);
-
+       FetchCourses();
+   },[courseId]);
+   console.log(formData);
 
 
     // useEffect(() => {
@@ -88,23 +103,39 @@ const ModifCours = ({ idCours }) => {
             const token = localStorage.getItem('token');
             if (!token) return { valid: false };
 
-            console.log(token)
             console.log(courseData)
             const courseDataModify = {
-               ...courseData,
-               ...formData,
+            
+            teacherID: 1,
+            courseID: formData.courseID,
+            image: formData.image,
+            title: formData.title,
+            type: formData.type,
+            duration: formData.duration,
+            startDate: formData.startDate,
+            startTime: formData.startTime,
+            location: formData.location,
+            maxParticipants: formData.maxParticipants,
+            paymentType: formData.paymentType,
+            isEvening: formData.isEvening,
+            recurrence: formData.recurrence,
+            teachers: formData.teachers,
+            links: formData.links,
+            students: formData.students,
+            tags: formData.tags
             };
 
             
-            console.log(courseDataModify)
-
             const response = await fetch(URL_DB + `teacher/modifyCourse`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(courseDataModify),
+                body: 
+                    JSON.stringify(courseDataModify)
+                    
+                ,
             });
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du cours');
@@ -117,9 +148,18 @@ const ModifCours = ({ idCours }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setCourseData(prevState => ({
+        setFormData(prevState => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setImageFile(file);
+        setFormData(prevState => ({
+            ...prevState,
+            image: URL.createObjectURL(file)
         }));
     };
 
@@ -145,54 +185,63 @@ const ModifCours = ({ idCours }) => {
         //     </form>
         //     </div>
         // </div>
-        <div className='ModalAdminGrid'>
-            <div>
-            <h1>Modifier le cours N°{idCours}</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    image du cours:
-                    <input type="file" name="image" accept="image/*" placeholder="Placez la nouvelle image" onChange={handleChange}/>
-                </label>
-                <label>
-                    Titre du cours:
-                    <input type="text" name="title" placeholder={courseData.title} onChange={handleChange}/>
-                </label>
-                <label>
-                    Type de danse:
-                    <input type="text" name="type" placeholder={courseData.type} onChange={handleChange}/>
-                </label>
-                <label>
-                    Durée:
-                    <input type="number" name="durée du cours" placeholder={courseData.duration} onChange={handleChange}/>
-                </label>
-                <label>
-                    Jour du cours:
-                    <input type="date" name="jour du cours" placeholder={courseData.startDate} onChange={handleChange}/>
-                </label>
-                <label>
-                    Heure du cours:
-                    <input type="time" name="heurs du cours" placeholder={courseData.startTime} onChange={handleChange}/>
-                </label>
-                <label>
-                    Lieu du cours:
-                    <input type="text" name="lieu du cours" placeholder={courseData.location} onChange={handleChange}/>
-                </label>
-                <label>
-                    Nombre max de participants:
-                    <input type="Number" name="nombre max de participants" placeholder={courseData.maxParticipants} onChange={handleChange}/>
-                </label>
-                <label>
-                    Est-ce une soirée :
-                    <input type="boolean" name="soiree?" placeholder={courseData.isEvening} onChange={handleChange}/>
-                </label>
-                <label>
-                    récurrence:
-                    <input type="Number" name="recurrence" placeholder={courseData.recurrense} onChange={handleChange}/>
-                </label>
-                
-                
-                <button type="submit">Mettre à jour</button>
-            </form>
+        <div id='modifAdmin' >
+            <Header></Header>
+            <div >
+                <h1>Modifier le cours N°{courseId}</h1>
+                <form onSubmit={handleSubmit}  className='formAdminCreate'>
+                    <label>
+                        Image du cours:
+                    </label>
+                    <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
+
+                    <label>
+                        Titre du cours:
+                    </label>
+                    <input type="text" name="title" placeholder={formData.title || ''} onChange={handleChange} />
+
+                    <label>
+                        Type de danse:
+                    </label>
+                    <input type="text" name="type" placeholder={formData.type || ''} onChange={handleChange} />
+
+                    <label>
+                        Durée:
+                    </label>
+                    <input type="number" name="duration" placeholder={formData.duration || ''} onChange={handleChange} />
+
+                    <label>
+                        Jour du cours:
+                    </label>
+                    <input type="date" name="startDate" placeholder={formData.startDate || ''} onChange={handleChange} />
+
+                    <label>
+                        Heure du cours:
+                    </label>
+                    <input type="time" name="startTime" placeholder={formData.startTime || ''} onChange={handleChange} />
+
+                    <label>
+                        Lieu du cours:
+                    </label>
+                    <input type="text" name="location" placeholder={formData.location || ''} onChange={handleChange} />
+
+                    <label>
+                        Nombre max de participants:
+                    </label>
+                    <input type="number" name="maxParticipants" placeholder={formData.maxParticipants || ''} onChange={handleChange} />
+
+                    <label>
+                        Est-ce une soirée :
+                    </label>
+                    <input type="checkbox" name="isEvening" checked={formData.isEvening || false} onChange={(e) => setFormData(prevState => ({ ...prevState, isEvening: e.target.checked }))} />
+
+                    <label>
+                        Récurrence:
+                    </label>
+                    <input type="number" name="recurrence" placeholder={formData.recurrence || ''} onChange={handleChange} />
+
+                    <button type="submit">Mettre à jour</button>
+                </form>
             </div>
         </div>
     );

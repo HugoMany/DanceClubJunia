@@ -11,7 +11,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 function Connexion() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [capchaReady, setCapchaReady] = useState(false);
+    const [captchaReady, setcaptchaReady] = useState(false);
+    const [captcha, setcaptcha] = useState();
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -25,10 +26,11 @@ function Connexion() {
         e.preventDefault();
         const json = {
             email,
-            password
+            password,
+            captcha
         };
         
-        if (capchaReady) {
+        if (captchaReady) {
         console.log('Starting fetch...');
         fetch(URL_DB + 'guest/login', {
             method: 'POST',
@@ -61,42 +63,23 @@ function Connexion() {
                 window.location.href = '/'; // Décommentez cette ligne
             } else {
                 console.log('pas ok');
-                window.location.href = '/connexion'; // Décommentez cette ligne
+                // window.location.href = '/connexion'; // Décommentez cette ligne
             }
         })
         .catch(error => {
             console.error('Fetch error:', error);
         });
         }
+        else{
+            console.log("Captcha non validé")
+        } 
     };
     const handleRecaptcha = value => {
         console.log("Captcha value:", value);    
-        setCapchaReady(true)
-    //     fetch('http://localhost:4000/upload', {
-    //         method: 'POST',
-    //         headers: {
-    //           'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //           response: value
-    //         })
-    //       })
-    //       .then(res => res.json())
-    //       .then(data => {
-    //         if (data.captchaSuccess) {
-    //           console.log('Captcha validation successful');
-    //           setCapchaReady(true)
-    //           // Continue with form submission
-    //         } else {
-    //           console.log('Captcha validation failed');
-    //           // Show an error message
-    //         }
-    //       })
-    //       .catch(err => {
-    //         console.error(err);
-    //         // Show an error message
-    //       });
-    //   
+        setcaptchaReady(true);
+        setcaptcha(value)
+
+
 };
     return (
         <div>

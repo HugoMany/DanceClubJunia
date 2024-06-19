@@ -61,10 +61,19 @@ function Home() {
                 className="mySwiper"
             >
                 <SwiperSlide><div className="cours">
-                    <h3>Jazz</h3>
+                    <h3>Moderne</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
                     <img src="" alt="" srcSet="" />
-                    <Button variant="contained" href="">
+                    <Button variant="contained" href="/blog/moderne">
+  Info
+</Button>
+
+                </div></SwiperSlide>
+                <SwiperSlide><div className="cours" id='rock'>
+                    <h3>Rock</h3>
+                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <img src="" alt="" srcSet="" />
+                    <Button variant="contained" href="/blog/rock">
   Info
 </Button>
 
@@ -87,15 +96,7 @@ function Home() {
 </Button>
 
                 </div></SwiperSlide>
-                <SwiperSlide><div className="cours">
-                    <h3>Moderne</h3>
-                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
-                    <img src="" alt="" srcSet="" />
-                    <Button variant="contained" href="">
-  Info
-</Button>
-
-                </div></SwiperSlide>
+                
                 <SwiperSlide><div className="cours">
                     <h3>Jazz</h3>
                     <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>

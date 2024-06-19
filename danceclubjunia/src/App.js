@@ -47,6 +47,9 @@ import InfoStudent from './PAGES/prof/infoStudent';
 import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 import AddTagToACours from './PAGES/prof/addTagToACours';
+import Compta from './PAGES/admin/Compta/compta';
+import InfoModerneDance from './PAGES/blog/infoModerneDance';
+import InfoRockDance from './PAGES/blog/infoRockDance';
 
 import Boutique from './PAGES/boutique';
 
@@ -69,13 +72,13 @@ function App() {
           <Route path="/admin/cours" element={<AdminCours />} />
           <Route path="/admin/cours" element={<AdminCours />} />
 
-          <Route path="/admin/cours/modif/:idParam" element={<ModifCours />} />
+          <Route path="/admin/cours/modifCours/:idParam" element={<ModifCours />} />
           <Route path="/admin/cours/supp/:idParam" element={<SupprimerCours />} />
 
-          <Route path="/admin/teacher/modif/:idParam" element={<ModifProf />} />
+          <Route path="/admin/teacher/modifProf/:idParam" element={<ModifProf />} />
           <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
 
-          <Route path="/admin/student/modif/:idParam" element={<ModifEleve />} />
+          <Route path="/admin/student/modifEleve/:idParam" element={<ModifEleve />} />
           <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
 
 
@@ -85,6 +88,8 @@ function App() {
           <Route path="/cours/:courseId" element={<CoursDynamique />} />
 
           <Route path='addTagToACours' element={<AddTagToACours/>}/>
+
+          <Route path="/admin/compta" element={<Compta/>}/>
 
           <Route path="/recherche" element={<Recherche />} />
           <Route path="/reservation" element={<ReservationPage />} />
@@ -109,6 +114,12 @@ function App() {
           <Route path="/infoStudent" element={<InfoStudent/>}/>
           <Route path="/infoStudentCourse" element={<InfoStudentCourse/>}/>
           <Route path="/infoStudentForProf" element={<InfoStudentForProf/>}/>
+
+          <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
+          <Route path="/blog/rock" element={<InfoRockDance/>}/>
+
+
+
 
           <Route path="/boutique" element={<Boutique/>}/>
         </Routes>

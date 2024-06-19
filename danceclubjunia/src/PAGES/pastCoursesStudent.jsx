@@ -50,7 +50,8 @@ const PastCoursesStudent = ({ studentId }) => {
       }
     return (
         <div>
-            {pastCourses.map(course => (
+            {pastCourses.length > 0 ? (
+  pastCourses.map(course => (
                     <a href={'/cours/' + course.courseID} className='courseA'>
                     <div class="coursesCase" key={course.courseID}>
                         <div className='divImageCoursSuivanteHomePage'>
@@ -68,7 +69,10 @@ const PastCoursesStudent = ({ studentId }) => {
 
                     </div>
                     </a>
-                ))}
+                ))
+                ) : (
+                  <p>Il n'y a pas de cours passés.</p>
+                )}
         </div>
     );
 };

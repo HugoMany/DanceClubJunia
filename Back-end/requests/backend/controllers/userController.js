@@ -79,8 +79,8 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.addLink = async (req, res) => {
-  const { userID, courseID, link } = req.body;
-
+  const { courseID, link } = req.body;
+  const userID = req.userID;
   console.log(`addLink | userID, courseID, link: ${userID}, ${courseID}, ${link}`);
 
   if (!courseID || !userID || !link) {
@@ -245,6 +245,13 @@ exports.getContactsStudents = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const { userID } = req.query;
+    
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    
+    if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken == userID) {
+      return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
+    }
 
     console.log("getProfile | userID : " + userID);
 
@@ -255,7 +262,7 @@ exports.getProfile = async (req, res) => {
     if (isNaN(userID) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
-
+    
     const result = await userService.getProfile(userID);
 
     return res.status(200).json({ success: true, student: result[0] });
@@ -264,11 +271,14 @@ exports.getProfile = async (req, res) => {
     console.error('getProfile | error:', error);
 
     switch (error.message) {
-      case "Erreur lors de la récupération du profil.":
+      case "Erreur lors de la récupération du type d'utilisateur.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "L'utilisateur n'existe pas.":
+      case "Erreur lors de la récupération du profil.":
         res.status(502).json({ success: false, message: error.message });
+        break;
+      case "L'utilisateur n'existe pas.":
+        res.status(503).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -281,6 +291,14 @@ exports.modifyProfile = async (req, res) => {
     const { userID, firstname, surname, email, photo, description } = req.body;
 
     console.log("modifyProfile | userID, firstname, surname, email, photo, description : " + userID + ", " + firstname + ", " + surname + ", " + email + ", " + photo + ", " + description);
+
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    
+    if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken == userID) {
+      return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
+    }
+
 
     if (!userID) {
       return res.status(400).json({ error: 'userID manquant' });

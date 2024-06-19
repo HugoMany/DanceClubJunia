@@ -1,0 +1,11 @@
+.blogCoursDance img {
+    width: 100%;
+}
+.blogGlobal {
+    height: 80vh;
+}
+.blogCoursDance {
+    text-align: left;
+    overflow-y: scroll;
+    height: 100%;
+}

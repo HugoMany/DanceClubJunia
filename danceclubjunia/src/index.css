@@ -125,3 +125,17 @@ html .swiper-slide {
   text-decoration: none;
   color: black;
 }
+#Credit {
+  position: absolute;
+  top: 4vh;
+  right: 9vw;
+  color: white;
+  font-size: 20px;
+}
+#Credit a {
+
+  color: black;
+  text-decoration: none;
+}
+
+

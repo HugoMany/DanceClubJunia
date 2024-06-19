@@ -1,46 +1,6 @@
 const db = require('../config/database');
 
 class StudentService {
-  async addCredit(studentID, credit) {
-
-    //
-    //  Il faut ajouter une vérification du droit pour le faire (hello asso)
-    //
-
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE Users SET credit = credit + ? WHERE userID = ?`;
-      db.query(sql, [credit, studentID], (err, result) => {
-        if (err || result.affectedRows == 0) {
-          reject(new Error("Erreur lors de l'ajout du credit."));
-        }
-
-        const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType) VALUES (?, ?, 'credit', ?, CURRENT_TIMESTAMP, 'online');"
-        db.query(paymentSql, [studentID, credit, credit], (err, result) => {
-          if (err || result.affectedRows == 0) {
-            reject(new Error("Erreur lors de l'enregistrement du paiement."));
-          }
-          
-          resolve(result);
-        });
-      });
-    });
-  }
-
-  async getSubscriptionEndDate(studentID) {
-    return new Promise((resolve, reject) => {
-      const sql = "SELECT subscriptionEnd FROM Users WHERE userID = ?";
-      db.query(sql, [studentID], (err, result) => {
-        if (err) {
-          reject(new Error("Erreur lors de la récupération de la date de fin de l'abonnement."));
-        }
-        if (result.length > 0) {
-          resolve(result[0].subscriptionEnd);
-        } else {
-          reject(new Error("Pas de date de fin d'abonnement."));
-        }
-      });
-    });
-  }
 
   async getCourses(studentID) {
     return new Promise((resolve, reject) => {
@@ -59,14 +19,17 @@ class StudentService {
 
   async buyPlace(studentID, type, number) {
     return new Promise((resolve, reject) => {
+
+    //
+    //  Il faut ajouter une vérification du droit pour le faire (hello asso)
+    //
+
       let priceQuery;
       if (type === "card") {
         priceQuery = 'SELECT price FROM Places WHERE type = ? AND number = ?';
       } else {
         priceQuery = 'SELECT price FROM Places WHERE type = ?';
       }
-
-      const updateUserCreditQuery = 'UPDATE Users SET credit = credit - ? WHERE userID = ?';
 
       // Récupération du prix
       db.query(priceQuery, [type, number], (err, result) => {
@@ -76,82 +39,34 @@ class StudentService {
 
         let price = result[0].price;
         if (type !== "card") {
-          price *= number; // Prix proportionnel au nombre de tickets ou de mois d'abonnement achetés
+          price *= number; // Prix proportionnel au nombre de tickets achetés
         }
 
-
-
-        // Vérifier si l'utilisateur a suffisamment de crédits
-        const getUserCreditQuery = 'SELECT credit FROM Users WHERE userID = ?';
-        db.query(getUserCreditQuery, [studentID], (err, result) => {
-          if (err) {
-            return reject(new Error("Erreur lors de la vérification des crédits."));
-          }
-
-          if (result.length == 0) {
-            return reject(new Error('Pas d\'utilisateur avec cet ID'));
-          }
-
-          const userCredit = result[0].credit;
-
-          if (userCredit >= price) {
-            // Soustraire le prix du ticket du crédit de l'utilisateur
-            db.query(updateUserCreditQuery, [price, studentID], (err, result) => {
-              if (err || result.length == 0) {
-                return reject(new Error('Erreur lors de la mise à jour du crédit de l\'utilisateur.'));
-              }
-
-
-              const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'online', ?);"
-              db.query(paymentSql, [studentID, price, type, number, studentID], (err, result) => {
-                if (err || result.affectedRows == 0) {
-                  return reject(new Error("Erreur lors de l'enregistrement du paiement."));
-                }
-                resolve(result);
-              });
-
-              switch (type) {
-                case 'ticket':
-                  const ticketSql = 'UPDATE Users SET tickets = tickets + ? WHERE userID = ?';
-                  db.query(ticketSql, [number, studentID], (err, result) => {
-                    if (err || result.affectedRows == 0) {
-                      return reject(new Error("Erreur lors de l'ajout du ticket à l'élève."));
-                    }
-                    resolve(result);
-                  });
-                  break;
-                case 'card':
-                  const cardSql = 'INSERT INTO Cards (userID, number, maxNumber) VALUES (?, 0, ?)';
-                  db.query(cardSql, [studentID, number], (err, result) => {
-                    if (err || result.affectedRows == 0) {
-                      return reject(new Error("Erreur lors de l'ajout de la carte à l'élève."));
-                    }
-                    resolve(result);
-                  });
-                  break;
-                case 'subscription':
-                  const days = number * 30; // Nombre de jours proportionnel au nombre de mois
-
-                  const subscriptionSql = `
-                    UPDATE Users 
-                    SET subscriptionEnd = CASE 
-                      WHEN subscriptionEnd IS NULL THEN DATE_ADD(CURDATE(), INTERVAL ? DAY)
-                      ELSE DATE_ADD(subscriptionEnd, INTERVAL ? DAY)
-                    END 
-                    WHERE userID = ?`;
-
-                  db.query(subscriptionSql, [days, days, studentID], (err, result) => {
-                    if (err || result.affectedRows == 0) {
-                      return reject(new Error("Erreur lors de l'ajout de temps d'abonnement."));
-                    }
-                    resolve(result);
-                  });
-                  break;
+        switch (type) {
+          case 'ticket':
+            const ticketSql = 'UPDATE Users SET tickets = tickets + ? WHERE userID = ?';
+            db.query(ticketSql, [number, studentID], (err, result) => {
+              if (err || result.affectedRows == 0) {
+                return reject(new Error("Erreur lors de l'ajout du ticket à l'élève."));
               }
             });
-          } else {
-            return reject(new Error('Crédit insuffisant.'));
+            break;
+          case 'card':
+            const cardSql = 'INSERT INTO Cards (userID, number, maxNumber) VALUES (?, 0, ?)';
+            db.query(cardSql, [studentID, number], (err, result) => {
+              if (err || result.affectedRows == 0) {
+                return reject(new Error("Erreur lors de l'ajout de la carte à l'élève."));
+              }
+            });
+            break;
+        }
+
+        const paymentSql = "INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'online', ?);"
+        db.query(paymentSql, [studentID, price, type, number, studentID], (err, result) => {
+          if (err || result.affectedRows == 0) {
+            return reject(new Error("Erreur lors de l'enregistrement du paiement."));
           }
+          resolve(result);
         });
       });
     });
@@ -189,14 +104,7 @@ class StudentService {
                 const paymentType = course.paymentType.split(',');
                 const currentDate = new Date();
 
-                // Vérifie si l'étudiant est abonné et si le cours accepte les abonnements
-                console.log("reserveCourse paymentType",paymentType,paymentType.includes('subscription'),student,student.subscriptionEnd);
-                if (paymentType.includes('subscription') && student.subscriptionEnd && new Date(student.subscriptionEnd) > new Date()) {
-                  this.addStudentToCourse(studentID, courseID)
-                    .then(() => logPayment(studentID, "course", currentDate, "subscription", studentID, courseID))
-                    .then(() => resolve({ message: "L'élève a été ajouté au cours via l'abonnement." }))
-                    .catch(err => reject(err));
-                } else if (paymentType.includes('card')) {
+                if (paymentType.includes('card')) {
                   // Vérifie si l'étudiant a une carte et si le cours accepte les cartes
                   this.getValidCard(studentID)
                     .then(card => {
@@ -204,34 +112,47 @@ class StudentService {
                         this.useCard(card)
                           .then(() => {
                             this.addStudentToCourse(studentID, courseID)
-                              .then(() => logPayment(studentID, "course", currentDate, "card", studentID, courseID))
+                              .then(() => this.logPayment(studentID, "course", currentDate, "card", studentID, courseID))
                               .then(() => resolve({ message: "L'élève a été ajouté au cours via une carte." }))
                               .catch(err => reject(err));
                           })
                           .catch(err => reject(err));
                       } else {
-                        reject(new Error("Aucune carte valide trouvée."));
+                        this.reserveWithTicket(student,courseID,currentDate)
+                        .then(() => resolve({ message: "L'élève a été ajouté au cours via un ticket." }))
+                        .catch(err => reject(err));
                       }
                     })
                     .catch(err => reject(err));
                 } else if (paymentType.includes('ticket') && student.tickets > 0) {
-                  // Vérifie si l'étudiant a des tickets et si le cours accepte les tickets
-                  this.decrementTickets(student)
-                    .then(() => {
-                      this.addStudentToCourse(studentID, courseID)
-                        .then(() => logPayment(studentID, "course", currentDate, "ticket", studentID, courseID))
-                        .then(() => resolve({ message: "L'élève a été ajouté au cours via un ticket." }))
-                        .catch(err => reject(err));
-                    })
+                  this.reserveWithTicket(student, courseID, currentDate)
+                    .then(() => resolve({ message: "L'élève a été ajouté au cours via un ticket." }))
                     .catch(err => reject(err));
-                } else {
-                  reject(new Error("Aucun mode de paiement valide trouvé ou fonds insuffisants."));
+                } else {  
+                  return reject(new Error("Aucun mode de paiement valide trouvé ou fonds insuffisants."));
                 }
               })
               .catch(err => reject(err));
           }
         })
         .catch(err => reject(err));
+    });
+  }
+
+  async reserveWithTicket(student,courseID,currentDate){
+    return new Promise((resolve, reject) => {
+      if(student.tickets < 1){
+        return reject(new Error("Aucun mode de paiement valide trouvé ou fonds insuffisants."));
+      }
+      const newTickets = student.tickets - 1;
+      db.query('UPDATE Users SET tickets = ? WHERE userID = ?', [newTickets, student.userID], (err, results) => {
+        if (err || results.affectedRows == 0) {
+          return reject(new Error("Erreur lors de la décrémentation des tickets."));
+        }
+        this.addStudentToCourse(student.userID, courseID);
+        this.logPayment(student.userID, "course", currentDate, "ticket", student.userID, courseID);
+        return resolve();
+      });
     });
   }
 
@@ -306,8 +227,11 @@ class StudentService {
   async getValidCard(studentID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM Cards WHERE userID = ? AND number < maxNumber ORDER BY number DESC LIMIT 1', [studentID], (err, rows) => {
-        if (err || rows.length == 0) {
+        if (err) {
           return reject(new Error("Erreur lors de la récupération d'une carte valide."));
+        }
+        if(rows.length == 0){
+          return resolve();
         }
         return resolve(rows[0]);
       });
@@ -331,36 +255,97 @@ class StudentService {
           }
         });
       }
-      resolve();
-    });
-  };
-
-  // Fonction pour décrémenter les tickets
-  async decrementTickets(student) {
-    return new Promise((resolve, reject) => {
-      const newTickets = student.tickets - 1;
-      db.query('UPDATE Users SET tickets = ? WHERE userID = ?', [newTickets, student.studentID], (err, results) => {
-        if (err || results.affectedRows == 0) {
-          return reject(new Error("Erreur lors de la décrémentation des tickets."));
-        }
-        resolve();
-      });
+      return resolve();
     });
   };
 
   // Fonction pour enregistrer le paiement
   async logPayment (userID, type, date, paymentType, sourceID, itemID) {
     return new Promise((resolve, reject) => {
-      const query = 'INSERT INTO Payments (userID, type, date, paymentType, sourceID, itemID) VALUES (?, ?, ?, ?, ?, ?)';
-      db.run(query, [userID, type, date, paymentType, sourceID, itemID], (err, results) => {
+      const query = 'INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID, itemID) VALUES (?, 0, ?, 0, ?, ?, ?, ?)';
+      db.query(query, [userID, type, date, paymentType, sourceID, itemID], (err, results) => {
         if (err) {
-          reject(new Error('Erreur lors de l\'enregistrement du paiement.'));
+          return reject(new Error('Erreur lors de l\'enregistrement du paiement.'));
         } else {
-          resolve(true);
+          return resolve(true);
         }
       });
     });
   };
+
+  async unsubscribeCourse (studentID, courseID) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Vérifie si le cours existe et récupère les détails du cours
+            const course = await this.getCourseDetails(courseID);
+            if (!course) {
+                return reject(new Error("Le cours n'existe pas."));
+            }
+
+            // Vérifie si la date du cours n'est pas passée
+            const currentDate = new Date();
+            const startDate = new Date(course.startDate);
+            if (currentDate >= startDate) {
+                return reject(new Error("Le cours a déjà commencé ou est terminé."));
+            }
+
+            // Vérifie si l'élève est inscrit au cours
+            const studentInCourse = await this.checkIfStudentInCourse(studentID, courseID);
+            if (!studentInCourse) {
+                return reject(new Error("L'élève n'est pas inscrit à ce cours."));
+            }
+
+            // Supprime l'étudiant du cours
+            await this.removeStudentFromCourse(studentID, course);
+
+            const student = await this.getStudentDetails(studentID);
+            
+            // Rembourse un ticket
+            await this.refundTicket(student);
+
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    });
+  }
+
+  async refundTicket(student) {
+    return new Promise((resolve, reject) => {
+      const newTickets = student.tickets + 1;
+      db.query('UPDATE Users SET tickets = ? WHERE userID = ?', [newTickets, student.userID], (err, results) => {
+        if (err || results.affectedRows == 0) {
+          return reject(new Error("Erreur lors de l'incrémentation des tickets."));
+        }
+        return resolve();
+      });
+    });
+  }
+
+  async removeStudentFromCourse(studentID, course) {
+    return new Promise((resolve, reject) => {
+      const studentsID = JSON.parse(course.studentsID);
+
+      // Retirer l'étudiant de la liste
+      const index = studentsID.indexOf(parseInt(studentID));
+      if (index == -1) {
+        return reject(new Error("Erreur lors de la récupération de l'élève."));
+      }
+
+      studentsID.splice(index, 1);
+
+      // Mettre à jour la liste des étudiants dans la base de données
+      const updateSql = 'UPDATE Courses SET studentsID = ? WHERE courseID = ?';
+      const updatedStudentsID = JSON.stringify(studentsID);
+      db.query(updateSql, [updatedStudentsID, course.courseID], (err, result) => {
+        if (err || result.affectedRows == 0) {
+          return reject(new Error("Erreur lors de la modification du cours."));
+        }
+
+        return resolve(result);
+      });
+    });
+  }
 
 }
 

@@ -12,104 +12,6 @@ const studentController = require('../controllers/studentController');
 
 /**
  * @swagger
- * /api/student/addCredit:
- *   post:
- *     summary: Ajouter des credits au compte d'un etudiant
- *     tags: [Students]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               studentID:
- *                 type: integer
- *                 description: ID de l'etudiant
- *                 example: 2
- *               credit:
- *                 type: integer
- *                 description: Montant des credits a ajouter
- *                 example: 50
- *     responses:
- *       200:
- *         description: Credits ajoutes avec succes
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     example: true
- *       400:
- *         description: Champ studentID manquant.
- *       401:
- *         description: Champ credit manquant.
- *       402:
- *         description: Le champ credit doit être un entier positif.
- *       403:
- *         description: Le champ studentID doit être un entier positif.
- *       501:
- *         description: Erreur lors de l'ajout du credit.
- *       502:
- *         description: Erreur lors de l'enregistrement du paiement.
- *       500:
- *         description: Erreur SQL
- */
-router.post('/addCredit', studentController.addCredit);
-
-/**
- * @swagger
- * /api/student/getSubscriptionEndDate:
- *   get:
- *     summary: Obtenir la date de fin d'abonnement d'un etudiant
- *     tags: [Students]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: studentID
- *         required: true
- *         schema:
- *           type: integer
- *           description: ID de l'etudiant
- *           example: 2
- *     responses:
- *       200:
- *         description: Date de fin d'abonnement recuperee avec succes
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   success:
- *                     type: boolean
- *                     example: true
- *                   subscriptionEndDate:
- *                     type: string
- *                     example: "2025-01-29T00:00:00.000Z"
- *       400:
- *         description: Champ studentID manquant.
- *       401:
- *         description: Le champ studentID doit être un entier positif.
- *       501:
- *         description: Erreur lors de la récupération de la date de fin de l'abonnement.
- *       502:
- *         description: Pas de date de fin d'abonnement.
- *       500:
- *         description: Erreur SQL
- */
-router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
-
-/**
- * @swagger
  * /api/student/getCourses:
  *   get:
  *     summary: Obtenir la liste des cours d'un etudiant
@@ -192,6 +94,8 @@ router.get('/getSubscriptionEndDate', studentController.getSubscriptionEndDate);
  *         description: Champ studentID manquant.
  *       401:
  *         description: Le champ studentID doit être un entier positif.
+ *       402:
+ *         description: Le studentID et le token ne correspondent pas
  *       501:
  *         description: Erreur lors de la récupération des cours.
  *       500:
@@ -245,27 +149,19 @@ router.get('/getCourses', studentController.getCourses);
  *       401:
  *         description: Le champ studentID doit être un entier positif.
  *       402:
- *         description: Type de place non valide. Utilisez "ticket", "subscription" ou "card".
+ *         description: Type de place non valide. Utilisez "ticket" ou "card".
  *       403:
  *         description: number n'est pas un entier postif.
+ *       404:
+ *         description: Le studentID et le token ne correspondent pas
  *       501:
  *         description: Erreur lors de la récupération du prix.
  *       502:
- *         description: Erreur lors de la vérification des crédits.
- *       503:
- *         description: Pas d\'utilisateur avec cet ID
- *       504:
- *         description: Erreur lors de la mise à jour du crédit de l\'utilisateur.
- *       505:
- *         description: Erreur lors de l'enregistrement du paiement.
- *       506:
  *         description: Erreur lors de l'ajout du ticket à l'élève.
- *       507:
+ *       503:
  *         description: Erreur lors de l'ajout de la carte à l'élève.
- *       508:
- *         description: Erreur lors de l'ajout de temps d'abonnement.
- *       509:
- *         description: Crédit insuffisant.
+ *       504:
+ *         description: Erreur lors de l'enregistrement du paiement.
  *       500:
  *         description: Erreur SQL
  */
@@ -317,7 +213,7 @@ router.post('/buyPlace', studentController.buyPlace);
  *                         example: 49.99
  *                       type:
  *                         type: string
- *                         description: Type de paiement (ticket, carte, abonnement, credit)
+ *                         description: Type de paiement (ticket, carte)
  *                         example: Course Fee
  *                       quantity:
  *                         type: integer
@@ -331,11 +227,15 @@ router.post('/buyPlace', studentController.buyPlace);
  *                       paymentType:
  *                         type: string
  *                         description: Methode de paiement (en ligne, en especes)
- *                         example: Credit Card
+ *                         example: online
  *       400:
  *         description: Champ studentID manquant.
  *       401:
  *         description: Le champ studentID doit être un entier positif.
+ *       402:
+ *         description: Le studentID et le token ne correspondent pas
+ *       403:
+ *         description: Un professeur ne peut pas exécuter cette requête
  *       501:
  *         description: Erreur lors de la récupération des paiements.
  *       500:
@@ -386,6 +286,10 @@ router.get('/getPaymentHistory', studentController.getPaymentHistory);
  *         description: Le champ studentID doit être un entier positif
  *       402:
  *         description: Le champ courseID doit être un entier positif
+ *       403:
+ *         description: Le studentID et le token ne correspondent pas
+ *       404:
+ *         description: Un professeur ne peut pas exécuter cette requête
  *       501:
  *         description: L'élève est déjà inscrit à ce cours.
  *       502:
@@ -416,5 +320,65 @@ router.get('/getPaymentHistory', studentController.getPaymentHistory);
  *         description: Erreur SQL
  */
 router.post('/reserveCourse', studentController.reserveCourse);
+
+/**
+ * @swagger
+ * /api/student/unsubscribeCourse:
+ *   post:
+ *     summary: Désinscrire un étudiant d'un cours
+ *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               studentID:
+ *                 type: integer
+ *                 description: ID de l'étudiant
+ *                 example: 1
+ *               courseID:
+ *                 type: integer
+ *                 description: ID du cours
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: ID de l'étudiant ou ID du cours manquant.
+ *       401:
+ *         description: Le champ studentID doit être un entier positif.
+ *       402:
+ *         description: Le champ courseID doit être un entier positif.
+ *       403:
+ *         description: Le studentID et le token ne correspondent pas.
+ *       404:
+ *         description: Un professeur ne peut pas exécuter cette requête.
+ *       501:
+ *         description: Le cours n'existe pas.
+ *       502:
+ *         description: Le cours a déjà commencé ou est terminé.
+ *       503:
+ *         description: L'élève n'est pas inscrit à ce cours.
+ *       504:
+ *         description: Erreur lors de l'incrémentation des tickets.
+ *       505:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       506:
+ *         description: Erreur lors de la modification du cours.
+ *       500:
+ *         description: Erreur SQL
+ */
+router.post('/unsubscribeCourse', studentController.unsubscribeCourse);
 
 module.exports = router;

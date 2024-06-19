@@ -1,88 +1,24 @@
 const studentService = require('../services/studentService');
 
-exports.addCredit = async (req, res) => {
-    try {
-        let { studentID, credit } = req.body;
-        credit = parseInt(credit);
-
-        console.log("addCredit | studentID, credit : " + studentID + ", " + credit);
-
-        if (!studentID) {
-            return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
-        }
-        if (!credit) {
-            return res.status(401).json({ success: false, message: 'Champ credit manquant.' });
-        }
-        if (isNaN(credit) || credit <= 0) {
-            return res.status(402).json({ success: false, message: 'Le champ credit doit être un entier positif.' });
-        }
-        if (isNaN(studentID) || studentID <= 0) {
-            return res.status(403).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
-        }
-
-        await studentService.addCredit(studentID, credit);
-
-        return res.status(200).json({ success: true });
-
-    } catch (error) {
-        console.error('addCredit | error:', error);
-
-        switch (error.message) {
-            case "Erreur lors de l'ajout du credit.":
-                res.status(501).json({ success: false, message: error.message });
-                break;
-            case "Erreur lors de l'enregistrement du paiement.":
-                res.status(502).json({ success: false, message: error.message });
-                break;
-            default:
-                res.status(500).json({ success: false, message: 'Erreur SQL' });
-        }
-    }
-};
-
-exports.getSubscriptionEndDate = async (req, res) => {
-    try {
-        const { studentID } = req.query;
-
-        console.log("getSubscriptionEndDate | studentID : " + studentID);
-
-        if (!studentID) {
-            return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
-        }
-        if (isNaN(studentID) || studentID <= 0) {
-            return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
-        }
-
-        const subscriptionEndDate = await studentService.getSubscriptionEndDate(studentID);
-
-        res.status(200).json({ success: true, subscriptionEndDate: subscriptionEndDate });
-    } catch (error) {
-        console.log('getSubscriptionEndDate | error:', error);
-
-        switch (error.message) {
-            case "Erreur lors de la récupération de la date de fin de l'abonnement.":
-                res.status(501).json({ success: false, message: error.message });
-                break;
-            case "Pas de date de fin d'abonnement.":
-                res.status(502).json({ success: false, message: error.message });
-                break;
-            default:
-                res.status(500).json({ success: false, message: 'Erreur SQL' });
-        }
-    }
-};
-
 exports.getCourses = async (req, res) => {
     try {
         const { studentID } = req.query;
 
         console.log("getCourses | studentID : " + studentID);
 
+        const userIDFromToken = req.userID;
+        const userTypeFromToken = req.userType;
+        if (userTypeFromToken == "student") {
+            if (userIDFromToken != studentID) {
+                return res.status(402).json({ success: false, message: 'Le studentID et le token ne correspondent pas' });
+            }
+        }
+
         if (!studentID) {
             return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
         }
         if (isNaN(studentID) || studentID <= 0) {
-            console.log("getCourses :",typeof(studentID), Number.isInteger(studentID));
+            console.log("getCourses :", typeof (studentID), Number.isInteger(studentID));
             return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
 
@@ -90,7 +26,7 @@ exports.getCourses = async (req, res) => {
 
         res.status(200).json({ success: true, courses });
     } catch (error) {
-        console.log('getSubscriptionEndDate | error:', error);
+        console.log('getCourses | error:', error);
 
         switch (error.message) {
             case "Erreur lors de la récupération des cours.":
@@ -107,6 +43,14 @@ exports.buyPlace = async (req, res) => {
 
     console.log(`buyPlace | studentID, type, number: ${studentID}, ${type}, ${number}`);
 
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    if (userTypeFromToken == "student") {
+        if (userIDFromToken != studentID) {
+            return res.status(404).json({ success: false, message: 'Le studentID et le token ne correspondent pas' });
+        }
+    }
+
     if (!studentID || !type || !number) {
         return res.status(400).json({ success: false, message: 'Tous les champs doivent être remplis.' });
     }
@@ -114,8 +58,8 @@ exports.buyPlace = async (req, res) => {
     if (isNaN(studentID) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
-    if (type !== 'ticket' && type !== 'subscription' && type !== 'card') {
-        return res.status(402).json({ error: 'Type de place non valide. Utilisez "ticket", "subscription" ou "card".' });
+    if (type !== 'ticket' && type !== 'card') {
+        return res.status(402).json({ error: 'Type de place non valide. Utilisez "ticket" ou "card".' });
     }
 
     if (isNaN(number) || number <= 0) {
@@ -132,29 +76,14 @@ exports.buyPlace = async (req, res) => {
             case "Erreur lors de la récupération du prix.":
                 res.status(501).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de la vérification des crédits.":
+            case "Erreur lors de l'ajout du ticket à l'élève.":
                 res.status(502).json({ success: false, message: error.message });
                 break;
-            case 'Pas d\'utilisateur avec cet ID':
+            case "Erreur lors de l'ajout de la carte à l'élève.":
                 res.status(503).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de la mise à jour du crédit de l\'utilisateur.":
-                res.status(504).json({ success: false, message: error.message });
-                break;
             case "Erreur lors de l'enregistrement du paiement.":
-                res.status(505).json({ success: false, message: error.message });
-                break;
-            case "Erreur lors de l'ajout du ticket à l'élève.":
-                res.status(506).json({ success: false, message: error.message });
-                break;
-            case "Erreur lors de l'ajout de la carte à l'élève.":
-                res.status(507).json({ success: false, message: error.message });
-                break;
-            case "Erreur lors de l'ajout de temps d'abonnement.":
-                res.status(508).json({ success: false, message: error.message });
-                break;
-            case "Crédit insuffisant.":
-                res.status(509).json({ success: false, message: error.message });
+                res.status(504).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -166,6 +95,17 @@ exports.getPaymentHistory = async (req, res) => {
     const { studentID } = req.query;
 
     console.log(`getPaymentHistory | studentID: ${studentID}`);
+
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    if (userTypeFromToken == "student") {
+        if (userIDFromToken != studentID) {
+            return res.status(402).json({ success: false, message: 'Le studentID et le token ne correspondent pas' });
+        }
+    }
+    else if(userTypeFromToken == "teacher") {
+        return res.status(403).json({ success: false, message: 'Un professeur ne peut pas exécuter cette requête' });
+    }
 
     if (!studentID) {
         return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
@@ -195,6 +135,17 @@ exports.reserveCourse = async (req, res) => {
     const { studentID, courseID } = req.body;
 
     console.log(`reserveCourse | studentID : ${studentID}, courseID : ${courseID}`);
+
+    const userIDFromToken = req.userID;
+    const userTypeFromToken = req.userType;
+    if (userTypeFromToken == "student") {
+        if (userIDFromToken != studentID) {
+            return res.status(403).json({ success: false, message: 'Le studentID et le token ne correspondent pas' });
+        }
+    }
+    else if(userTypeFromToken == "teacher") {
+        return res.status(404).json({ success: false, message: 'Un professeur ne peut pas exécuter cette requête' });
+    }
 
     if (!studentID || !courseID) {
         return res.status(400).json({ error: "ID de l'étudiant ou ID du cours manquant." });
@@ -259,4 +210,63 @@ exports.reserveCourse = async (req, res) => {
         }
     }
 };
-  
+
+exports.unsubscribeCourse = async (req, res) => {
+    try {
+        const { studentID, courseID } = req.body;
+
+        console.log(`unsubscribeCourse | studentID: ${studentID}, courseID: ${courseID}`);
+
+        const userIDFromToken = req.userID;
+        const userTypeFromToken = req.userType;
+        if (userTypeFromToken == "student") {
+            if (userIDFromToken != studentID) {
+                return res.status(403).json({ success: false, message: 'Le studentID et le token ne correspondent pas.' });
+            }
+        }
+        else if(userTypeFromToken == "teacher") {
+            return res.status(404).json({ success: false, message: 'Un professeur ne peut pas exécuter cette requête.' });
+        }
+
+        if (!studentID || !courseID) {
+            return res.status(400).json({ error: "ID de l'étudiant ou ID du cours manquant." });
+        }
+
+        if (isNaN(studentID) || studentID <= 0) {
+            return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
+        }
+
+        if (isNaN(courseID) || courseID <= 0) {
+            return res.status(402).json({ success: false, message: 'Le champ courseID doit être un entier positif.' });
+        }
+
+        const result = await studentService.unsubscribeCourse(studentID, courseID);
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('unsubscribeCourse | error:', error);
+
+        switch (error.message) {
+            case "Le cours n'existe pas.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Le cours a déjà commencé ou est terminé.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "L'élève n'est pas inscrit à ce cours.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de l'incrémentation des tickets.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération de l'élève.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du cours.":
+                res.status(506).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
+    }
+};

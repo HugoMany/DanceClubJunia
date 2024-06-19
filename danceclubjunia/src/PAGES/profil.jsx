@@ -6,7 +6,6 @@ import Loading from '../elements/loading';
 import PastCoursesStudent from './pastCoursesStudent';
 // import StudentPastCourses from './studentPastCourses';
 
-const ID_CONST_STUDENT = 10;
 
 
 
@@ -16,71 +15,89 @@ const Profil = () => {
     const [userData, setUserData] = useState(null);
     const [userPaymentHistory, setPaymentHistory] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                //Recup TOKEN dans le local storage
-                const token = localStorage.getItem('token');
-                if (!token) return { valid: false };
-
-                const response = await fetch(URL_DB + 'user/getProfile?userID=' + ID_CONST_STUDENT, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserData(data);
-                    fetchPaymentHistory();
+    const [idStudent, setIdStudent] = useState(null);
 
 
-                } else {
-                    console.error('Erreur lors de la récupération des info du compte');
-                }
-            } catch (error) {
-                console.error('Erreur lors de la récupération des info du compte', error);
+    const fetchID = async () => {
+        //Recup TOKEN dans le local storage
+        const token = localStorage.getItem('token');
+        if (!token) return { valid: false };
+
+        const response1 = await fetch(URL_DB + 'auth/verifyToken', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (response1.ok) {
+            const data = await response1.json();
+            console.log(data.userId);
+            fetchUser(data.userId);
+        } else {
+            console.error('Erreur');
+        }
+    };
+
+    const fetchUser = async (idUser) => {
+        try {
+            //Recup TOKEN dans le local storage
+            const token = localStorage.getItem('token');
+            if (!token) return { valid: false };
+
+            const response = await fetch(URL_DB + 'user/getProfile?userID=' + idUser, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUserData(data);
+                setIdStudent(idUser);
+                fetchPaymentHistory(idUser);
+
+            } else {
+                console.error('Erreur lors de la récupération des info du compte');
             }
-            finally {
-            }
-        };
-        const fetchPaymentHistory = async () => {
-            try {
-                //Recup TOKEN dans le local storage
-                const token = localStorage.getItem('token');
-                if (!token) return { valid: false };
-                const response = await fetch(URL_DB + 'student/getPaymentHistory?studentID=2', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
+        } catch (error) {
+            console.error('Erreur lors de la récupération des info du compte', error);
+        }
+        finally {
+        }
+    };
+    const fetchPaymentHistory = async (idUser) => {
+                            
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setPaymentHistory(data);
-                    setLoading(false);
-                    console.log(data);
-                } else {
-                    console.error('Erreur lors de la récupération des prof');
-                }
-            } catch (error) {
-                console.error('Erreur lors de la récupération des prof', error);
-            }
-            finally {
-            }
-        };
+            const token = localStorage.getItem('token');
+            const response2 = await fetch(URL_DB + 'student/getPaymentHistory?studentID='+idUser, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
-        fetchUser();
+            if (response2.ok) {
+                const data = await response2.json();
+                setPaymentHistory(data);
+                setLoading(false);
+                console.log(data);
+            } else {
+                console.error('Erreur lors de la récupération des prof');
+            }
+        }
         
+   
+    useEffect(() => {
+        fetchID();
     }, []);
 
-    
+
 if (loading) {
         return <Loading></Loading>;
       }
+      else{
   return (
   
   <div className='Profil'>
@@ -114,12 +131,12 @@ if (loading) {
     <div >
       <h2>Vos anciens cours</h2>
       <div className='studentPastCourses'>
-      <PastCoursesStudent studentId={10}></PastCoursesStudent>
+      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
     </div>  
 
     </div>
   );
-};
+};}
 
 export default Profil;
