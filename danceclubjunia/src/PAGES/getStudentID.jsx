@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AjoutCredits from './ajoutCredits';
+import Button from '@mui/material/Button';
 const API_URL = 'http://90.110.227.143/api/teacher/searchStudent';
 
 const GetStudentID = () => {
@@ -37,7 +38,7 @@ const GetStudentID = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button onClick={searchStudent}>Search</button>
+      <Button Button variant="contained" color="primary" onClick={searchStudent}>Search</Button>
       {userID && <div>
       <p>User ID: {dataUserFound.userID}</p>
       <p>Surname: {dataUserFound.surname}</p>

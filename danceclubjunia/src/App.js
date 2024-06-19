@@ -54,6 +54,7 @@ import InfoRockDance from './PAGES/blog/infoRockDance';
 import Boutique from './PAGES/boutique';
 
 
+import AllContacts from './PAGES/prof/allContacts';
 function App() {
   return (
     <div className="App">
@@ -77,6 +78,7 @@ function App() {
 
           <Route path="/admin/teacher/modifProf/:idParam" element={<ModifProf />} />
           <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
+
 
           <Route path="/admin/student/modifEleve/:idParam" element={<ModifEleve />} />
           <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
@@ -106,7 +108,9 @@ function App() {
           <Route path="/creerEleve" element={<CreerEleve/>}/>
           <Route path="/getStudentID" element={<GetStudentID/>}/>
           <Route path="/ajoutCredits" element={<AjoutCredits/>}/>
-          <Route path="/prof" element={<Prof/>}/>
+          <Route path="/prof" element={<Prof/>}/>          
+          <Route path="/prof/allContact" element={<AllContacts/>} />
+
 
           <Route path="/appel" element={<Appel/>}/>
           <Route path="/creerProf" element={<CreerProf/>}/>
