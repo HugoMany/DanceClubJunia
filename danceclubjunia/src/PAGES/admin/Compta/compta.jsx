@@ -10,7 +10,7 @@ import {
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 import Header from '../../../elements/header';
-import {fetchAllCourses,fetchAllUser,fetchAllProf} from './fetchEverything';
+import {fetchAllCourses,fetchAllUser,fetchAllProf, fetchAllPayments} from './fetchEverything';
 // Define your columns
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -45,6 +45,8 @@ export default function CustomExport() {
     console.log(fetchAllCourses());
     console.log(fetchAllUser());
     console.log(fetchAllProf());
+    console.log(fetchAllPayments());
+
 }, []); 
  
   return (
