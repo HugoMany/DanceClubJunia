@@ -63,3 +63,24 @@ img.LogoTemp {
     border: 0px solid;
     border-radius: 70px;
 }
+html .forget {
+    width: 75vw;
+    height:50vh;
+    margin: 8vh 4.5vw;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5vw;
+    border: 0px solid;
+    border-radius: 20px;
+    background: white;
+}
+html .forget input {
+    padding: 10px;
+    margin: 10px;
+    width: 60vw;
+    border: 1px solid;
+    border-radius: 5px;
+}

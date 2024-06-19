@@ -138,7 +138,7 @@ function Connexion() {
                 <button className='inscriptionLogin'>
                     <span className="material-symbols-outlined">swipe_right</span> Inscription
                 </button>
-                <p><a className='mdpOublie' href='/'>Mot de passe oublié</a></p>
+                <p><a className='mdpOublie' href='/connexion/forget'>Mot de passe oublié</a></p>
             </div>
         </div>
     );
