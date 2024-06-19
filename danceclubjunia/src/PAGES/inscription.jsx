@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
 import {URL_DB} from '../const/const';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Inscription() {
     const [firstname, setFirstname] = useState('');
@@ -9,8 +10,14 @@ function Inscription() {
     const [password, setPassword] = useState('');
     const [connectionMethod, setConnectionMethod] = useState('');
     const [photo, setPhoto] = useState('');
+    const [captchaReady, setcaptchaReady] = useState(false);
+    const [captcha, setcaptcha] = useState();
 
-    
+    const handleRecaptcha = value => {
+        console.log("Captcha value:", value);    
+        setcaptchaReady(true);
+        setcaptcha(value)
+};
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,9 +28,10 @@ function Inscription() {
             password,
             photo,
             connectionMethod,
+            captcha
         };
         console.log('Form Data:', json);
-        
+        if (captchaReady) {
         // Add logic to save course data
         fetch(URL_DB+'guest/registerStudent', {
             method: 'POST',
@@ -39,7 +47,7 @@ function Inscription() {
         .catch(error => {
             console.error('Error:', error);
         });
-
+    }
     };
 
     return (
@@ -106,6 +114,8 @@ function Inscription() {
                         onChange={(e) => setPhoto(e.target.value)}
                     />
                 </div>
+                <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
+
                 <button className='connexionLogin' type="submit">S'inscrire</button>
             </form>
             <button className='inscriptionLogin'>
