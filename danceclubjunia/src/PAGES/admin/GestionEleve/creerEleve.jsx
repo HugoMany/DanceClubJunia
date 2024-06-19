@@ -8,9 +8,8 @@ function CreerEleve() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [connectionMethod, setConnectionMethod] = useState('');
+    const connectionMethod = "mail";
     const [photo, setPhoto] = useState('');
-    const credit = 0;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,7 +21,6 @@ function CreerEleve() {
             password,
             connectionMethod,
             photo,
-            credit
         };
         console.log('Form Data:', formData);
 
@@ -108,17 +106,6 @@ function CreerEleve() {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    />
-                <br />
-                <label>
-                    connectionMethod:
-                   
-                </label>
-                <input
-                        type="text"
-                        required
-                        value={connectionMethod}
-                        onChange={(e) => setConnectionMethod(e.target.value)}
                     />
                 <br />
                 <label>

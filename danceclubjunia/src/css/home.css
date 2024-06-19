@@ -94,3 +94,15 @@ h2{
     margin: 0px;
     font-size: 12px;
 }
+.cours{
+    /* background-image: url(https://atoutdanses44.fr/wp-content/uploads/2020/07/Rock-1.jpg); */
+    background-position: center;
+    background-size: contain;
+    color: white;
+}
+.boutique {
+    border: 0px solid;
+    border-radius: 20px;
+    background-color: white;
+    padding: 20px;
+}

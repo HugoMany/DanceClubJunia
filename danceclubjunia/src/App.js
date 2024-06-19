@@ -48,6 +48,15 @@ import InfoStudentCourse from './PAGES/prof/infoStudentCourse';
 import InfoStudentForProf from './PAGES/prof/infoStudentForProf';
 import AddTagToACours from './PAGES/prof/addTagToACours';
 import Compta from './PAGES/admin/Compta/compta';
+import InfoModerneDance from './PAGES/blog/infoModerneDance';
+import InfoRockDance from './PAGES/blog/infoRockDance';
+
+import Boutique from './PAGES/boutique';
+
+import CreateCardPage from './PAGES/admin/GestionAbo/createCardPage.jsx';
+
+import AllContacts from './PAGES/prof/allContacts';
+import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
 function App() {
   return (
     <div className="App">
@@ -65,14 +74,17 @@ function App() {
           <Route path="/admin/prof" element={<AdminProf />} />
           <Route path="/admin/cours" element={<AdminCours />} />
           <Route path="/admin/cours" element={<AdminCours />} />
+          <Route path="/admin/abo" element={<CreateCardPage />} />
+
 
           <Route path="/admin/cours/modifCours/:idParam" element={<ModifCours />} />
           <Route path="/admin/cours/supp/:idParam" element={<SupprimerCours />} />
 
-          <Route path="/admin/teacher/modifProf/:idParam" element={<ModifProf />} />
+          <Route path="/admin/teacher/modif/:idParam" element={<ModifProf />} />
           <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
 
-          <Route path="/admin/student/modifEleve/:idParam" element={<ModifEleve />} />
+
+          <Route path="/admin/student/modif/:idParam" element={<ModifEleve />} />
           <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
 
 
@@ -100,7 +112,9 @@ function App() {
           <Route path="/creerEleve" element={<CreerEleve/>}/>
           <Route path="/getStudentID" element={<GetStudentID/>}/>
           <Route path="/ajoutCredits" element={<AjoutCredits/>}/>
-          <Route path="/prof" element={<Prof/>}/>
+          <Route path="/prof" element={<Prof/>}/>          
+          <Route path="/prof/allContact" element={<AllContacts/>} />
+
 
           <Route path="/appel" element={<Appel/>}/>
           <Route path="/creerProf" element={<CreerProf/>}/>
@@ -108,6 +122,15 @@ function App() {
           <Route path="/infoStudent" element={<InfoStudent/>}/>
           <Route path="/infoStudentCourse" element={<InfoStudentCourse/>}/>
           <Route path="/infoStudentForProf" element={<InfoStudentForProf/>}/>
+
+          <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
+          <Route path="/blog/rock" element={<InfoRockDance/>}/>
+          <Route path="/blog/classique" element={<InfoClassiqueDance/>}/>
+
+
+
+
+          <Route path="/boutique" element={<Boutique/>}/>
         </Routes>
       </Router>
     </div>

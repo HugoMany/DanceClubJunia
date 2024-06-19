@@ -6,6 +6,7 @@ import AjoutCredits from '../ajoutCredits';
 import React, { useState } from 'react';
 import AddTagToACours from './addTagToACours';
 import AddlinkToACours from './addLinkToACours';
+import { Button } from '@mui/material';
 // import TeacherRequire from '../elements/teacherRequire.jsx';
 const Prof = ()=>{
     const [userID, setUserID] = useState(null);
@@ -15,19 +16,25 @@ const Prof = ()=>{
         
         <Header title="Profil"></Header>
         <div>
-            <GetStudentID setUserID={setUserID} />
+            <GetStudentID setUserID={setUserID}/>
            
         </div>
 
 
-        <div>
+        {/* <div>
             <PlanningProf teacherId="1"></PlanningProf>
-        </div>
+        </div> */}
+                      <hr  id='traitProf'/>
+
         <div>
             <Appel></Appel>
         </div>
-        
+              <hr  id='traitProf'/>
+
+        <Button Button variant="contained" color="primary" href='/prof/allContact'> Tout les contacts des students</Button>
+
     </div>
+
 
 
 )

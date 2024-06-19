@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../elements/header';
-import {URL_DB} from '../const/const';
+import { URL_DB } from '../const/const';
 import ReCAPTCHA from "react-google-recaptcha";
 
 function Inscription() {
@@ -8,19 +8,68 @@ function Inscription() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [connectionMethod, setConnectionMethod] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const connectionMethod = "mail";
     const [photo, setPhoto] = useState('');
-    const [captchaReady, setcaptchaReady] = useState(false);
-    const [captcha, setcaptcha] = useState();
+    const [captchaReady, setCaptchaReady] = useState(false);
+    const [captcha, setCaptcha] = useState();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleRecaptcha = value => {
         console.log("Captcha value:", value);    
-        setcaptchaReady(true);
-        setcaptcha(value)
-};
+        setCaptchaReady(true);
+        setCaptcha(value);
+    };
+
+    const handleErrors = (status) => {
+        switch (status) {
+            case 400:
+                setErrorMessage("Au moins un des champs suivants n'est pas rempli : firstname, surname, email, password, connectionMethod.");
+                break;
+            case 401:
+                setErrorMessage('Email invalide.');
+                break;
+            case 402:
+                setErrorMessage('Mot de passe trop court (minimum 8 caractères).');
+                break;
+            case 403:
+                setErrorMessage('Captcha manquant.');
+                break;
+            case 500:
+                setErrorMessage('Erreur SQL.');
+                break;
+            case 501:
+                setErrorMessage("Erreur lors de la vérification de l'existence de l'email.");
+                break;
+            case 502:
+                setErrorMessage('Email déjà utilisé.');
+                break;
+            case 503:
+                setErrorMessage('Erreur lors de la création du compte.');
+                break;
+            case 504:
+                setErrorMessage('Échec de la vérification reCAPTCHA.');
+                break;
+            case 505:
+                setErrorMessage('Erreur lors de la vérification reCAPTCHA.');
+                break;
+            case 506:
+                setErrorMessage('Erreur lors du hachage du mot de passe.');
+                break;
+            default:
+                setErrorMessage('Erreur inconnue.');
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Vérification des mots de passe
+        if (password !== confirmPassword) {
+            setErrorMessage('Les mots de passe ne correspondent pas.');
+            return;
+        }
+
         const json = {
             firstname,
             surname,
@@ -32,27 +81,42 @@ function Inscription() {
         };
         console.log('Form Data:', json);
         if (captchaReady) {
-        // Add logic to save course data
-        fetch(URL_DB+'guest/registerStudent', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(json)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+            fetch(URL_DB + 'guest/registerStudent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw response;
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                if (data.success) {
+                    window.location.href = '/'; // Redirection après succès
+                } else {
+                    setErrorMessage('Erreur lors de l\'inscription.');
+                }
+            })
+            .catch(response => {
+                response.json().then(err => {
+                    handleErrors(response.status);
+                });
+            });
+        } else {
+            console.log("Captcha non validé");
+            setErrorMessage("Captcha non validé");
+        }
     };
 
     return (
         <div className='Form'>
             <h2>Inscription</h2>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="nom"></label>
@@ -85,6 +149,16 @@ function Inscription() {
                     />
                 </div>
                 <div>
+                    <label htmlFor="confirmMotDePasse"></label>
+                    <input
+                        placeholder='Confirmation Password'
+                        type="password"
+                        id="confirmMotDePasse"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                </div>
+                <div>
                     <label htmlFor="email"></label>
                     <input
                         placeholder='E-mail'
@@ -95,34 +169,19 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="connection"></label>
-                    <input
-                        placeholder='Connection Method'
-                        type="text"
-                        id="connectionMethod"
-                        value={connectionMethod}
-                        onChange={(e) => setConnectionMethod(e.target.value)}
-                    />
-                </div>
-                <div>
                     <label htmlFor="photo"></label>
                     <input
                         placeholder='Photo'
                         type="file"
                         id="photo"
-                        value={photo}
-                        onChange={(e) => setPhoto(e.target.value)}
+                        onChange={(e) => setPhoto(e.target.files[0])}
                     />
                 </div>
                 <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
-
                 <button className='connexionLogin' type="submit">S'inscrire</button>
             </form>
             <button className='inscriptionLogin'>
-            <span class="material-symbols-outlined">
-swipe_left
-</span> Connexion
-            
+                <span className="material-symbols-outlined">swipe_left</span> Connexion
             </button>
         </div>
     );
