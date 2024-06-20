@@ -17,7 +17,9 @@ const ReturnStudentsProfil = (idCoursSelected) => {
                       'Authorization': `Bearer ${token}`,
                   },
                 });
-    
+                if (response.status === 504) {
+                  setStudents("Il n'y a pas d'élève dans le cours.");
+                }
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data.students)
@@ -44,9 +46,13 @@ const ReturnStudentsProfil = (idCoursSelected) => {
       <h1>Return Students Profile</h1>
     <div>
         {/* Add your JSX content here */}
-        {students.map((student) => (
-        <div key={student.id}>{student.name}</div>
-        ))}
+        {students === "Il n'y a pas d'élève dans le cours." ? (
+          <div>{students}</div>
+        ) : (
+          students.map((student) => (
+            <div key={student.id}>{student.name}</div>
+          ))
+        )}
     </div>
       
       {/* Add your JSX content here */}

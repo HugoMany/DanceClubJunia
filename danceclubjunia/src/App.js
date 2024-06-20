@@ -59,6 +59,7 @@ import AllContacts from './PAGES/prof/allContacts';
 import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
 import MdpForget from './PAGES/mdpForget.jsx';
 import MdpRecovery from './PAGES/mdpRecovery.jsx';
+import CoursDynamiqueProf from './PAGES/prof/coursDynamiqueProf.jsx';
 function App() {
   return (
     <div className="App">
@@ -116,6 +117,7 @@ function App() {
           <Route path="/ajoutCredits" element={<AjoutCredits/>}/>
           <Route path="/prof" element={<Prof/>}/>          
           <Route path="/prof/allContact" element={<AllContacts/>} />
+          <Route path="/prof/cours/:idCours" element={<CoursDynamiqueProf/>} />
 
 
           <Route path="/appel" element={<Appel/>}/>

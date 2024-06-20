@@ -55,21 +55,14 @@ const Appel = () => {
                                 <Typography variant="h5">{course.title}</Typography>
                                 <Typography color="textSecondary">Start Date: {new Date(course.startDate).toLocaleString()}</Typography>
                                 <Typography color="textSecondary">Location: {course.location}</Typography>
-                                <Button variant="contained" color="primary" onClick={() => setSelectedCourseId(course.courseID)}>Selectionné</Button>
+                                <Button variant="contained" color="primary" href={'/prof/cours/'+course.courseID}>Selectionné</Button>
                             </CardContent>
                         </Card>
                     ))
                 ) : (
-                    <p>Aucun cours prévu pour aujourd'hui.</p>
+                    <p>Aucun cours prévu pour l'instant.</p>
                 )}
             </div>
-            {selectedCourseId && (
-                <div>
-                    <AddTagToACours idCoursSelected={selectedCourseId} />
-                    <AddlinkToACours idCoursSelected={selectedCourseId} />
-                    <ReturnStudentsProfil idCoursSelected={selectedCourseId} />
-                </div>
-            )}
         </div>
     );
 };
