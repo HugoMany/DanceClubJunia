@@ -38,7 +38,7 @@ const AddTagToACours = (idCoursSelected) => {
         const token = localStorage.getItem('token');
         if (!token) return { valid: false };
 
-        fetch(URL_DB + 'user/searchCourse?courseID=10', {
+        fetch(URL_DB + 'user/searchCourse?courseID='+idCoursSelected.idCoursSelected, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

@@ -31,3 +31,8 @@ hr#traitProf {
     border: 2px solid black;
     width: 100%;
 }
+html .coursDynamiqueProf {
+    height: 80vh;
+    overflow-y: scroll;
+    padding:  5vh 0px;
+}
