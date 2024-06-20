@@ -57,6 +57,9 @@ import CreateCardPage from './PAGES/admin/GestionAbo/createCardPage.jsx';
 
 import AllContacts from './PAGES/prof/allContacts';
 import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
+
+import Revenu from './PAGES/admin/Compta/revenu.jsx';
+
 function App() {
   return (
     <div className="App">
@@ -131,6 +134,8 @@ function App() {
 
 
           <Route path="/boutique" element={<Boutique/>}/>
+          <Route path="/revenu" element={<Revenu/>}/>
+
         </Routes>
       </Router>
     </div>
