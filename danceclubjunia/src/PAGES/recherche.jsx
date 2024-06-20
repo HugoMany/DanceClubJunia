@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Autocomplete } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { URL_DB } from '../const/const';
 
 function Recherche() {
     const [searchQuery, setSearchQuery] = useState('');
     const [courses, setCourses] = useState([]);
-    const [searchResults, setSearchResults] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchCourses();
@@ -52,7 +53,7 @@ function Recherche() {
         const filteredCourses = courses.filter(course =>
             course.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
         );
-        setSearchResults(filteredCourses);
+        navigate('/results', { state: { searchResults: filteredCourses } });
     };
 
     return (
@@ -79,23 +80,6 @@ function Recherche() {
             </Button>
 
             {errorMessage && <div className="error-message">{errorMessage}</div>}
-
-            {searchResults.length > 0 ? (
-                <div className="coursesList">
-                    <h3>Search Results</h3>
-                    <ul>
-                        {searchResults.map((course, index) => (
-                            <li key={index}>
-                                <h4>{course.title}</h4>
-                                <p>{course.description}</p>
-                                <p>Tags: {course.tags.join(', ')}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ) : (
-                searchQuery && <p>No courses found with the given tags.</p>
-            )}
         </div>
     );
 }

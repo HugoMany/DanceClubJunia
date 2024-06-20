@@ -21,7 +21,9 @@ import PlanningProf from './PAGES/prof/planningProf';
 import PlanningEleve from './PAGES/planningEleve';
 import CoursesList from './PAGES/listCourse';
 import ConnexionEtInscriptionSlider from './elements/connexionEtInscriptionSlider';
+
 import Recherche from './PAGES/recherche';
+import Results from './PAGES/results.jsx';
 
 import ReservationPage from './PAGES/reservationPage';
 import CreerEleve from './PAGES/admin/GestionEleve/creerEleve'
@@ -104,6 +106,8 @@ function App() {
           <Route path="/admin/compta" element={<Compta/>}/>
 
           <Route path="/recherche" element={<Recherche />} />
+          <Route path="/results" element={<Results />} />
+
           <Route path="/reservation" element={<ReservationPage />} />
           <Route path="/planningProf" element={<PlanningProf/>} />
           <Route path="/planningEleve" element={<PlanningEleve/>}/>
