@@ -58,7 +58,7 @@ function Recherche() {
 
     return (
         <div className='searchCourses'>
-            <h2>Search Courses by Tags</h2>
+            {/* <h2>Search Courses by Tags</h2> */}
             <Autocomplete
                 freeSolo
                 options={suggestions}
@@ -79,7 +79,7 @@ function Recherche() {
                 Search
             </Button>
 
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );
 }
