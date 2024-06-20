@@ -8,9 +8,11 @@ html body .addAndDeleteTag {
     align-content: center;
     flex-wrap: wrap;
 }
-.ProfPage {
-    /* overflow-x: scroll; */
+html .ProfPage {
+    overflow-x: hidden;
     padding-top: 5vh;
+    height: 77vh;
+    overflow-y: scroll;
 }
 html .coursDynamique {
     display: flex;
