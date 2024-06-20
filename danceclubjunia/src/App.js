@@ -139,7 +139,7 @@ function App() {
 
 
           <Route path="/boutique" element={<Boutique/>}/>
-          <Route path="/revenu" element={<Revenu/>}/>
+          <Route path="/admin/revenu" element={<Revenu/>}/>
 
         </Routes>
       </Router>

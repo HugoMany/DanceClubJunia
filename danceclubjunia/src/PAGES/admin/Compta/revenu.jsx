@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { URL_DB } from '../../../const/const';
-
+import Header from '../../../elements/header';
+import { Button } from '@mui/material';
 const Revenu = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -34,8 +35,10 @@ const Revenu = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div >
+            <Header></Header>
+            <form onSubmit={handleSubmit} className='revenuForm'>
+                <h1>Revenu total</h1>
                 <label>
                     Date de début :
                     <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required />
@@ -44,11 +47,11 @@ const Revenu = () => {
                     Date de fin :
                     <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required />
                 </label>
-                <button type="submit">Calculer les revenus</button>
+                <Button variant="contained" type="submit">Calculer les revenus</Button>
             </form>
 
             {revenueDetails && (
-                <div>
+                <div className='resultatRevenu'>
                     <h2>Détails des revenus</h2>
                     <p>Profit total : {revenueDetails.totalProfit}</p>
                     <p>Part de l'association : {revenueDetails.assoPart}</p>
