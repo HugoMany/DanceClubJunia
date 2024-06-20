@@ -97,3 +97,7 @@ html body .Admin {
 #modifAdmin{
     overflow-y: scroll;
 }
+.paimentsTable {
+    overflow-y: scroll;
+    height: 70vh;
+}
