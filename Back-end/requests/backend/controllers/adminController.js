@@ -1,4 +1,6 @@
 const adminService = require('../services/adminService');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.getAllStudents = async (req, res) => {
     try {
@@ -215,11 +217,11 @@ exports.modifyPlacePrice = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
     try {
-        const { image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags } = req.body;
+        const { image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags, roomPrice } = req.body;
 
         console.log(`createCourse | image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags : ${image}, ${title}, ${type}, ${duration}, ${startDate}, ${startTime}, ${location}, ${maxParticipants}, ${paymentType}, ${isEvening}, ${recurrence}, ${teachers}, ${links}, ${students}, ${tags}`);
 
-        if (!image || !title || !type || !duration || !startDate || !startTime || !location || !maxParticipants || !paymentType || !teachers || !Array.isArray(teachers)) {
+        if (!image || !title || !type || !duration || !startDate || !startTime || !location || !maxParticipants || !paymentType || !teachers || !Array.isArray(teachers) || !roomPrice) {
             return res.status(400).json({ error: 'Certains champs obligatoires sont manquants ou invalides.' });
         }
         if (isNaN(duration) || isNaN(maxParticipants) || isNaN(isEvening) || (recurrence && isNaN(recurrence))) {
@@ -236,7 +238,7 @@ exports.createCourse = async (req, res) => {
             return res.status(404).json({ error: 'La date ou l\'heure de début du cours est invalide.' });
         }
 
-        const createdCourse = await adminService.createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags);
+        const createdCourse = await adminService.createCourse(image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags, roomPrice);
 
         res.status(200).json({ success: true, course: createdCourse });
 
@@ -478,8 +480,9 @@ exports.modifyTeacher = async (req, res) => {
         if (password.length <= 8) {
           return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
         }
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         fieldsToUpdate.push('password = ?');
-        values.push(password);
+        values.push(hashedPassword);
       }
   
       if (connectionMethod) {
@@ -525,3 +528,35 @@ exports.modifyTeacher = async (req, res) => {
       }
     }
   };
+
+exports.calculateRevenue = async (req, res) => {
+  try {
+      const { startDate, endDate } = req.query;
+
+      console.log(`calculateRevenue | startDate, endDate : ${startDate}, ${endDate}`);
+
+      // Vérifie que startDate et endDate sont au format YYYY-MM-DD
+      if (startDate || endDate) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+            return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
+        }
+      }
+
+      const revenueDetails = await adminService.calculateRevenue(startDate, endDate);
+
+      res.status(200).json({ success: true, revenueDetails });
+  } catch (error) {
+      console.error('calculateRevenue | error:', error);
+
+      switch (error.message) {
+          case "Erreur lors du calcul des revenus.":
+              res.status(501).json({ success: false, message: error.message });
+              break;
+          case "Aucun paiement trouvé.":
+              res.status(502).json({ success: false, message: error.message });
+              break;
+          default:
+              res.status(500).json({ success: false, message: 'Erreur SQL.' });
+      }
+  }
+};

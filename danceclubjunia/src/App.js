@@ -57,6 +57,8 @@ import CreateCardPage from './PAGES/admin/GestionAbo/createCardPage.jsx';
 
 import AllContacts from './PAGES/prof/allContacts';
 import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
+import MdpForget from './PAGES/mdpForget.jsx';
+import MdpRecovery from './PAGES/mdpRecovery.jsx';
 
 import Revenu from './PAGES/admin/Compta/revenu.jsx';
 
@@ -87,7 +89,7 @@ function App() {
           <Route path="/admin/teacher/supp/:idParam" element={< SupprimerProf/>} />
 
 
-          <Route path="/admin/student/modifEleve/:idParam" element={<ModifEleve />} />
+          <Route path="/admin/student/modif/:idParam" element={<ModifEleve />} />
           <Route path="/admin/student/supp/:idParam" element={<SupprimerEleve />} />
 
 
@@ -129,7 +131,8 @@ function App() {
           <Route path="/blog/moderne" element={<InfoModerneDance/>}/>
           <Route path="/blog/rock" element={<InfoRockDance/>}/>
           <Route path="/blog/classique" element={<InfoClassiqueDance/>}/>
-
+          <Route path="/connexion/forget" element={<MdpForget/>}/>
+          <Route path="/reset-password/token/:token" element={<MdpRecovery/>}/>
 
 
 

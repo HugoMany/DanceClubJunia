@@ -20,16 +20,14 @@ const Appel = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    const currentDate = new Date();
 
-                    const isSameDay = (date1, date2) => {
-                        return date1.getFullYear() === date2.getFullYear() &&
-                            date1.getMonth() === date2.getMonth() &&
-                            date1.getDate() === date2.getDate();
+                    const isSameDay = (date) => {
+                        const currentDate = new Date();
+                        return date > currentDate;
                     };
 
                     const todaysCourses = data.courses.filter(course =>
-                        isSameDay(new Date(course.startDate), currentDate)
+                        isSameDay(new Date(course.startDate))
                     );
 
                     const sortedCourses = todaysCourses.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));

@@ -207,6 +207,8 @@ router.post('/login', guestController.login);
  *         description: Email invalide.
  *       402:
  *         description: Mot de passe trop court (minimum 8 caractères).
+ *       403:
+ *         description: Captcha manquant.
  *       501:
  *         description: Erreur lors de la vérification de l'existence de l'email.
  *       502:
@@ -217,6 +219,8 @@ router.post('/login', guestController.login);
  *         description: Échec de la vérification reCAPTCHA.
  *       505:
  *         description: Erreur lors de la vérification reCAPTCHA.
+ *       506:
+ *         description: Erreur lors du hachage du mot de passe.
  *       500:
  *         description: Erreur SQL
  */
@@ -395,6 +399,108 @@ router.get('/getCardPrices', guestController.getCardPrices);
 
 router.get('/getContactsTeachers', guestController.getContactsTeachers);
 
+/**
+ * @swagger
+ * /api/guest/generateResetToken:
+ *   post:
+ *     summary: Générer un jeton de réinitialisation pour un utilisateur
+ *     tags: [Guest]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Email de l'utilisateur pour lequel générer le jeton de réinitialisation.
+ *                 example: john.doe@example.com
+ *     responses:
+ *       200:
+ *         description: Jeton généré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: Token generated and stored
+ *       400:
+ *         description: Email manquant.
+ *       401:
+ *         description: Email invalide.
+ *       501:
+ *         description: Erreur lors de la vérification de l'existence du token.
+ *       502:
+ *         description: Erreur lors de l'insertion du token dans la base de données.
+ *       503:
+ *         description: Erreur lors de la vérification de l'existence de l'utilisateur.
+ *       504:
+ *         description: L'utilisateur n'existe pas.
+ *       500:
+ *         description: Erreur SQL
+ */
+router.post('/generateResetToken', guestController.generateResetToken);
 
+/**
+ * @swagger
+ * /api/guest/resetPassword:
+ *   post:
+ *     summary: Réinitialiser le mot de passe d'un utilisateur
+ *     tags: [Guest]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Jeton de réinitialisation du mot de passe.
+ *                 example: "abc123"
+ *               newPassword:
+ *                 type: string
+ *                 description: Nouveau mot de passe pour l'utilisateur.
+ *                 example: "newpassword123"
+ *     responses:
+ *       200:
+ *         description: Mot de passe réinitialisé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Mot de passe réinitialisé avec succès"
+ *       400:
+ *         description: Token et newPassword sont requis.
+ *       401:
+ *         description: Le mot de passe est trop court.
+ *       501:
+ *         description: Token expiré.
+ *       502:
+ *         description: Token introuvable.
+ *       503:
+ *         description: Erreur lors de la modification du mot de passe.
+ *       504:
+ *         description: Le token n'existe pas.
+ *       505:
+ *         description: Token invalide.
+ *       500:
+ *         description: Erreur SQL
+ */
+router.post('/resetPassword', guestController.resetPassword);
 
 module.exports = router;

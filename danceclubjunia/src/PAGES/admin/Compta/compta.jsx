@@ -11,49 +11,32 @@ import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 import Header from '../../../elements/header';
 import {fetchAllCourses,fetchAllUser,fetchAllProf, fetchAllPayments} from './fetchEverything';
+
 // Define your columns
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'courseID', headerName: 'Course ID', width: 130 },
-  { field: 'title', headerName: 'Course Title', width: 130 },
-  { field: 'type', headerName: 'Course Type', width: 130 },
-  { field: 'duration', headerName: 'Duration', width: 130 },
-  { field: 'startDate', headerName: 'Start Date', width: 130 },
+  { field: 'paymentID', headerName: 'Payment ID', width: 130 },
+  { field: 'userID', headerName: 'User ID', width: 130 },
+  { field: 'price', headerName: 'Price', width: 130 },
+  { field: 'type', headerName: 'Type', width: 130 },
+  { field: 'quantity', headerName: 'Quantity', width: 130 },
+  { field: 'date', headerName: 'Date', width: 130 },
   { field: 'paymentType', headerName: 'Payment Type', width: 130 },
-  { field: 'paymentOptions', headerName: 'Payment Options', width: 130 },
+  { field: 'sourceID', headerName: 'Source ID', width: 130 },
+  { field: 'itemID', headerName: 'Item ID', width: 130 },
 ];
-
-// Define your rows
-const rows = [
-  {
-    id: 1,
-    courseID: 'COURSE_001',
-    title: 'Accounting Basics',
-    type: 'Online',
-    duration: '30 hours',
-    startDate: '2022-01-01',
-    paymentType: 'Credit Card',
-    paymentOptions: 'Installments',
-  },
-  // Add more rows as needed
-];
-
-// The rest of your code remains the same...
 
 export default function CustomExport() {
-  useEffect(() => {
-    console.log(fetchAllCourses());
-    console.log(fetchAllUser());
-    console.log(fetchAllProf());
-    console.log(fetchAllPayments());
+  const [dataPayments, setDataPayments] = useState([]);
 
-}, []); 
- 
+  useEffect(() => {
+    fetchAllPayments().then((data) => {setDataPayments(data)});
+  }, []); 
+
   return (
     <div>
       <Header></Header>
-      <div style={{ width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} slots={{ toolbar: CustomToolbar }} />
+      <div className='paimentsTable'>
+        <DataGrid rows={dataPayments} columns={columns} slots={{ toolbar: CustomToolbar }}   getRowId={(row) => row.paymentID} checkboxSelection/>
       </div>
     </div>
   );
@@ -65,7 +48,6 @@ function CustomExportButton(props: ButtonProps) {
   return (
     <GridToolbarExportContainer {...props}>
       <GridCsvExportMenuItem options={csvOptions} />
-      {/* <JsonExportMenuItem /> */}
     </GridToolbarExportContainer>
   );
 }
@@ -77,4 +59,3 @@ function CustomToolbar(props: GridToolbarContainerProps) {
     </GridToolbarContainer>
   );
 }
-

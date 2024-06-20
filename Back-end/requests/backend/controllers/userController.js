@@ -1,83 +1,5 @@
 const userService = require('../services/userService');
 
-exports.generateResetToken = async (req, res) => {
-  const { email } = req.body;
-
-  console.log(`generateResetToken | email: ${email}`);
-
-  if (!email) {
-    return res.status(400).json({ success: false, message: "Email manquant." });
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(401).json({ error: 'Email invalide.' });
-  }
-
-  try {
-    const token = await userService.generateResetToken(email);
-    res.status(200).json({ success: true, message: "Token généré et stocké." });
-  } catch (error) {
-    console.error('generateResetToken | error:', error);
-
-    switch (error.message) {
-      case "Erreur lors de la vérification de l'existence du token.":
-        res.status(501).json({ success: false, message: error.message });
-        break;
-      case "Erreur lors de l'insertion du token dans la base de données.":
-        res.status(502).json({ success: false, message: error.message });
-        break;
-      case "Erreur lors de la vérification de l'existence de l'utilisateur.":
-        res.status(503).json({ success: false, message: error.message });
-        break;
-      case "L'utilisateur n'existe pas.":
-        res.status(504).json({ success: false, message: error.message });
-        break;
-      default:
-        res.status(500).json({ success: false, message: 'Erreur SQL' });
-    }
-  }
-};
-
-exports.resetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
-
-  console.log(`resetPassword | token: ${token}, newPassword: ${newPassword}`);
-
-  if (!token || !newPassword) {
-    return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
-  }
-  if (newPassword.lengh < 8) {
-    return res.status(401).json({ success: false, message: 'Le mot de passe est trop court.' });
-  }
-
-  try {
-    await userService.resetPassword(token, newPassword);
-    res.status(200).json({ success: true, message: 'Password updated successfully' });
-  } catch (error) {
-    console.error('resetPassword | error:', error);
-
-    switch (error.message) {
-      case "Token expiré.":
-        res.status(501).json({ success: false, message: error.message });
-        break;
-      case "Token introuvable.":
-        res.status(502).json({ success: false, message: error.message });
-        break;
-      case "Erreur lors de la modification du mot de passe.":
-        res.status(503).json({ success: false, message: error.message });
-        break;
-      case "Le token n'existe pas.":
-        res.status(504).json({ success: false, message: error.message });
-        break;
-      case "Token invalide.":
-        res.status(505).json({ success: false, message: error.message });
-        break;
-      default:
-        res.status(500).json({ success: false, message: 'Erreur SQL' });
-    }
-  }
-};
-
 exports.addLink = async (req, res) => {
   const { courseID, link } = req.body;
   const userID = req.userID;
@@ -248,12 +170,11 @@ exports.getProfile = async (req, res) => {
     
     const userIDFromToken = req.userID;
     const userTypeFromToken = req.userType;
-    
-    if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken == userID) {
-      return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
-    }
 
     console.log("getProfile | userID : " + userID);
+    if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken != userID) {
+      return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
+    }
 
 
     if (!userID) {

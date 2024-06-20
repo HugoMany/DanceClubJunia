@@ -1,4 +1,6 @@
 const teacherService = require('../services/teacherService');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.getStudent = async (req, res) => {
   try {
@@ -114,8 +116,9 @@ exports.modifyStudent = async (req, res) => {
       if (password.length <= 8) {
         return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
       }
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
       fieldsToUpdate.push('password = ?');
-      values.push(password);
+      values.push(hashedPassword);
     }
 
     if (connectionMethod) {
@@ -378,7 +381,7 @@ exports.getTeacherPlaces = async (req, res) => {
 
 exports.modifyCourse = async (req, res) => {
   try {
-    const { courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags } = req.body;
+    const { courseID, image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags, roomPrice } = req.body;
 
     const userIDFromToken = req.userID;
     const userTypeFromToken = req.userType;
@@ -463,11 +466,19 @@ exports.modifyCourse = async (req, res) => {
       values.push(recurrence);
     }
 
+    if (roomPrice) {
+      if (roomPrice < 0) {
+        return res.status(408).json({ error: "Le prix de la salle doit être positif ou nul." });
+      }
+      fieldsToUpdate.push('roomPrice = ?');
+      values.push(roomPrice);
+    }
+
     if (fieldsToUpdate.length === 0) {
       return res.status(407).json({ error: 'Aucun champ à mettre à jour.' });
     }
 
-    const result = await teacherService.modifyCourse(userIDFromToken, userTypeFromToken, courseID, values, fieldsToUpdate, teachers, students, links, tags);
+    const result = await teacherService.modifyCourse(userIDFromToken, userTypeFromToken, courseID, values, fieldsToUpdate, teachers, students, links, tags, roomPrice);
 
     res.status(200).json({ success: true, course: result });
 
