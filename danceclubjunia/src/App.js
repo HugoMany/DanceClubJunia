@@ -60,6 +60,9 @@ import InfoClassiqueDance from './PAGES/blog/infoClassiqueDance';
 import MdpForget from './PAGES/mdpForget.jsx';
 import MdpRecovery from './PAGES/mdpRecovery.jsx';
 import CoursDynamiqueProf from './PAGES/prof/coursDynamiqueProf.jsx';
+
+import Revenu from './PAGES/admin/Compta/revenu.jsx';
+
 function App() {
   return (
     <div className="App">
@@ -136,6 +139,8 @@ function App() {
 
 
           <Route path="/boutique" element={<Boutique/>}/>
+          <Route path="/revenu" element={<Revenu/>}/>
+
         </Routes>
       </Router>
     </div>
