@@ -13,6 +13,7 @@ const CoursDynamique = () => {
     const [error, setError] = useState(null);
     const [studentID, setStudentID] = useState(null);
     const [reservationMessage, setReservationMessage] = useState('');
+    const [teachers, setTeachers] = useState([]);
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -76,6 +77,34 @@ const CoursDynamique = () => {
         fetchCourse();
     }, [courseId]);
 
+    useEffect(() => {
+        if (course) {
+            const teacherIDs = JSON.parse(course.teachersID || '[]');
+            fetchTeachersInfo(teacherIDs);
+        }
+    }, [course]);
+
+    const fetchTeachersInfo = async (teacherIDs) => {
+        try {
+            const response = await fetch(`${URL_DB}guest/getContactsTeachers`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userIDs: teacherIDs }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setTeachers(data.contacts);
+            } else {
+                throw new Error('Error fetching teachers');
+            }
+        } catch (error) {
+            console.error('Error fetching teachers:', error);
+        }
+    };
+
     const handleReservation = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -132,7 +161,7 @@ const CoursDynamique = () => {
             <p>Start Time: {startTime}</p>
             <p>Location: {course.location}</p>
             <p>Duration: {course.duration} minutes</p>
-            <p>Teachers: {course.teacher}</p>
+            <p>Teachers: {teachers.map(teacher => teacher.surname).join(', ')}</p>
             <Button 
                 variant="contained" 
                 color={isFull ? "secondary" : "primary"} 
