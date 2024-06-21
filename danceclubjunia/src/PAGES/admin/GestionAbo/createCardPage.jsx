@@ -61,6 +61,7 @@ const CreateCardPage = () => {
     
     return (
         <div className=''>
+            <div className='aboAdmin'>
             <Header></Header>
             <h1>Create Card Page</h1>
             <h2>Nombre de place</h2>
@@ -72,6 +73,7 @@ const CreateCardPage = () => {
             <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
             <button onClick={deleteCard}>Delete Card</button>
             {message && <p>{message}</p>}
+        </div>
         </div>
     );
 };

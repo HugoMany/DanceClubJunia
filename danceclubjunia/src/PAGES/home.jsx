@@ -65,8 +65,8 @@ function Home() {
             >
                 <SwiperSlide>
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_MODERNE})` }}>
-                        <h3>Moderne</h3>
-                        <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <h3>Moderne</h3>
+                    <p>La danse moderne, tout en étant innovante et expressive, requiert une grande maîtrise technique et beaucoup de discipline.</p>
                         <img src="" alt="" srcSet="" />
                         <Button variant="contained" href="/blog/moderne">
                             Info
@@ -76,8 +76,8 @@ function Home() {
                 <SwiperSlide>
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_ROCK})` }}>
 
-                        <h3>Rock</h3>
-                        <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <h3>Rock</h3>
+                    <p>La danse rock, dynamique et énergique, nécessite une bonne technique et une coordination parfaite.</p>
                         <img src="" alt="" srcSet="" />
                         <Button variant="contained" href="/blog/rock">
                             Info
@@ -88,7 +88,7 @@ function Home() {
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_DANCE})` }}>
 
                     <h3>Dance</h3>
-                    <p>La danse classique est une danse très technique qui demande beaucoup de rigueur.</p>
+                    <p>La dance moderne est une forme de danse expressive et créative qui requiert à la fois technique et passion.</p>
                     <img src="" alt="" srcSet="" />
                     <Button variant="contained" href="/blog/classique">
                         Info
