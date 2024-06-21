@@ -17,6 +17,7 @@ const Profil = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [idStudent, setIdStudent] = useState(null);
+    const [userPaymentHistory, setPaymentHistory] = useState(null);
 
 
     const fetchID = async () => {
@@ -57,6 +58,7 @@ const Profil = () => {
                 const data = await response.json();
                 setUserData(data);
                 setIdStudent(idUser);
+                fetchPaymentHistory(idUser);
                 setLoading(false);
             } else {
                 console.error('Erreur lors de la récupération des info du compte');
@@ -67,6 +69,28 @@ const Profil = () => {
         finally {
         }
     };
+    const fetchPaymentHistory = async (idUser) => {
+                            
+
+        const token = localStorage.getItem('token');
+        const response2 = await fetch(URL_DB + 'student/getPaymentHistory?studentID='+idUser, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (response2.ok) {
+            const data = await response2.json();
+            setPaymentHistory(data);
+            setLoading(false);
+            console.log(data);
+        } else {
+            console.error('Erreur lors de la récupération des prof');
+        }
+    }
+    
+
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -99,15 +123,27 @@ if (loading) {
       <QRCode link={URL_FRONT+"profil/student/"+idStudent}></QRCode>
 
       </div>
-  
+
 
     <div >
       <h2>Vos anciens cours</h2>
       <div className='studentPastCourses'>
+      <div className='paiementList'>
+    {userPaymentHistory?.payments.map((payment, index) => (
+        <div key={index}>
+            <div>Payment ID: {payment.paymentID}</div>
+            <div>Price: {payment.price}</div>
+            <div>Type: {payment.type}</div>
+            <div>Quantity: {payment.quantity}</div>
+            <br></br>
+        </div>
+    ))}
+    
+    
+    </div>  
+    </div>
       <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
-    </div>  
-
     </div>
   );
 };}
