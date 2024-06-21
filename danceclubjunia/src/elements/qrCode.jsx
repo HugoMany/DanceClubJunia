@@ -1,10 +1,10 @@
 import React from 'react';
-import QRCodeReact from 'qrcode.react';
+// import QRCodeReact from 'qrcode.react';
 
 const QRCode = ({ link }) => {
   return (
     <div>
-      <QRCodeReact value={link} />
+      {/* <QRCodeReact value={link} /> */}
     </div>
   );
 };
