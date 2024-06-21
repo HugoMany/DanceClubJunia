@@ -16,7 +16,8 @@ html .ProfPage {
 }
 html .coursDynamique {
     display: flex;
-    height: 50vh;
+    height: max-content;
+    padding: 20px 0px;
     margin: 25vh 10vw;
     width: 80vw;
     align-content: center;
