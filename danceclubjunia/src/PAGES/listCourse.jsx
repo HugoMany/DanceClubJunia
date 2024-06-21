@@ -62,11 +62,10 @@ const CoursesList = () => {
                                 </div>
                                 <div className='typeEtProfCoursSuivantHomePage'>
                                     <p>{course.type}</p>
+                                    <p style={{ textAlign: 'end' }}>{students.length} / {course.maxParticipants} participants</p>
                                     <p>{course.teachersID}</p>
                                 </div>
-                                <div className='studentCount'>
-                                    <p>{students.length} / {course.maxParticipants} participants</p>
-                                </div>
+                       
                             </div>
                         </a>
                     );

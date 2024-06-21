@@ -1,0 +1,12 @@
+.coursesList {
+    display: flex;
+    overflow-y: scroll;
+    height: 75vh;
+}
+.resultCase {
+    margin: 2vw;
+}
+.resultCase a{
+    text-decoration: none;
+
+}

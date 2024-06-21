@@ -40,6 +40,7 @@ const InfoModerneDance = () => {
                 <p>Téléphone : 01 23 45 67 89</p>
                 <p>Email : info@dansmoderne-asso.fr</p>
                 <p>Rejoignez-nous et laissez-vous emporter par le rythme et l'expression de la danse moderne !</p>
+                <br /><br />
             </div>
         )
     };

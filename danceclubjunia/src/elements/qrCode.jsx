@@ -1,12 +1,21 @@
-import React from 'react';
-// import QRCodeReact from 'qrcode.react';
+import React, { useState } from 'react';
+import QRCode from 'react-qr-code';
 
-const QRCode = ({ link }) => {
+const QRCodeComponent = ({ link }) => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleClick = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
   return (
     <div>
-      {/* <QRCodeReact value={link} /> */}
+      {/* <h1>Votre QR Code</h1> */}
+      <div onClick={handleClick} style={{ cursor: 'pointer' }}>
+        <QRCode size={isFullScreen ? window.innerWidth : '200px'} value={link} />
+      </div>
     </div>
   );
 };
 
-export default QRCode;
+export default QRCodeComponent;

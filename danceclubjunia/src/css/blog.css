@@ -3,9 +3,11 @@
 }
 .blogGlobal {
     height: 80vh;
+    /* margin: 20px 0px; */
 }
 .blogCoursDance {
     text-align: left;
     overflow-y: scroll;
     height: 100%;
+    padding: 0px 20px;
 }

@@ -39,6 +39,8 @@ const InfoClassiqueDance = () => {
                 <p>Téléphone : 01 23 45 67 89</p>
                 <p>Email : info@danseclassique-asso.fr</p>
                 <p>Rejoignez-nous et laissez-vous emporter par la grâce et l'élégance de la danse classique !</p>
+                <br />
+                <br />
             </div>
         )
     };

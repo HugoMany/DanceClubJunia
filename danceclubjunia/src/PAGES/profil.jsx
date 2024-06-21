@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../elements/header';
 import '../css/profil.css';
-import { URL_DB } from '../const/const';
+import { URL_DB, URL_FRONT } from '../const/const';
 import Loading from '../elements/loading';
 import PastCoursesStudent from './pastCoursesStudent';
 import isTeacher from '../elements/isTeacher';
 import QRCode from '../elements/qrCode';
 // import StudentPastCourses from './studentPastCourses';
 
-
+import requireConnexion from '../elements/requireConnexion';
 
 
 
@@ -67,15 +67,17 @@ const Profil = () => {
         finally {
         }
     };
+    const token = localStorage.getItem('token');
+
     useEffect(() => {
         fetchID();
     }, []);
 
 if (loading) {
-    // // if (isTeacher()){
-    //     alert("Vous n'êtes pas autorisé à accéder à cette page")
-    //     window.location.href = "/";
-    // // }
+    if (isTeacher()) {
+        alert("Vous n'êtes pas autorisé à accéder à cette page")
+        window.location.href = "/";
+    }
 
 
         return <Loading></Loading>;
@@ -94,11 +96,10 @@ if (loading) {
       <p>Surname: {userData?.student.surname}</p>
       <p>Email: {userData?.student.email}</p>
       <p>Credit: {userData?.student.credit}</p>
+      <QRCode link={URL_FRONT+"profil/student/"+idStudent}></QRCode>
+
       </div>
-      <div className='infoProfil'>
-        <QRCode link={"youtube.com"}></QRCode>
-    
-</div>
+  
 
     <div >
       <h2>Vos anciens cours</h2>

@@ -39,6 +39,8 @@ const InfoRockDance = () => {
                 <p>Téléphone : 01 23 45 67 89</p>
                 <p>Email : info@danserock-asso.fr</p>
                 <p>Rejoignez-nous et laissez-vous emporter par le rythme et l'énergie de la danse rock !</p>
+                <br />
+                <br />
             </div>
         )
     };
