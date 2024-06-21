@@ -97,7 +97,7 @@ function Inscription() {
             .then(data => {
                 console.log('Success:', data);
                 if (data.success) {
-                    window.location.href = '/'; // Redirection après succès
+                    window.location.href = '/connexion'; // Redirection après succès
                 } else {
                     setErrorMessage('Erreur lors de l\'inscription.');
                 }

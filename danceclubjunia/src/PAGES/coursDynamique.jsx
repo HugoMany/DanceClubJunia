@@ -143,7 +143,13 @@ const CoursDynamique = () => {
 
     if (error) return <div>Error: {error.message}</div>;
 
-    if (course === null) return <div>No course found</div>;
+    if (course === null) {
+        setTimeout(() => {
+            window.location.href = '/connexion';
+        }, 2500);
+        
+        return <div> <Header></Header><h1>Vous ne pouvez pas accéder à cette page sans être connecté.</h1></div>;
+    }
 
     const students = JSON.parse(course.studentsID || '[]');
     const maxParticipants = course.maxParticipants;

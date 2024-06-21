@@ -122,3 +122,16 @@ html .revenuForm {
     align-items: center;
     justify-content: center;
 }
+.aboAdmin {
+    background: white;
+    border: 0px;
+    width: 75vw;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    margin: 0px 7.5vw;
+    padding: 2vw
+}

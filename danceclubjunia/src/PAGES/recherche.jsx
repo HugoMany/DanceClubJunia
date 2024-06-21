@@ -65,7 +65,7 @@ function Recherche() {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Enter tags to search for courses"
+                        label="Entrer un tag pour rechercher des cours"
                         variant="outlined"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
