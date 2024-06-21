@@ -5,6 +5,7 @@ import AddlinkToACours from './addLinkToACours';
 import ReturnStudentsProfil from './returnStudentsProfil';
 import Header from '../../elements/header';
 import { Button } from '@mui/material';
+import DeleteACours from './deleteACours';
 const CoursDynamiqueProf = () => { 
     const { idCours } = useParams();
     return (
@@ -16,6 +17,7 @@ undo
             <AddTagToACours idCoursSelected={idCours} />
             <AddlinkToACours idCoursSelected={idCours} />
             <ReturnStudentsProfil idCoursSelected={idCours} />
+            <DeleteACours idCoursSelected={idCours}></DeleteACours>
         </div>
     );
 };
