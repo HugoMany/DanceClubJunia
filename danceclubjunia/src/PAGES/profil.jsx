@@ -5,6 +5,7 @@ import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
 import PastCoursesStudent from './pastCoursesStudent';
 import isTeacher from '../elements/isTeacher';
+import QRCode from '../elements/qrCode';
 // import StudentPastCourses from './studentPastCourses';
 
 
@@ -14,8 +15,7 @@ import isTeacher from '../elements/isTeacher';
 
 const Profil = () => {
     const [userData, setUserData] = useState(null);
-    const [userPaymentHistory, setPaymentHistory] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [idStudent, setIdStudent] = useState(null);
 
 
@@ -57,8 +57,7 @@ const Profil = () => {
                 const data = await response.json();
                 setUserData(data);
                 setIdStudent(idUser);
-                fetchPaymentHistory(idUser);
-
+                setLoading(false);
             } else {
                 console.error('Erreur lors de la récupération des info du compte');
             }
@@ -68,38 +67,15 @@ const Profil = () => {
         finally {
         }
     };
-    const fetchPaymentHistory = async (idUser) => {
-                            
-
-            const token = localStorage.getItem('token');
-            const response2 = await fetch(URL_DB + 'student/getPaymentHistory?studentID='+idUser, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (response2.ok) {
-                const data = await response2.json();
-                setPaymentHistory(data);
-                setLoading(false);
-                console.log(data);
-            } else {
-                console.error('Erreur lors de la récupération des prof');
-            }
-        }
-        
-   
     useEffect(() => {
         fetchID();
     }, []);
 
-
 if (loading) {
-    if (isTeacher()){
-        alert("Vous n'êtes pas autorisé à accéder à cette page")
-        window.location.href = "/";
-    }
+    // // if (isTeacher()){
+    //     alert("Vous n'êtes pas autorisé à accéder à cette page")
+    //     window.location.href = "/";
+    // // }
 
 
         return <Loading></Loading>;
@@ -120,19 +96,8 @@ if (loading) {
       <p>Credit: {userData?.student.credit}</p>
       </div>
       <div className='infoProfil'>
-    <h2>Historique d'achat</h2>
+        <QRCode link={"youtube.com"}></QRCode>
     
-    <div className='paiementList'>
-    {userPaymentHistory?.payments.map((payment, index) => (
-        <div key={index}>
-            <div>Payment ID: {payment.paymentID}</div>
-            <div>Price: {payment.price}</div>
-            <div>Type: {payment.type}</div>
-            <div>Quantity: {payment.quantity}</div>
-            <br></br>
-        </div>
-    ))}
-    '</div>
 </div>
 
     <div >

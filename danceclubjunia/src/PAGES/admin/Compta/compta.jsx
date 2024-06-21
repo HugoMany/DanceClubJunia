@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 import Header from '../../../elements/header';
 import {fetchAllCourses,fetchAllUser,fetchAllProf, fetchAllPayments} from './fetchEverything';
+import { Button } from '@mui/material';
 
 // Define your columns
 const columns = [
@@ -38,6 +39,10 @@ export default function CustomExport() {
       <div className='paimentsTable'>
         <DataGrid rows={dataPayments} columns={columns} slots={{ toolbar: CustomToolbar }}   getRowId={(row) => row.paymentID} checkboxSelection/>
       </div>
+      <Button variant="contained" color="primary" href='/admin/revenu'> <span class="material-symbols-outlined">
+receipt_long
+</span>Revenu total</Button>
+
     </div>
   );
 }

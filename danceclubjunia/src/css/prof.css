@@ -32,7 +32,7 @@ hr#traitProf {
     width: 100%;
 }
 html .coursDynamiqueProf {
-    height: 80vh;
+    height: 75vh;
     overflow-y: scroll;
-    padding:  5vh 0px;
+    padding: 3vh 0px;
 }
