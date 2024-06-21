@@ -141,6 +141,8 @@ const ModifCours = () => {
                 throw new Error('Erreur lors de la mise à jour du cours');
             }
             alert('Cours mis à jour avec succès');
+            window.location.href = '/admin/gestionCours';
+
         } catch (error) {
             console.error('Erreur lors de la mise à jour du cours', error);
         }

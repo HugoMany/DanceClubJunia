@@ -125,7 +125,9 @@ const ModifCours = () => {
             if (!response.ok) {
                 throw new Error('Erreur lors de la mise à jour du prof');
             }
+
             alert('professeur mis à jour avec succès');
+            window.location.href = '/admin/prof';
         } catch (error) {
             console.error('Erreur lors de la mise à jour du prof', error);
         }
