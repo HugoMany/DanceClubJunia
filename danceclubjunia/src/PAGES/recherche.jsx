@@ -76,7 +76,9 @@ function Recherche() {
                 }}
             />
             <Button variant="contained" color="primary" onClick={handleSearch}>
-                Search
+            <span class="material-symbols-outlined">
+search
+</span>
             </Button>
 
             {errorMessage && <p className="error-message">{errorMessage}</p>}
