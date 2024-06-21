@@ -64,6 +64,7 @@ import MdpRecovery from './PAGES/mdpRecovery.jsx';
 import CoursDynamiqueProf from './PAGES/prof/coursDynamiqueProf.jsx';
 
 import Revenu from './PAGES/admin/Compta/revenu.jsx';
+import ProfilStudentFromProf from './PAGES/prof/profilStudentFromProf.jsx';
 
 function App() {
   return (
@@ -126,6 +127,7 @@ function App() {
           <Route path="/prof/allContact" element={<AllContacts/>} />
           <Route path="/prof/cours/:idCours" element={<CoursDynamiqueProf/>} />
 
+          <Route path="/profil/student/:id" element={< ProfilStudentFromProf/>} />
 
           <Route path="/appel" element={<Appel/>}/>
           <Route path="/creerProf" element={<CreerProf/>}/>

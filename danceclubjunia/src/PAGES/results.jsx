@@ -1,23 +1,34 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-
+import Header from '../elements/header';
+import '../css/admin.css';
+import { Button, Card, CardContent, Typography } from '@mui/material';
+import '../css/resultat.css';
 function Results() {
     const location = useLocation();
     const { searchResults } = location.state || { searchResults: [] };
 
     return (
         <div className="coursesList">
+            <Header></Header>
             <h3>Search Results</h3>
             {searchResults.length > 0 ? (
-                <ul>
+                <div >
                     {searchResults.map((course, index) => (
+                        <div className='resultCase'>
                         <a key={index} href = {"cours/"+ course.courseID} >
-                            <h4>{course.title}</h4>
-                            <p>{course.description}</p>
-                            <p>Tags: {course.tags.join(', ')}</p>
+                        <Card key={course.id} sx={{ marginBottom: 2 }}>
+                            <CardContent>
+                                <Typography variant="h5">{course.title}</Typography>
+                                <Typography color="textSecondary">Start Date: {course.description}</Typography>
+                                <Typography color="textSecondary">Location: {course.location}</Typography>
+                                <Typography color="textSecondary">Tags: {course.tags.join(', ')}</Typography>
+                            </CardContent>
+                        </Card>
                         </a>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>No courses found with the given tags.</p>
             )}
