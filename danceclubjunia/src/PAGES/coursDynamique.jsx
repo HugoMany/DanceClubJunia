@@ -139,6 +139,40 @@ const CoursDynamique = () => {
         }
     };
 
+    const handleUnsubscription = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No token found');
+
+            const response = await fetch(`${URL_DB}student/unsubscribeCourse`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    studentID: studentID,
+                    courseID: parseInt(courseId, 10),
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setReservationMessage('Vous avez été désinscrit du cours.');
+                setCourse(prevCourse => ({
+                    ...prevCourse,
+                    studentsID: JSON.stringify(JSON.parse(prevCourse.studentsID || '[]').filter(id => id !== studentID))
+                }));
+            } else {
+                const errorData = await response.json();
+                setReservationMessage(errorData.message || 'Error unsubscribing from course');
+            }
+        } catch (error) {
+            console.error('Error unsubscribing from course:', error);
+            setReservationMessage(error.message);
+        }
+    };
+
     if (loading) return <Loading />;
 
     if (error) return <div>Error: {error.message}</div>;
@@ -154,6 +188,7 @@ const CoursDynamique = () => {
     const students = JSON.parse(course.studentsID || '[]');
     const maxParticipants = course.maxParticipants;
     const isFull = students.length >= maxParticipants;
+    const isEnrolled = students.includes(studentID);
 
     // Extract the start time from the startDate
     const startTime = new Date(course.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -170,11 +205,11 @@ const CoursDynamique = () => {
             <p>Teachers: {teachers.map(teacher => teacher.surname).join(', ')}</p>
             <Button 
                 variant="contained" 
-                color={isFull ? "secondary" : "primary"} 
-                onClick={handleReservation} 
-                disabled={isFull}
+                color={isEnrolled ? "secondary" : "primary"} 
+                onClick={isEnrolled ? handleUnsubscription : handleReservation} 
+                disabled={isFull && !isEnrolled}
             >
-                {isFull ? "Cours plein" : "Réserver"}
+                {isEnrolled ? "Se désinscrire" : isFull ? "Cours plein" : "Réserver"}
             </Button>
             {reservationMessage && <Alert severity="info">{reservationMessage}</Alert>}
         </div>
