@@ -91,11 +91,13 @@ const CoursesList = () => {
                                 </div>
                                 <div className='typeEtProfCoursSuivantHomePage'>
                                     <p>{course.type}</p>
-                                    <p>Teachers: {course.teachers.map(teacher => teacher.surname).join(', ')}</p>
+                                    <p style={{ textAlign: 'end', fontSize: '12px' }}>{students.length} / {course.maxParticipants} <span id='peopleIconGoogle' class="material-symbols-outlined">
+group
+</span></p>
+                                    <p>{course.teachers.map(teacher => teacher.surname).join(', ')}</p>
                                 </div>
-                                <div className='studentCount'>
-                                    <p>{students.length} / {course.maxParticipants} participants</p>
-                                </div>
+                                {/* <div className='studentCount'> */}
+                                {/* </div> */}
                             </div>
                         </a>
                     );

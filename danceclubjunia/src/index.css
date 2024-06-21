@@ -142,3 +142,11 @@ html .swiper-slide {
   flex-direction: row;
   align-items: center;
 }
+
+html body span#peopleIconGoogle{
+    text-align: end;
+    position: relative;
+    font-size: 15px;
+    bottom: -3px;
+
+}
