@@ -89,7 +89,7 @@ h1 p{
 .header {
   position: absolute;
   width: 100vw;
-  /* height: 10vh; */
+  height: 10vh;
   top: 0px;
   left: 0px;
   background-color: white;

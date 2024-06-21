@@ -8,7 +8,7 @@ function Header({ title }) {
 
 
     return (
-        <div>
+        <div style={{ flex: 0 }}>
             <a href="/" className="noTagLink"><img src={logo} className="LogoTemp" alt="Logo" />
             <div class="header">
                 <h1>Dance Club</h1>

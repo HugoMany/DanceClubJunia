@@ -37,8 +37,6 @@ function Home() {
         <div><div>
             <Header title={"Accueil"}></Header>
 
-            <br />
-
 
 
             <div>
