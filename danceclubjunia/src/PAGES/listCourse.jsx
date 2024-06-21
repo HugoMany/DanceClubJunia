@@ -3,7 +3,7 @@ import { URL_DB } from '../const/const';
 import Loading from '../elements/loading';
 
 const CoursesList = () => {
-    const [cours, setCours] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,8 +22,15 @@ const CoursesList = () => {
                     const filteredCourses = data.courses.filter(course => new Date(course.startDate) > currentDate);
                     // Trier les cours restants par date de début
                     const sortedCourses = filteredCourses.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-                    setCours(sortedCourses);
-                    console.log(sortedCourses);
+                    
+                    // Récupérer les informations des enseignants pour chaque cours
+                    const coursesWithTeachers = await Promise.all(sortedCourses.map(async (course) => {
+                        const teacherIDs = JSON.parse(course.teachersID || '[]');
+                        const teachers = await fetchTeachersInfo(teacherIDs);
+                        return { ...course, teachers };
+                    }));
+
+                    setCourses(coursesWithTeachers);
                     setLoading(false);
 
                 } else {
@@ -31,6 +38,28 @@ const CoursesList = () => {
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des cours', error);
+            }
+        };
+
+        const fetchTeachersInfo = async (teacherIDs) => {
+            try {
+                const response = await fetch(`${URL_DB}guest/getContactsTeachers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userIDs: teacherIDs }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.contacts;
+                } else {
+                    throw new Error('Error fetching teachers');
+                }
+            } catch (error) {
+                console.error('Error fetching teachers:', error);
+                return [];
             }
         };
 
@@ -43,10 +72,10 @@ const CoursesList = () => {
 
     return (
         <div>
-            {cours.length === 0 ? (
+            {courses.length === 0 ? (
                 <h3 className='coursesCase'>Il n'y a pas de cours à venir</h3>
             ) : (
-                cours.map(course => {
+                courses.map(course => {
                     const students = JSON.parse(course.studentsID || '[]');
                     return (
                         <a href={'/cours/' + course.courseID} className='courseA' key={course.courseID}>
@@ -62,10 +91,11 @@ const CoursesList = () => {
                                 </div>
                                 <div className='typeEtProfCoursSuivantHomePage'>
                                     <p>{course.type}</p>
-                                    <p style={{ textAlign: 'end' }}>{students.length} / {course.maxParticipants} participants</p>
-                                    <p>{course.teachersID}</p>
+                                    <p>Teachers: {course.teachers.map(teacher => teacher.surname).join(', ')}</p>
                                 </div>
-                       
+                                <div className='studentCount'>
+                                    <p>{students.length} / {course.maxParticipants} participants</p>
+                                </div>
                             </div>
                         </a>
                     );
