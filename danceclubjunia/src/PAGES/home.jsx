@@ -64,16 +64,20 @@ function Home() {
                 className="mySwiper"
             >
                 <SwiperSlide>
+                    <a href="/blog/moderne" className='linkButNoLinkWHite'>
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_MODERNE})` }}>
                     <h3>Moderne</h3>
                     <p>La danse moderne, tout en étant innovante et expressive, requiert une grande maîtrise technique et beaucoup de discipline.</p>
                         <img src="" alt="" srcSet="" />
-                        <Button variant="contained" href="/blog/moderne">
+                        <Button variant="contained" >
                             Info
                         </Button>
                     </div>
+                    </a>
                 </SwiperSlide>
                 <SwiperSlide>
+                    <a href="/blog/rock" className='linkButNoLinkWHite'>
+
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_ROCK})` }}>
 
                     <h3>Rock</h3>
@@ -83,8 +87,11 @@ function Home() {
                             Info
                         </Button>
 
-                    </div></SwiperSlide>
-                <SwiperSlide>                    
+                    </div></a>
+                    </SwiperSlide>
+                <SwiperSlide>   
+                <a href="/blog/rock" className='linkButNoLinkWHite'>
+                 
                     <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_DANCE})` }}>
 
                     <h3>Dance</h3>
@@ -94,7 +101,7 @@ function Home() {
                         Info
                     </Button>
 
-                </div></SwiperSlide>
+                </div></a></SwiperSlide>
                 {/* <SwiperSlide>                   
                 <div className="cours" style={{ backgroundImage: `url(${IMAGE_URL_DANCE})` }}>
 
