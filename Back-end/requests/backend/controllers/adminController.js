@@ -221,7 +221,7 @@ exports.createCourse = async (req, res) => {
 
         console.log(`createCourse | image, title, type, duration, startDate, startTime, location, maxParticipants, paymentType, isEvening, recurrence, teachers, links, students, tags : ${image}, ${title}, ${type}, ${duration}, ${startDate}, ${startTime}, ${location}, ${maxParticipants}, ${paymentType}, ${isEvening}, ${recurrence}, ${teachers}, ${links}, ${students}, ${tags}`);
 
-        if (!image || !title || !type || !duration || !startDate || !startTime || !location || !maxParticipants || !paymentType || !teachers || !Array.isArray(teachers) || !roomPrice) {
+        if (!image || !title || !type || !duration || duration <= 0 || !startDate || !startTime || !location || !maxParticipants || maxParticipants <= 0 || !paymentType || !teachers || !Array.isArray(teachers) || !roomPrice || roomPrice < 0) {
             return res.status(400).json({ error: 'Certains champs obligatoires sont manquants ou invalides.' });
         }
         if (isNaN(duration) || isNaN(maxParticipants) || isNaN(isEvening) || (recurrence && isNaN(recurrence))) {
@@ -287,8 +287,8 @@ exports.createTeacher = async (req, res) => {
         const result = await adminService.createTeacher(firstname, surname, email, password, connectionMethod, photo, description);
 
         if (result) {
-            // Supprimer le mot de passe de la réponse
             delete result.password;
+            delete result.tickets;
             res.status(200).json({ success: true, teacher: result });
         } else {
             res.status(500).json({ error: 'Erreur SQL' });
@@ -316,11 +316,8 @@ exports.getPayments = async (req, res) => {
 
         console.log(`getPayments | startDate, endDate : ${startDate}, ${endDate}`);
 
-        if (!startDate || !endDate) {
-            return res.status(400).json({ error: 'Les paramètres startDate et endDate sont requis.' });
-        }
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
-            return res.status(401).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
+        if ((startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
+            return res.status(400).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
         }
         const payments = await adminService.getPayments(startDate, endDate);
         res.status(200).json({ success: true, payments });
@@ -508,7 +505,7 @@ exports.modifyTeacher = async (req, res) => {
   
       const result = await adminService.modifyTeacher(teacherID, values, fieldsToUpdate);
   
-      res.status(200).json({ success: true, student: result[0] });
+      res.status(200).json({ success: true, teacher: result[0] });
   
     } catch (error) {
       console.error('modifyTeacher | error:', error);
@@ -536,10 +533,8 @@ exports.calculateRevenue = async (req, res) => {
       console.log(`calculateRevenue | startDate, endDate : ${startDate}, ${endDate}`);
 
       // Vérifie que startDate et endDate sont au format YYYY-MM-DD
-      if (startDate || endDate) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
-            return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
-        }
+      if ((startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
+        return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
       }
 
       const revenueDetails = await adminService.calculateRevenue(startDate, endDate);

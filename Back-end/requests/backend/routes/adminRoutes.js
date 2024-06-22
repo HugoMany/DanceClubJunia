@@ -36,22 +36,22 @@ const { authorize } = require('../middlewares/auth');
  *                     properties:
  *                       userID:
  *                         type: integer
- *                         example: 6
+ *                         example: 1
  *                       firstname:
  *                         type: string
- *                         example: "Lucas"
+ *                         example: "John"
  *                       surname:
  *                         type: string
- *                         example: "Vano"
+ *                         example: "Doe"
  *                       email:
  *                         type: string
- *                         example: "lucas.vano@example.com"
+ *                         example: "john.doe@example.com"
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
  *                       tickets:
  *                         type: integer
- *                         example: 2
+ *                         example: 5
  *                       photo:
  *                         type: string
  *                         example: "https://picsum.photos/200/200"
@@ -86,16 +86,16 @@ router.get('/getAllStudents', adminController.getAllStudents);
  *                     properties:
  *                       userID:
  *                         type: integer
- *                         example: 6
+ *                         example: 1
  *                       firstname:
  *                         type: string
- *                         example: "Lucas"
+ *                         example: "John"
  *                       surname:
  *                         type: string
- *                         example: "Vano"
+ *                         example: "Doe"
  *                       email:
  *                         type: string
- *                         example: "lucas.vano@example.com"
+ *                         example: "john.doe@example.com"
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
@@ -105,7 +105,7 @@ router.get('/getAllStudents', adminController.getAllStudents);
  *                       description:
  *                         type: string
  *                         nullable: true
- *                         example: "chevalier déchu"
+ *                         example: "Professeur de danse"
  *       500:
  *         description: Aucun professeur trouvé.
  */
@@ -137,16 +137,16 @@ router.get('/getAllTeachers', adminController.getAllTeachers);
  *                     properties:
  *                       userID:
  *                         type: integer
- *                         example: 6
+ *                         example: 1
  *                       firstname:
  *                         type: string
- *                         example: "Lucas"
+ *                         example: "John"
  *                       surname:
  *                         type: string
- *                         example: "Vano"
+ *                         example: "Doe"
  *                       email:
  *                         type: string
- *                         example: "lucas.vano@example.com"
+ *                         example: "john.doe@example.com"
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
@@ -156,7 +156,7 @@ router.get('/getAllTeachers', adminController.getAllTeachers);
  *                       description:
  *                         type: string
  *                         nullable: true
- *                         example: "chevalier déchu"
+ *                         example: "Administrateur"
  *       500:
  *         description: Aucun admin trouvé.
  */
@@ -188,16 +188,16 @@ router.get('/getAllAdmins', adminController.getAllAdmins);
  *                     properties:
  *                       userID:
  *                         type: integer
- *                         example: 6
+ *                         example: 1
  *                       firstname:
  *                         type: string
- *                         example: "Lucas"
+ *                         example: "John"
  *                       surname:
  *                         type: string
- *                         example: "Vano"
+ *                         example: "Doe"
  *                       email:
  *                         type: string
- *                         example: "lucas.vano@example.com"
+ *                         example: "john.doe@example.com"
  *                       connectionMethod:
  *                         type: string
  *                         example: "email"
@@ -206,14 +206,14 @@ router.get('/getAllAdmins', adminController.getAllAdmins);
  *                         example: "student"
  *                       tickets:
  *                         type: integer
- *                         example: 2
+ *                         example: 5
  *                       photo:
  *                         type: string
  *                         example: "https://picsum.photos/200/200"
  *                       description:
  *                         type: string
  *                         nullable: true
- *                         example: "chevalier déchu"
+ *                         example: "Description"
  *       500:
  *         description: Aucun utilisateur trouvé.
  */
@@ -540,10 +540,7 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                     startDate:
  *                       type: string
  *                       format: date
- *                       example: "2024-06-15"
- *                     startTime:
- *                       type: string
- *                       example: "18:00"
+ *                       example: "2024-06-15T18:00:00.000Z"
  *                     location:
  *                       type: string
  *                       example: "Salle de danse 1"
@@ -554,34 +551,26 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                       type: string
  *                       example: "ticket,card"
  *                     isEvening:
- *                       type: boolean
- *                       example: false
+ *                       type: integer
+ *                       example: 0
  *                     recurrence:
  *                       type: integer
  *                       example: 7
- *                     teachers:
- *                       type: array
- *                       items:
- *                         type: string
- *                       example: ["john.doe@example.com"]
+ *                     teachersID:
+ *                       type: string
+ *                       example: "[1]"
  *                     links:
- *                       type: array
- *                       items:
- *                         type: string
- *                         example: ["http://example.com"]
- *                     students:
- *                       type: array
- *                       items:
- *                         type: string
- *                         example: ["test@example.com"]
+ *                       type: string
+ *                       example: "[\"http://example.com\"]"
+ *                     studentsID:
+ *                       type: string
+ *                       example: "[2, 3]"
  *                     tags:
  *                       type: string
- *                       example: "danse,salsa,debutant"
+ *                       example: "[\"danse\", \"salsa\", \"debutant\"]"
  *                     call:
- *                       type: array
- *                       items:
- *                         type: integer
- *                         example: [7]
+ *                       type: string
+ *                       example: "[]"
  *                     roomPrice:
  *                      type: number
  *                      example: 100
@@ -669,6 +658,9 @@ router.post('/createCourse', adminController.createCourse);
  *                 teacher:
  *                   type: object
  *                   properties:
+ *                     userID:
+ *                       type: integer
+ *                       example: 1
  *                     firstname:
  *                       type: string
  *                       example: John
@@ -682,6 +674,9 @@ router.post('/createCourse', adminController.createCourse);
  *                     connectionMethod:
  *                       type: string
  *                       example: email
+ *                     userType:
+ *                       type: string
+ *                       example: "teacher"
  *                     photo:
  *                       type: string
  *                       format: binary
@@ -728,7 +723,7 @@ router.post('/createTeacher', adminController.createTeacher);
  *           format: date
  *         required: false
  *         description: Date de fin
- *         example : "2024-05-01"
+ *         example : "2024-12-01"
  *     responses:
  *       200:
  *         description: Liste des paiements
@@ -754,10 +749,10 @@ router.post('/createTeacher', adminController.createTeacher);
  *                       price:
  *                         type: number
  *                         format: float
- *                         example: 30.0
+ *                         example: 5.0
  *                       type:
  *                         type: string
- *                         example: "equipment"
+ *                         example: "course"
  *                       quantity:
  *                         type: integer
  *                         example: 3
@@ -767,13 +762,14 @@ router.post('/createTeacher', adminController.createTeacher);
  *                         example: "2024-01-10T16:30:00.000Z"
  *                       paymentType:
  *                         type: string
- *                         example: "bank transfer"
+ *                         example: "ticket"
  *                       sourceID:
  *                         type: integer
- *                         example: null
+ *                         example: 3
+ *                       itemID:
+ *                         type: integer
+ *                         example: 10
  *       400:
- *         description: Les paramètres startDate et endDate sont requis.
- *       401:
  *         description: Les dates de début et de fin doivent être au format YYYY-MM-DD.
  *       501:
  *         description: Erreur lors de la récupération des paiements.
@@ -942,7 +938,7 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                 example: "description"
  *     responses:
  *       200:
- *         description: professeur modifie avec succes
+ *         description: Professeur modifie avec succes
  *         content:
  *           application/json:
  *             schema:
@@ -951,7 +947,7 @@ router.delete('/deleteStudent', adminController.deleteStudent);
  *                 success:
  *                   type: boolean
  *                   example: true
- *                 student:
+ *                 teacher:
  *                   type: object
  *                   properties:
  *                     userID:

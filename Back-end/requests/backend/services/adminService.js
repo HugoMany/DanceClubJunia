@@ -240,7 +240,7 @@ class AdminService {
                 });
             })
             .catch(error => {
-                reject(new Error("Erreur lors de la création du cours: " + error.message));
+                reject(new Error(error.message));
             });
         });
     }
@@ -257,7 +257,9 @@ class AdminService {
                     console.log(err.message)
                     return reject(new Error("Erreur lors de la récupération des ID."));
                 }
-                if (rows.count == 0) {
+                console.log("rows",rows)
+                if (rows.length == 0) {
+                    console.log("rows0")
                     return reject(new Error("Les emails n'appartiennent à aucun utilisateur."));
                 }
 
@@ -490,6 +492,12 @@ class AdminService {
 
       async calculateRevenue(startDate = '1970-01-01', endDate = new Date().toISOString().slice(0, 10)) {
         return new Promise((resolve, reject) => {
+            if (!startDate || startDate == "") {
+              startDate = '1970-01-01';
+            }
+            if (!endDate || endDate == "") {
+              endDate = new Date().toISOString().slice(0, 10);
+            }
           const query = `
             SELECT c.courseID, c.roomPrice, p.userID, p.price, p.date, c.teachersID
             FROM Payments p
@@ -556,7 +564,7 @@ class AdminService {
             });
 
             const teachersRevenueList = Object.entries(teachersRevenue).map(([teacherID, revenue]) => ({
-              teacherID,
+              teacherID: parseInt(teacherID, 10),
               revenue
             }));
       

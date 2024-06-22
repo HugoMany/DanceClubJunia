@@ -9,7 +9,8 @@ class GuestService {
   async getAllCourses() {
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT * FROM Courses
+        SELECT courseID, image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags
+        FROM Courses
       `;
 
       db.query(sql, (err, result) => {
@@ -172,7 +173,7 @@ class GuestService {
   async getCoursesByPeriod(startDate, endDate) {
     return new Promise((resolve, reject) => {
       const sql = `
-            SELECT *
+            SELECT courseID, image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags
             FROM Courses
             WHERE startDate >= ? AND startDate <= ?
         `;
@@ -287,9 +288,13 @@ class GuestService {
         });
       };
 
-      await userExist(email);
-      await insertToken(email, token);
-      resolve(token);
+      try {
+        await userExist(email);
+        await insertToken(email, token);
+        resolve(token);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
@@ -308,7 +313,7 @@ class GuestService {
 
       const updatePassword = async (userID, newPassword) => {
         const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-        const sql = 'UPDATE Users SET password = ? WHERE userID = ?';
+        const sql = 'UPDATE Users SET password = ? WHERE email = ?';
         return new Promise((resolve, reject) => {
           db.query(sql, [hashedPassword, userID], (err, result) => {
             if (err || resolve.affectedRows == 0) return reject(new Error("Erreur lors de la modification du mot de passe."));
@@ -328,22 +333,26 @@ class GuestService {
       };
 
       (async () => {
-        const tokenInfo = await getTokenInfo(token);
-        if (!tokenInfo) {
-          return reject(new Error('Token invalide.'));
+        try {
+          const tokenInfo = await getTokenInfo(token);
+          if (!tokenInfo) {
+            return reject(new Error('Token invalide.'));
+          }
+
+          const tokenDate = new Date(tokenInfo.date);
+          const currentDate = new Date();
+          const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
+
+          if (diffMinutes > 5) {
+            return reject(new Error('Token expiré.'));
+          }
+          
+          await updatePassword(tokenInfo.email, newPassword);
+          await deleteToken(token);
+          resolve();
+        } catch (error) {
+          reject(error);
         }
-
-        const tokenDate = new Date(tokenInfo.date);
-        const currentDate = new Date();
-        const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
-
-        if (diffMinutes > 5) {
-          return reject(new Error('Token expiré.'));
-        }
-
-        await updatePassword(tokenInfo.userID, newPassword);
-        await deleteToken(token);
-        resolve();
       })();
     });
   }

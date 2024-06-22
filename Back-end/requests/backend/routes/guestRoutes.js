@@ -23,70 +23,67 @@ const guestController = require('../controllers/guestController');
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 description: Informations du cours modifie
- *                 properties:
- *                   courseId:
- *                     type: integer
- *                     example: 3
- *                   image:
- *                     type: string
- *                     example: "image.png"
- *                   title:
- *                     type: string
- *                     example: "Cours de danse"
- *                   type:
- *                     type: string
- *                     example: "Salsa"
- *                   duration:
- *                     type: integer
- *                     example: 60
- *                   startDate:
- *                     type: string
- *                     format: date
- *                     example: "2024-06-15"
- *                   startTime:
- *                     type: string
- *                     example: "18:00"
- *                   location:
- *                     type: string
- *                     example: "Salle de danse 1"
- *                   maxParticipants:
- *                     type: integer
- *                     example: 20
- *                   paymentType:
- *                     type: string
- *                     example: "ticket,card"
- *                   isEvening:
- *                     type: boolean
- *                     example: true
- *                   recurrence:
- *                     type: integer
- *                     example: 7
- *                   teachers:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["john.doe@example.com"]
- *                   links:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["http://example.com"]
- *                   students:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["test@example.com"]
- *                   tags:
- *                     type: string
- *                     example: "danse,salsa,debutant"
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Informations du cours modifie
+ *                     properties:
+ *                       courseId:
+ *                         type: integer
+ *                         example: 3
+ *                       image:
+ *                         type: string
+ *                         example: "image.png"
+ *                       title:
+ *                         type: string
+ *                         example: "Cours de danse"
+ *                       type:
+ *                         type: string
+ *                         example: "Salsa"
+ *                       duration:
+ *                         type: integer
+ *                         example: 60
+ *                       startDate:
+ *                         type: string
+ *                         format: date
+ *                         example: "2024-10-15T18:00:00.000Z"
+ *                       location:
+ *                         type: string
+ *                         example: "Salle de danse 1"
+ *                       maxParticipants:
+ *                         type: integer
+ *                         example: 20
+ *                       paymentType:
+ *                         type: string
+ *                         example: "ticket,card"
+ *                       isEvening:
+ *                         type: integer
+ *                         example: 0
+ *                       recurrence:
+ *                         type: integer
+ *                         example: 7
+ *                       teachersID:
+ *                         type: string
+ *                         example: "[1]"
+ *                       links:
+ *                         type: string
+ *                         example:  "[\"http://example.com\"]"
+ *                       studentsID:
+ *                         type: string
+ *                         example: "[2, 3]"
+ *                       tags:
+ *                         type: string
+ *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       500:
  *         description: Erreur SQL
  *       501:
- *         description: Il n\'y a pas de cours.
+ *         description: Il n'y a pas de cours.
  */
 router.get('/getAllCourses', guestController.getAllCourses);
 
@@ -129,6 +126,15 @@ router.get('/getAllCourses', guestController.getAllCourses);
  *                 userID:
  *                   type: integer
  *                   example: 1
+ *                 userType:
+ *                   type: string
+ *                   example: "student"
+ *                 token:
+ *                   type: string
+ *                   example: "ihrezbgihyozerghuizoreGHUIGZROH3"
+ *                 refreshToken:
+ *                   type: string
+ *                   example: "rieoprhguoierphgnueiorghuieeeryr"
  *       400:
  *         description: Email manquant.
  *       401:
@@ -266,22 +272,54 @@ router.post('/registerStudent', guestController.registerStudent);
  *                   type: array
  *                   items:
  *                     type: object
+ *                     description: Informations du cours modifie
  *                     properties:
  *                       courseId:
  *                         type: integer
+ *                         example: 3
+ *                       image:
+ *                         type: string
+ *                         example: "image.png"
  *                       title:
  *                         type: string
+ *                         example: "Cours de danse"
  *                       type:
  *                         type: string
+ *                         example: "Salsa"
+ *                       duration:
+ *                         type: integer
+ *                         example: 60
  *                       startDate:
  *                         type: string
  *                         format: date
+ *                         example: "2024-10-15T18:00:00.000Z"
  *                       location:
  *                         type: string
+ *                         example: "Salle de danse 1"
  *                       maxParticipants:
  *                         type: integer
+ *                         example: 20
+ *                       paymentType:
+ *                         type: string
+ *                         example: "ticket,card"
  *                       isEvening:
- *                         type: boolean
+ *                         type: integer
+ *                         example: 0
+ *                       recurrence:
+ *                         type: integer
+ *                         example: 7
+ *                       teachersID:
+ *                         type: string
+ *                         example: "[1]"
+ *                       links:
+ *                         type: string
+ *                         example:  "[\"http://example.com\"]"
+ *                       studentsID:
+ *                         type: string
+ *                         example: "[2, 3]"
+ *                       tags:
+ *                         type: string
+ *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
  *         description: Les paramètres startDate et endDate sont requis.
  *       401:
@@ -453,7 +491,7 @@ router.post('/getContactsTeachers', guestController.getContactsTeachers);
  *                   type: boolean
  *                 message:
  *                   type: string
- *                   example: Token generated and stored
+ *                   example: Token généré et stocké.
  *       400:
  *         description: Email manquant.
  *       401:
