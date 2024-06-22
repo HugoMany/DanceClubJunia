@@ -5,19 +5,21 @@ FAIT --- Adam - requête pour se désinscrire d'un cours (gérer remboursement)
 Fait --- Paul - Hachage Mot de passe
 FAIT --- Adam - Supprimer les crédits
 FAIT - Paul - Email reset mdp
-FAIT - A VERIFIER ----------------------- Paul - Token de raffraichissement
 FAIT --- Adam - getProfile : rajouter la description si teacher ou admin + renvoyer carte de l'utilisateur
 FAIT --- Adam - Requête captcha
-Adam - Faire requête renevu
-FAIT --- Changer fonctionnement de buyPlace et supprimer addCredit
-Utiliser JWT pour resetPassword
-Ajouter colonne dans courses pour faire appel + requête
 FAIT - Mettre les trucs de reset MDP dans guest
+FAIT --- Adam - Faire requête renevu
+FAIT --- Changer fonctionnement de buyPlace et supprimer addCredit
+FAIT - A VERIFIER ----------------------- Paul - Token de raffraichissement
+FAIT - Utiliser JWT pour resetPassword
+FAIT - Rajouter hachage mdp resetPassword et vérif email présente dans BDD et faire vérification des token obselère quotidienne
+Ajouter colonne dans courses pour faire appel + requête
+nombre d'apprenant max
+Revenue pour un prof et pour un cours
 changer les isNaN
+CANCEL - https
 Vérifier les réponses swagger (searchCourse etc...)
 faire des tests
-Revenue pour un prof et pour un cours
-connexion google ect...
 
 addTag removeTag : ban la virgule "," ou ajouter/supprimer plusieurs à la fois 
 getCourseByPeriod : mettre startDate et enddate en optionel

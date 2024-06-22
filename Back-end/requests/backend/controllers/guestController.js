@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
     if (!emailRegex.test(email)) {
         return res.status(402).json({ error: 'Email invalide.' });
     }
-    if (password.length <= 8) {
+    if (password.length < 8) {
         return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
     }
 
@@ -57,11 +57,11 @@ exports.login = async (req, res) => {
         });
 
         // Stocker le jeton de rafraîchissement en base de données ou en cache
-        await guestService.saveRefreshToken(user.userID, refreshToken);
+        await guestService.saveOrUpdateRefreshToken(user.userID, refreshToken);
 
         res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'strict' });
         res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' });
-        res.status(200).json({ success: true, userID: user.userID, userType: user.userType, accessToken: accessToken,refreshToken: refreshToken   });
+        res.status(200).json({ success: true, userID: user.userID, userType: user.userType, token: accessToken, refreshToken: refreshToken });
     } catch (error) {
         console.error('login | error:', error);
 
@@ -207,8 +207,10 @@ exports.getCardPrices = async (req, res) => {
 
 exports.getContactsTeachers = async (req, res) => {
     try {
-        console.log("getContactsTeachers");
-        const contacts = await guestService.getContactsTeachers();
+
+        const { userIDs } = req.body;
+        console.log("getContactsTeachers | userIDs : ", userIDs);
+        const contacts = await guestService.getContactsTeachers(userIDs || []);
         res.status(200).json({ success: true, contacts: contacts });
     } catch (error) {
         console.error('getContacts | error:', error);
@@ -228,88 +230,91 @@ exports.getContactsTeachers = async (req, res) => {
 
 exports.generateResetToken = async (req, res) => {
     const { email } = req.body;
-  
+
     console.log(`generateResetToken | email: ${email}`);
-  
+
     if (!email) {
-      return res.status(400).json({ success: false, message: "Email manquant." });
+        return res.status(400).json({ success: false, message: "Email manquant." });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(401).json({ error: 'Email invalide.' });
+        return res.status(401).json({ error: 'Email invalide.' });
     }
-  
+
     try {
-      const token = await guestService.generateResetToken(email);
-  
-      const resetUrl = `http://yourfrontend.com/reset-password/token/${token}`;
-          const message = `
+        const token = await guestService.generateResetToken(email);
+
+        const resetUrl = `http://yourfrontend.com/reset-password/token/${token}`;
+        const message = `
               <h1>Vous avez demandé une réinitialisation de mot de passe</h1>
               <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>
               <a href="${resetUrl}">Réinitialiser le mot de passe</a>
           `;
-  
-          await sendMail(email, 'Réinitialisation de mot de passe', '', message);
-  
-      res.status(200).json({ success: true, message: "Token généré et stocké." });
+
+        
+        await sendMail(email, 'Réinitialisation de mot de passe', '', message);
+        
+        res.status(200).json({ success: true, message: "Token généré et stocké." });
     } catch (error) {
-      console.error('generateResetToken | error:', error);
-  
-      switch (error.message) {
-        case "Erreur lors de la vérification de l'existence du token.":
-          res.status(501).json({ success: false, message: error.message });
-          break;
-        case "Erreur lors de l'insertion du token dans la base de données.":
-          res.status(502).json({ success: false, message: error.message });
-          break;
-        case "Erreur lors de la vérification de l'existence de l'utilisateur.":
-          res.status(503).json({ success: false, message: error.message });
-          break;
-        case "L'utilisateur n'existe pas.":
-          res.status(504).json({ success: false, message: error.message });
-          break;
-        default:
-          res.status(500).json({ success: false, message: 'Erreur SQL' });
-      }
+        console.error('generateResetToken | error:', error);
+
+        switch (error.message) {
+            case "Erreur lors de la vérification de l'existence du token.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de l'insertion du token dans la base de données.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la vérification de l'existence de l'utilisateur.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "L'utilisateur n'existe pas.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
-  };
-  
-  exports.resetPassword = async (req, res) => {
+};
+
+exports.resetPassword = async (req, res) => {
     const { token, newPassword } = req.body;
-  
+
     console.log(`resetPassword | token: ${token}, newPassword: ${newPassword}`);
-  
+
     if (!token || !newPassword) {
-      return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
+        return res.status(400).json({ success: false, message: 'Token et newPassword sont requis.' });
     }
     if (newPassword.lengh < 8) {
-      return res.status(401).json({ success: false, message: 'Le mot de passe est trop court.' });
+        return res.status(401).json({ success: false, message: 'Le mot de passe est trop court.' });
     }
-  
+
     try {
-      await guestService.resetPassword(token, newPassword);
-      res.status(200).json({ success: true, message: 'Password updated successfully' });
+        
+
+        await guestService.resetPassword(token, newPassword);
+        res.status(200).json({ success: true, message: 'Password updated successfully' });
     } catch (error) {
-      console.error('resetPassword | error:', error);
-  
-      switch (error.message) {
-        case "Token expiré.":
-          res.status(501).json({ success: false, message: error.message });
-          break;
-        case "Token introuvable.":
-          res.status(502).json({ success: false, message: error.message });
-          break;
-        case "Erreur lors de la modification du mot de passe.":
-          res.status(503).json({ success: false, message: error.message });
-          break;
-        case "Le token n'existe pas.":
-          res.status(504).json({ success: false, message: error.message });
-          break;
-        case "Token invalide.":
-          res.status(505).json({ success: false, message: error.message });
-          break;
-        default:
-          res.status(500).json({ success: false, message: 'Erreur SQL' });
-      }
+        console.error('resetPassword | error:', error);
+
+        switch (error.message) {
+            case "Token expiré.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Token introuvable.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la modification du mot de passe.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Le token n'existe pas.":
+                res.status(504).json({ success: false, message: error.message });
+                break;
+            case "Token invalide.":
+                res.status(505).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
-  };
+};

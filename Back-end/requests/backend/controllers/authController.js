@@ -34,7 +34,7 @@ exports.refreshToken = async (req, res) => {
         const userId = decoded.id;
 
         // Vérifiez si le jeton de rafraîchissement est valide et existe en base de données
-        const tokenExists = await guestService.verifyRefreshToken(userId, refreshToken);
+        const tokenExists = await guestService.saveOrUpdateRefreshToken(userId, refreshToken);
         if (!tokenExists) {
             return res.status(403).json({ message: 'Invalid refresh token' });
         }

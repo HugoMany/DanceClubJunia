@@ -3,6 +3,7 @@ const axios = require('axios');
 const bcrypt = require('bcrypt');
 const config = require('../config/config');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 
 class GuestService {
   async getAllCourses() {
@@ -74,28 +75,59 @@ class GuestService {
 
   async saveRefreshToken(userID, refreshToken) {
     return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO refreshToken (userID, token) VALUES (?, ?)";
-        db.query(sql, [userID, refreshToken], (err, result) => {
+      const sql = "INSERT INTO refreshToken (userID, token) VALUES (?, ?)";
+      db.query(sql, [userID, refreshToken], (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+  }
+
+  async saveOrUpdateRefreshToken(userId, refreshToken) {
+    return new Promise((resolve, reject) => {
+      const selectSql = "SELECT * FROM refreshToken WHERE userID = ?";
+      db.query(selectSql, [userId], (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+
+        if (result.length > 0) {
+          // Update existing token
+          const updateSql = "UPDATE refreshToken SET token = ? WHERE userID = ?";
+          db.query(updateSql, [refreshToken, userId], (err, result) => {
             if (err) {
-                return reject(err);
+              return reject(err);
             }
             resolve(result);
-        });
+          });
+        } else {
+          // Insert new token
+          const insertSql = "INSERT INTO refreshToken (userID, token) VALUES (?, ?)";
+          db.query(insertSql, [userId, refreshToken], (err, result) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(result);
+          });
+        }
+      });
     });
-    
-}
+  }
 
-async verifyRefreshToken(userId, refreshToken) {
-  return new Promise((resolve, reject) => {
+  async verifyRefreshToken(userId, refreshToken) {
+    return new Promise((resolve, reject) => {
       const sql = "SELECT * FROM refreshToken WHERE userID = ? AND token = ?";
       db.query(sql, [userId, refreshToken], (err, result) => {
-          if (err) {
-              return reject(err);
-          }
-          resolve(result.length > 0);
+        if (err) {
+          return reject(err);
+        }
+        resolve(result.length > 0);
       });
-  });
-}
+    });
+  }
 
   async registerStudent(firstname, surname, email, password, connectionMethod, photo, captcha) {
     return new Promise((resolve, reject) => {
@@ -195,46 +227,45 @@ async verifyRefreshToken(userId, refreshToken) {
     });
   }
 
-  async getContactsTeachers() {
+  async getContactsTeachers(ids = []) {
     return new Promise((resolve, reject) => {
-      const sql = `
-            SELECT email
+        let sql = `
+            SELECT email, firstname, surname
             FROM Users
             WHERE userType = 'teacher'
         `;
-
-      db.query(sql, (err, rows) => {
-        if (err) {
-          return reject(new Error("Erreur lors de la récupération des contacts."));
-        }
-        if (rows.length === 0) {
-          return reject(new Error("Il n'y a pas de professeur."));
+        
+        // Ajouter une condition si des IDs sont fournis
+        if (ids.length > 0) {
+            const placeholders = ids.map(() => '?').join(',');
+            sql += ` AND userID IN (${placeholders})`;
         }
 
-        const contacts = rows.map(row => row.email);
-        resolve(contacts);
-      });
+        db.query(sql, ids, (err, rows) => {
+            if (err) {
+              console.log(err.message);
+                return reject(new Error("Erreur lors de la récupération des contacts."));
+            }
+            if (rows.length === 0) {
+                return reject(new Error("Il n'y a pas de professeur."));
+            }
+
+            const contacts = rows.map(row => ({
+                email: row.email,
+                firstname: row.firstname,
+                surname: row.surname
+            }));
+            resolve(contacts);
+        });
     });
-  }
+}
 
   async generateResetToken(email) {
-    return new Promise((resolve, reject) => {
-      const generateToken = () => Math.floor(100000 + Math.random() * 900000); // Génère un nombre à 6 chiffres
-
-      let token = generateToken();
-
-      const checkTokenUnique = (token) => {
-        return new Promise((resolve, reject) => {
-          const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
-          db.query(sql, [token], (err, result) => {
-            if (err) return reject(new Error("Erreur lors de la vérification de l'existence du token."));
-            resolve(result.length === 0);
-          });
-        });
-      };
+    return new Promise(async(resolve, reject) => {
+      const token = jwt.sign({email: email }, config.jwtSecret, { expiresIn: '5m' });
 
       const insertToken = (email, token) => {
-        const sql = 'INSERT INTO ResetPassword (token, email, date) VALUES (?, ?, NOW())';
+        const sql = 'INSERT INTO ResetPassword (token, email) VALUES (?, ?)';
         return new Promise((resolve, reject) => {
           db.query(sql, [token, email], (err, result) => {
             if (err || result.affectedRows == 0) return reject(new Error("Erreur lors de l'insertion du token dans la base de données."));
@@ -244,28 +275,21 @@ async verifyRefreshToken(userId, refreshToken) {
       };
 
       const userExist = (email) => {
-        const sql = 'SELECT * FROM Users WHERE UserID = ?';
+        const sql = 'SELECT * FROM Users WHERE email = ?';
         return new Promise((resolve, reject) => {
-          db.query(sql, [token, email], (err, result) => {
+          db.query(sql, email, (err, result) => {
             if (err) return reject(new Error("Erreur lors de la vérification de l'existence de l'utilisateur."));
-            resolve(result.length > 0);
+            if(result.length <= 0) {
+              return reject(new Error("L'utilisateur n'existe pas."));
+            }
+            resolve();
           });
         });
       };
 
-      (async () => {
-        if (!userExist(email)) {
-          return reject(new Error("L'utilisateur n'existe pas."));
-        }
-
-        let isUnique = await checkTokenUnique(token);
-        while (!isUnique) {
-          token = generateToken();
-          isUnique = await checkTokenUnique(token);
-        }
-        await insertToken(email, token);
-        resolve(token);
-      })();
+      await userExist(email);
+      await insertToken(email, token);
+      resolve(token);
     });
   }
 
@@ -282,10 +306,11 @@ async verifyRefreshToken(userId, refreshToken) {
         });
       };
 
-      const updatePassword = (userID, newPassword) => {
+      const updatePassword = async (userID, newPassword) => {
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
         const sql = 'UPDATE Users SET password = ? WHERE userID = ?';
         return new Promise((resolve, reject) => {
-          db.query(sql, [newPassword, userID], (err, result) => {
+          db.query(sql, [hashedPassword, userID], (err, result) => {
             if (err || resolve.affectedRows == 0) return reject(new Error("Erreur lors de la modification du mot de passe."));
             resolve(result);
           });

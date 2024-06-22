@@ -368,14 +368,27 @@ router.get('/getCardPrices', guestController.getCardPrices);
 /**
  * @swagger
  * /api/guest/getContactsTeachers:
- *   get:
- *     summary: Recupere tous les emails des professeurs.
+ *   post:
+ *     summary: Récupère les noms, prénoms et emails des professeurs. Permet de filtrer par une liste d'IDs.
  *     tags: [Guest]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userIDs:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 description: Liste d'IDs des professeurs à récupérer
+ *                 example: [1, 2, 3]
  *     responses:
  *       200:
- *         description: Liste d'emails des professeurs recuperee avec succes.
+ *         description: Liste des contacts des professeurs récupérée avec succès.
  *         content:
  *           application/json:
  *             schema:
@@ -387,8 +400,17 @@ router.get('/getCardPrices', guestController.getCardPrices);
  *                 contacts:
  *                   type: array
  *                   items:
- *                     type: string
- *                     example: "john.doe@example.com"
+ *                     type: object
+ *                     properties:
+ *                       email:
+ *                         type: string
+ *                         example: "john.doe@example.com"
+ *                       firstname:
+ *                         type: string
+ *                         example: "John"
+ *                       surname:
+ *                         type: string
+ *                         example: "Doe"
  *       501:
  *         description: Erreur lors de la récupération des contacts.
  *       502:
@@ -396,8 +418,9 @@ router.get('/getCardPrices', guestController.getCardPrices);
  *       500:
  *         description: Erreur SQL
  */
+router.post('/getContactsTeachers', guestController.getContactsTeachers);
 
-router.get('/getContactsTeachers', guestController.getContactsTeachers);
+
 
 /**
  * @swagger
