@@ -172,25 +172,33 @@ class GuestService {
 
   async getCoursesByPeriod(startDate, endDate) {
     return new Promise((resolve, reject) => {
-      const sql = `
-            SELECT courseID, image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags
-            FROM Courses
-            WHERE startDate >= ? AND startDate <= ?
-        `;
-
-      db.query(sql, [startDate, endDate], (err, rows) => {
+      let sql = `
+        SELECT courseID, image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags
+        FROM Courses
+      `;
+  
+      const params = [];
+      if (startDate) {
+        sql += ' WHERE startDate >= ?';
+        params.push(startDate);
+      }
+      if (endDate) {
+        sql += startDate ? ' AND startDate <= ?' : ' WHERE startDate <= ?';
+        params.push(endDate);
+      }
+  
+      db.query(sql, params, (err, rows) => {
         if (err) {
           return reject(new Error("Erreur lors de la récupération des cours."));
         }
-        else if (rows.length == 0) {
+        if (rows.length === 0) {
           return reject(new Error("Il n'y a pas de cours pour cette période."));
         }
-        else {
-          resolve(rows);
-        }
+        resolve(rows);
       });
     });
   }
+  
 
   async getTicketPrice() {
     return new Promise((resolve, reject) => {
@@ -302,31 +310,35 @@ class GuestService {
     return new Promise((resolve, reject) => {
       const getTokenInfo = (token) => {
         return new Promise((resolve, reject) => {
-          const sql = 'SELECT * FROM ResetPassword WHERE token = ?';
-          db.query(sql, [token], (err, result) => {
-            if (err) return reject(new Error('Token expiré.'));
-            if (result.length == 0) return reject(new Error('Token introuvable.'));
-            resolve(result[0]);
+          jwt.verify(token, config.jwtSecret, (err, decoded) => {
+            if (err) {
+              return reject(new Error('Token expiré ou invalide.'));
+            }
+            resolve(decoded.email);
           });
         });
       };
 
-      const updatePassword = async (userID, newPassword) => {
+      const updatePassword = async (email, newPassword) => {
         const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
         const sql = 'UPDATE Users SET password = ? WHERE email = ?';
         return new Promise((resolve, reject) => {
-          db.query(sql, [hashedPassword, userID], (err, result) => {
-            if (err || resolve.affectedRows == 0) return reject(new Error("Erreur lors de la modification du mot de passe."));
+          db.query(sql, [hashedPassword, email], (err, result) => {
+            if (err || result.affectedRows == 0) {
+              return reject(new Error("Erreur lors de la modification du mot de passe."));
+            }
             resolve(result);
           });
         });
       };
 
-      const deleteToken = (token) => {
-        const sql = 'DELETE FROM ResetPassword WHERE token = ?';
+      const deleteToken = (email) => {
+        const sql = 'DELETE FROM ResetPassword WHERE email = ?';
         return new Promise((resolve, reject) => {
-          db.query(sql, [token], (err, result) => {
-            if (err || result.affectedRows == 0) return reject(new Error("Le token n'existe pas."));
+          db.query(sql, [email], (err, result) => {
+            if (err || result.affectedRows == 0) {
+              return reject(new Error("Le token n'existe pas."));
+            }
             resolve(result);
           });
         });
@@ -334,21 +346,9 @@ class GuestService {
 
       (async () => {
         try {
-          const tokenInfo = await getTokenInfo(token);
-          if (!tokenInfo) {
-            return reject(new Error('Token invalide.'));
-          }
-
-          const tokenDate = new Date(tokenInfo.date);
-          const currentDate = new Date();
-          const diffMinutes = Math.floor((currentDate - tokenDate) / (1000 * 60));
-
-          if (diffMinutes > 5) {
-            return reject(new Error('Token expiré.'));
-          }
-          
-          await updatePassword(tokenInfo.email, newPassword);
-          await deleteToken(token);
+          const email = await getTokenInfo(token);
+          await updatePassword(email, newPassword);
+          await deleteToken(email);
           resolve();
         } catch (error) {
           reject(error);

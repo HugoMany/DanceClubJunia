@@ -10,23 +10,30 @@ FAIT --- Adam - Requête captcha
 FAIT - Mettre les trucs de reset MDP dans guest
 FAIT --- Adam - Faire requête renevu
 FAIT --- Changer fonctionnement de buyPlace et supprimer addCredit
-FAIT - A VERIFIER ----------------------- Paul - Token de raffraichissement
+SEMI-CANCEL (code présent dans back mais sera pas intégrer) Paul - Token de raffraichissement
 FAIT - Utiliser JWT pour resetPassword
-FAIT - Rajouter hachage mdp resetPassword et vérif email présente dans BDD et faire vérification des token obselère quotidienne
-Ajouter colonne dans courses pour faire appel + requête
-nombre d'apprenant max
-Revenue pour un prof et pour un cours
-changer les isNaN
+FAIT - Rajouter hachage mdp resetPassword et vérif email présente dans BDD et faire vérification des token obselère toutes les heures
+Fait -- Ajouter colonne dans courses pour faire appel + requête
+FAIT -- nombre d'apprenant max
+CANCEL -- Revenue pour un prof et pour un cours
+FAIT -- changer les isNaN
 CANCEL - https
 Vérifier les réponses swagger (searchCourse etc...)
 faire des tests
+FAIT - createTeacher : suppression des tickets dans le résultat
+FAIT - getPayments : startDate et endDate optionnels
+FAIT - modifyTeacher : changement du résultat student -> teacher
+FAIT - calculateRevenue : possibilité de renseigner aucune, une ou deux dates (startDate et endDate)
+FAIT - calculateRevenue : les teacherID sont des int plutôt que des string
+FAIT - getAllCourses et getCourseByPeriod : supression de call et roomPrice du résultat
+
 
 addTag removeTag : ban la virgule "," ou ajouter/supprimer plusieurs à la fois 
-getCourseByPeriod : mettre startDate et enddate en optionel
-createTeacher : pas de retour en cas d'email déjà utilisé
-newStudent :  pas de retour en cas d'email déjà utilisé
-getTeacherPlaces : mettre les périodes en optionel
-searchCoursesTeacher : période optionel
+FAIT -- getCourseByPeriod : mettre startDate et enddate en optionel
+FAIT -- createTeacher : pas de retour en cas d'email déjà utilisé
+FAIT -- newStudent :  pas de retour en cas d'email déjà utilisé
+FAIT -- getTeacherPlaces : mettre les périodes en optionel
+FAIT -- searchCoursesTeacher : mettre les périodes en optionel
 
 Eux :
 Hello asso

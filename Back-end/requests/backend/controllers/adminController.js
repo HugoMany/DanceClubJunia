@@ -59,7 +59,7 @@ exports.deleteCourse = async (req, res) => {
         if (!courseID) {
             return res.status(400).json({ error: 'ID du cours manquant.' });
         }
-        if (isNaN(courseID)) {
+        if (!Number.isInteger(parseInt(courseID)) ) {
             return res.status(401).json({ error: 'L\'ID du cours n\'est pas un entier.' });
         }
 
@@ -100,11 +100,11 @@ exports.createCard = async (req, res) => {
         if (!price) {
             return res.status(401).json({ error: 'Prix manquant.' });
         }
-        if (isNaN(place) || place <= 0) {
+        if (!Number.isInteger(parseInt(place)) || place <= 0) {
             return res.status(402).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
-        if (isNaN(price) || price <= 0) {
+        if (!Number.isInteger(parseInt(price)) || price <= 0) {
             return res.status(403).json({ error: 'Le champ price doit être un entier positif.' });
         }
 
@@ -139,7 +139,7 @@ exports.deleteCard = async (req, res) => {
         if (!place) {
             return res.status(400).json({ error: 'Nombre de places manquant.' });
         }
-        if (isNaN(place) || place <= 0) {
+        if (!Number.isInteger(parseInt(place)) || place <= 0) {
             return res.status(401).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
@@ -180,7 +180,7 @@ exports.modifyPlacePrice = async (req, res) => {
         if (type.startsWith('card') && !/card\d+/.test(type)) {
             return res.status(402).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
         }
-        if (isNaN(price) || price <= 0) {
+        if (!Number.isInteger(parseInt(price)) || price <= 0) {
             return res.status(403).json({ error: 'Le prix doit être un entier positif.' });
         }
 
@@ -224,7 +224,7 @@ exports.createCourse = async (req, res) => {
         if (!image || !title || !type || !duration || duration <= 0 || !startDate || !startTime || !location || !maxParticipants || maxParticipants <= 0 || !paymentType || !teachers || !Array.isArray(teachers) || !roomPrice || roomPrice < 0) {
             return res.status(400).json({ error: 'Certains champs obligatoires sont manquants ou invalides.' });
         }
-        if (isNaN(duration) || isNaN(maxParticipants) || isNaN(isEvening) || (recurrence && isNaN(recurrence))) {
+        if (!Number.isInteger(parseInt(duration)) || !Number.isInteger(parseInt(maxParticipants)) || !Number.isInteger(parseInt(isEvening)) || (recurrence && !Number.isInteger(parseInt(recurrence)))) {
             return res.status(401).json({ error: 'Certains champs numériques sont invalides.' });
         }
         if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -234,7 +234,7 @@ exports.createCourse = async (req, res) => {
             return res.status(403).json({ error: "L'heure de début du cours doit être au format HH:MM." });
         }
         const startDateTime = new Date(`${startDate} ${startTime}`);
-        if (isNaN(startDateTime.getTime())) {
+        if (!Number.isInteger(parseInt(startDateTime.getTime()))) {
             return res.status(404).json({ error: 'La date ou l\'heure de début du cours est invalide.' });
         }
 
@@ -280,7 +280,7 @@ exports.createTeacher = async (req, res) => {
         if (!emailRegex.test(email)) {
             return res.status(401).json({ error: 'Email invalide.' });
         }
-        if (password.length <= 8) {
+        if (password.length < 8) {
             return res.status(402).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
         }
 
@@ -343,7 +343,7 @@ exports.deleteTeacher = async (req, res) => {
         if (!teacherID) {
             return res.status(400).json({ error: 'ID du professeur manquant.' });
         }
-        if (isNaN(teacherID)) {
+        if (!Number.isInteger(parseInt(teacherID))) {
             return res.status(401).json({ error: 'L\'ID du professeur n\'est pas un entier.' });
         }
 
@@ -395,7 +395,7 @@ exports.deleteStudent = async (req, res) => {
         if (!studentID) {
             return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
         }
-        if (isNaN(studentID)) {
+        if (!Number.isInteger(parseInt(studentID))) {
             return res.status(401).json({ error: 'L\'de l\'étudiant n\'est pas un entier.' });
         }
 
@@ -447,7 +447,7 @@ exports.modifyTeacher = async (req, res) => {
       if (!teacherID) {
         return res.status(400).json({ error: 'teacherID manquant.' });
       }
-      if (isNaN(teacherID) || teacherID <= 0) {
+      if (!Number.isInteger(parseInt(teacherID)) || teacherID <= 0) {
         return res.status(401).json({ error: 'Le champ teacherID doit être un entier positif.' });
       }
   

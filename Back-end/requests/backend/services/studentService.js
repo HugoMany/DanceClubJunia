@@ -98,30 +98,46 @@ class StudentService {
           if (alreadyInCourse) {
             reject(new Error("L'élève est déjà inscrit à ce cours."));
           } else {
-            // Récupère les informations du cours et de l'étudiant
-            Promise.all([this.getCourseDetails(courseID), this.getStudentDetails(studentID)])
-              .then(([course, student]) => {
-                const paymentType = course.paymentType.split(',');
-                const currentDate = new Date();
-  
-                if (paymentType.includes('card')) {
-                  // Vérifie si l'étudiant a une carte et si le cours accepte les cartes
-                  this.getValidCard(studentID)
-                    .then(card => {
-                      if (card) {
-                        this.useCard(card)
-                          .then(cardMaxNumber => {
-                            this.getPrice('card', cardMaxNumber)
-                              .then(price => {
-                                this.addStudentToCourse(studentID, courseID)
-                                  .then(() => this.logPayment(studentID, "course", currentDate, `card${cardMaxNumber}`, studentID, courseID, price))
-                                  .then(() => resolve({ message: "L'élève a été ajouté au cours via une carte." }))
-                                  .catch(err => reject(err));
-                              })
-                              .catch(err => reject(err));
+            // Vérifie s'il y a de la place dans le cours
+            this.checkCourseCapacity(courseID)
+              .then(course => {
+                if (course.currentParticipants >= course.maxParticipants) {
+                  reject(new Error("Le cours est complet."));
+                } else {
+                  // Récupère les informations du cours et de l'étudiant
+                  Promise.all([this.getCourseDetails(courseID), this.getStudentDetails(studentID)])
+                    .then(([course, student]) => {
+                      const paymentType = course.paymentType.split(',');
+                      const currentDate = new Date();
+
+                      if (paymentType.includes('card')) {
+                        this.getValidCard(studentID)
+                          .then(card => {
+                            if (card) {
+                              this.useCard(card)
+                                .then(cardMaxNumber => {
+                                  this.getPrice('card', cardMaxNumber)
+                                    .then(price => {
+                                      this.addStudentToCourse(studentID, courseID)
+                                        .then(() => this.logPayment(studentID, "course", currentDate, `card${cardMaxNumber}`, studentID, courseID, price))
+                                        .then(() => resolve({ message: "L'élève a été ajouté au cours via une carte." }))
+                                        .catch(err => reject(err));
+                                    })
+                                    .catch(err => reject(err));
+                                })
+                                .catch(err => reject(err));
+                            } else {
+                              this.getPrice('ticket', 0)
+                                .then(price => {
+                                  this.reserveWithTicket(student, courseID, currentDate, price)
+                                    .then(() => resolve({ message: "L'élève a été ajouté au cours via un ticket." }))
+                                    .catch(err => reject(err));
+                                })
+                                .catch(err => reject(err));
+                            }
                           })
                           .catch(err => reject(err));
-                      } else {
+                      } else if (paymentType.includes('ticket') && student.tickets > 0) {
                         this.getPrice('ticket', 0)
                           .then(price => {
                             this.reserveWithTicket(student, courseID, currentDate, price)
@@ -129,25 +145,29 @@ class StudentService {
                               .catch(err => reject(err));
                           })
                           .catch(err => reject(err));
+                      } else {
+                        return reject(new Error("Aucun mode de paiement valide trouvé ou fonds insuffisants."));
                       }
                     })
                     .catch(err => reject(err));
-                } else if (paymentType.includes('ticket') && student.tickets > 0) {
-                  this.getPrice('ticket', 0)
-                    .then(price => {
-                      this.reserveWithTicket(student, courseID, currentDate, price)
-                        .then(() => resolve({ message: "L'élève a été ajouté au cours via un ticket." }))
-                        .catch(err => reject(err));
-                    })
-                    .catch(err => reject(err));
-                } else {
-                  return reject(new Error("Aucun mode de paiement valide trouvé ou fonds insuffisants."));
                 }
               })
               .catch(err => reject(err));
           }
         })
         .catch(err => reject(err));
+    });
+  }
+
+  async checkCourseCapacity(courseID) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT maxParticipants, JSON_LENGTH(studentsID) AS currentParticipants FROM Courses WHERE courseID = ?';
+      db.query(sql, [courseID], (err, rows) => {
+        if (err || rows.length === 0) {
+          return reject(new Error("Erreur lors de la récupération de la capacité du cours."));
+        }
+        resolve(rows[0]);
+      });
     });
   }
 

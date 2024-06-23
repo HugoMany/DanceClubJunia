@@ -217,14 +217,14 @@ class AdminService {
             ])
             .then(([teacherIDs, studentIDs]) => {
                 const sql = `
-                    INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags, roomPrice, \`call\`)
+                    INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags, roomPrice, attendance)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
     
                 // Pour `call`, une liste vide est insérée en tant que chaîne JSON
                 const callList = JSON.stringify([]);
     
-                db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, callList], (err, result) => {
+                db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, JSON.stringify([])], (err, result) => {
                     if (err) {
                         return reject(new Error("Erreur lors de la création du cours."));
                     }
@@ -273,31 +273,31 @@ class AdminService {
     
 
     async createTeacher(firstname, surname, email, password, connectionMethod, photo, description) {
-        return new Promise(async(resolve, reject) => {
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return new Promise((resolve, reject) => {
+          const checkEmailSql = 'SELECT userID FROM Users WHERE email = ?';
+          db.query(checkEmailSql, [email], (err, results) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification de l'email."));
+            }
+            if (results.length > 0) {
+              return reject(new Error("L'email est déjà utilisé."));
+            }
+      
+            const hashedPassword = bcrypt.hashSync(password, saltRounds);
             const sql = `
-                INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
-                VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
+              INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
+              VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
             `;
-
+      
             db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo, description], (err, result) => {
-                if (err || result.affectedRows == 0) {
-                    return reject(new Error("Erreur lors de la création du professeur."));
-                }
-
-                // Vérification de l'insertion réussie
-                if (result.affectedRows > 0) {
-                    const selectSql = 'SELECT * FROM Users WHERE userID = ?';
-                    db.query(selectSql, [result.insertId], (err, rows) => {
-                        if (err) {
-                            return reject(new Error("Erreur lors de la récupération du professeur."));
-                        }
-                        resolve(rows[0]);
-                    });
-                }
+              if (err) {
+                return reject(new Error("Erreur lors de la création du compte enseignant."));
+              }
+              resolve(result.insertId);
             });
+          });
         });
-    }
+      }
 
     async getPayments(startDate = null, endDate = null) {
         return new Promise((resolve, reject) => {

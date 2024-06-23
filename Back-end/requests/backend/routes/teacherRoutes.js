@@ -1083,4 +1083,33 @@ router.post('/addTag', teacherController.addTag);
 router.patch('/removeTag', teacherController.removeTag);
 
 
+/**
+ * @swagger
+ * /api/teacher/markAttendance:
+ *   post:
+ *     summary: Marquer la présence d'un étudiant à un cours
+ *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               studentID:
+ *                 type: integer
+ *                 description: ID de l'étudiant
+ *               courseID:
+ *                 type: integer
+ *                 description: ID du cours
+ *     responses:
+ *       200:
+ *         description: Présence marquée avec succès
+ *       400:
+ *         description: Erreur lors du marquage de la présence
+ */
+router.post('/markAttendance', teacherController.markAttendance);
+
 module.exports = router;

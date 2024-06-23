@@ -138,10 +138,7 @@ exports.registerStudent = async (req, res) => {
 exports.getCoursesByPeriod = async (req, res) => {
     const { startDate, endDate } = req.query;
 
-    if (!startDate || !endDate) {
-        return res.status(400).json({ error: 'Les paramètres startDate et endDate sont requis.' });
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+    if ((startDate &&!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
         return res.status(401).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
     }
 
@@ -244,7 +241,7 @@ exports.generateResetToken = async (req, res) => {
     try {
         const token = await guestService.generateResetToken(email);
 
-        const resetUrl = `http://yourfrontend.com/reset-password/token/${token}`;
+        const resetUrl = `http://localhost:3001/reset-password/token/${token}`;
         const message = `
               <h1>Vous avez demandé une réinitialisation de mot de passe</h1>
               <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>
