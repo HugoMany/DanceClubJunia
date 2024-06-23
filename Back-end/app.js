@@ -41,15 +41,6 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Charger les certificats SSL/TLS auto-signés
-const privateKey = fs.readFileSync('./certificate/selfsigned.key', 'utf8');
-const certificate = fs.readFileSync('./certificate/selfsigned.crt', 'utf8');
-
-const credentials = {
-    key: privateKey,
-    cert: certificate
-};
-
 // app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 /*app.get('*', (req, res) => {

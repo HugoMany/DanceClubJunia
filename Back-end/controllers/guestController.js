@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const guestService = require('../services/guestService');
-const { sendMail } = require('../utility/mailer');
+const { sendMail } = require('../utils/mailer');
 
 exports.getAllCourses = async (req, res) => {
     try {
