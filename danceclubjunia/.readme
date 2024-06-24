@@ -1,8 +1,19 @@
-cd /danceclubjunia
-npm start 
+---------------------------------
+LANCEMENT DE L'APPLICATION FRONT
+---------------------------------
 
-cd /danceclubjunia/src/capcha/server/
+- Installé nodesjs et npm sur votre machine
+- Cloner le projet sur votre machine
+- Ouvrir un terminal
+
+cd root/danceclubjunia
 
 npm install 
 
-node app.js
+---------------------------------
+ATTENDEZ LA FIN DE L'INSTALLATION
+---------------------------------
+
+npm start 
+
+
