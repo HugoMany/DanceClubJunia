@@ -39,9 +39,7 @@ const InfoModerneDance = () => {
                 <p>Pour en savoir plus sur nos cours, événements et inscriptions, n'hésitez pas à nous contacter :</p>
                 <p>Adresse : 123 Rue de la Danse, 75000 Paris</p>
                 <p>Téléphone : 01 23 45 67 89</p>
-                <p>Email : info@dansmoderne-asso.fr</p>
-                <p>Rejoignez-nous et laissez-vous emporter par le rythme et l'expression de la danse moderne !</p>
-                <br /><br />
+                
             </div>
         )
     };

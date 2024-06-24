@@ -3,7 +3,7 @@ import Header from '../elements/header';
 import { URL_DB } from '../const/const';
 import ReCAPTCHA from "react-google-recaptcha";
 
-function Inscription() {
+function InscriptionPage() {
     const [firstname, setFirstname] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -114,14 +114,15 @@ function Inscription() {
     };
 
     return (
-        <div className='Form'>
+        <div className='FormSolo'>
+            <Header />
             <h2>Inscription</h2>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="prenom"></label>
                     <input
-                        placeholder='Prénom'
+                        placeholder='prénom'
                         type="text"
                         id="nom"
                         value={firstname}
@@ -131,7 +132,7 @@ function Inscription() {
                 <div>
                     <label htmlFor="nom"></label>
                     <input
-                        placeholder='Nom'
+                        placeholder='nom'
                         type="text"
                         id="prenom"
                         value={surname}
@@ -172,11 +173,13 @@ function Inscription() {
                 <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
                 <button className='connexionLogin' type="submit">S'inscrire</button>
             </form>
-            <button className='inscriptionLogin'>
+            <a href="/connexion">
+            <button className='inscriptionLogin' >
                 <span className="material-symbols-outlined">swipe_left</span> Connexion
             </button>
+            </a>
         </div>
     );
 }
 
-export default Inscription;
+export default InscriptionPage;

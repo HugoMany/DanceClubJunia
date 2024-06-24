@@ -124,26 +124,26 @@ const AddTagToACours = (idCoursSelected) => {
     if (loading) {
         return <Loading></Loading>
     } else {
-        const tags = cours.tags.split(',');
-    return (
-        <div>
-            <h1>Add Tag to a Course</h1>
-            <p>Id cours selectionné: {cours.courseID}</p>
-            <div className='addAndDeleteTag'>
-                TAGS: <br />
-                {tags.map((tag, index) => (
-                    <React.Fragment key={index}>
-                        {tag}
-                        <Button variant="contained" value={tag} onClick={() => handleRemoveTag(tag)}>Supprimer ce tag</Button> <br />
-                    </React.Fragment>
-                ))}
-
-                <input type="text" placeholder="New Tag" value={newTag} onChange={handleTagChange} />
-                <Button variant="contained" onClick={handleAddTag}>Add Tag</Button>
+        const tags = JSON.parse(cours.tags); // Parse the JSON string to an array
+        return (
+            <div>
+                <h1>Ajouté un tag à un cours</h1>
+                {/* <p>Id cours selectionné: {cours.courseID}</p> */}
+                <div className='addAndDeleteTag'>
+                    <h3>Liens: </h3>
+                    {tags.map((tag, index) => (
+                        <React.Fragment key={index}>
+                            {tag}
+                            <Button variant="contained" value={tag} onClick={() => handleRemoveTag(tag)}>Supprimer ce tag</Button> <br />
+                        </React.Fragment>
+                    ))}
+    
+                    <input type="text" placeholder="Nouveau Tag" value={newTag} onChange={handleTagChange} />
+                    <Button variant="contained" onClick={handleAddTag}>Ajouter ce Tag</Button>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 };
 
 export default AddTagToACours;

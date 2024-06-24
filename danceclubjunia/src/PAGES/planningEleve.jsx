@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loading from '../elements/loading';
 
 const PlanningEleve = ({ studentId }) => {
     const [courses, setCourses] = useState([]);
@@ -37,23 +38,23 @@ const PlanningEleve = ({ studentId }) => {
     }, [studentId]);
 
     // Filtrer les cours à venir
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading courses: {error.message}</div>;
+    if (loading) return <Loading></Loading>;
+    if (error) return <div>Erreur lors du chargement des cours: {error.message}</div>;
 
     return (
         <div>
-            <h2>Upcoming Courses</h2>
+            <h2>Prochain cours</h2>
             <ul>
                 {courses.map(course => (
                     <li key={course.courseId}>
                         <h3>{course.title}</h3>
                         <img src={course.image} alt={course.title} />
                         <p>Type: {course.type}</p>
-                        <p>Start Date: {new Date(course.startDate).toDateString()}</p>
-                        <p>Start Time: {course.startTime}</p>
-                        <p>Location: {course.location}</p>
-                        <p>Duration: {course.duration}</p>
-                        <p>Teachers: {course.teachers.join(', ')}</p>
+                        <p>Date: {new Date(course.startDate).toDateString()}</p>
+                        <p>Heure: {course.startTime}</p>
+                        <p>Lieu: {course.location}</p>
+                        <p>Durée: {course.duration}</p>
+                        <p>Professeur: {course.teachers.join(', ')}</p>
                     </li>
                 ))}
             </ul>

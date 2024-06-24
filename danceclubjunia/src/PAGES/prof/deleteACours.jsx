@@ -34,7 +34,7 @@ const DeleteACours = ({ idCoursSelected }) => {
     return (
         <div>
             <Button variant="contained" fullWidth="true" color="error" onClick={fetchCours} disabled={loading}>
-                {loading ? 'Deleting...' : 'Delete Course'}
+                {loading ? 'Supprimer...' : 'Supprimer Course'}
             </Button>
         </div>
     );

@@ -124,27 +124,26 @@ const AddlinkToACours = (idCoursSelected) => {
     if (loading) {
         return <Loading></Loading>
     } else {
-        const links = cours.links.split(',');
-    return (
-        <div>
-            <h1>Add link to a Course</h1>
-            <p>Id cours selectionné: {cours.courseID}</p>
-            <div className='addAndDeleteTag'>
-                linkS: <br />
-                {links.map((link, index) => (
-                    <React.Fragment key={index}>
-                        {link}
-                        <Button variant="contained" value={link} onClick={() => handleRemovelink(link)}>Supprimer ce link</Button> <br />
-                    </React.Fragment>
-                ))}
-
-                <input type="text" placeholder="New link" value={newlink} onChange={handlelinkChange} />
-                <Button variant="contained" onClick={handleAddlink}>Add link</Button>
+        const links = JSON.parse(cours.links); // Parse the JSON string to an array
+        return (
+            <div>
+                <h1>Ajouter un lien à un cours</h1>
+                {/* <p>Id cours selectionné: {cours.courseID}</p> */}
+                <div className='addAndDeleteTag'>
+                    <h3>Liens</h3>
+                    {links.map((link, index) => (
+                        <React.Fragment key={index}>
+                            {link}
+                            <Button variant="contained" value={link} onClick={() => handleRemovelink(link)}>Supprimer ce lien</Button> <br />
+                        </React.Fragment>
+                    ))}
+    
+                    <input type="text" placeholder="Nouveau lien" value={newlink} onChange={handlelinkChange} />
+                    <Button variant="contained" onClick={handleAddlink}>Ajouter ce lien</Button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
-};
-
 export default AddlinkToACours;
 

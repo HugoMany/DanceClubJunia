@@ -1,7 +1,7 @@
 import logo from './img/logo.jpg';
 import './App.css';
 import Rgpd from './PAGES/rgpd'
-import Inscription from './PAGES/inscription';
+import InscriptionPage from './PAGES/inscriptionPage.jsx';
 import Connexion from './PAGES/connexion';
 import Profil from './PAGES/profil';
 import React from 'react';
@@ -142,7 +142,7 @@ function App() {
           <Route path="/connexion/forget" element={<MdpForget/>}/>
           <Route path="/reset-password/token/:token" element={<MdpRecovery/>}/>
 
-
+          <Route path="/inscription" element={<InscriptionPage/>}/>
 
           <Route path="/boutique" element={<Boutique/>}/>
           <Route path="/admin/revenu" element={<Revenu/>}/>

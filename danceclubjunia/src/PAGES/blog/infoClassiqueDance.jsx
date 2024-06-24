@@ -6,6 +6,7 @@ const InfoClassiqueDance = () => {
         content: (
             <div>
                 <h2>Qu'est-ce que la Danse Classique ?</h2>
+                <hr></hr>
                 <p>La danse classique, également connue sous le nom de ballet, est une forme de danse qui trouve ses origines à la cour de la Renaissance en Italie et en France. Elle se caractérise par des mouvements gracieux, une technique rigoureuse et une expression artistique élégante. La danse classique inclut des techniques comme les pointes, les pirouettes et les sauts, et elle est souvent accompagnée de musique classique.</p>
 
                 <h3>Nos Cours et Ateliers</h3>
@@ -37,10 +38,7 @@ const InfoClassiqueDance = () => {
                 <p>Pour en savoir plus sur nos cours, événements et inscriptions, n'hésitez pas à nous contacter :</p>
                 <p>Adresse : 123 Rue de la Danse, 75000 Paris</p>
                 <p>Téléphone : 01 23 45 67 89</p>
-                <p>Email : info@danseclassique-asso.fr</p>
-                <p>Rejoignez-nous et laissez-vous emporter par la grâce et l'élégance de la danse classique !</p>
-                <br />
-                <br />
+               
             </div>
         )
     };

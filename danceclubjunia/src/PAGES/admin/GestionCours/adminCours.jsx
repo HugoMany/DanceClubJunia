@@ -125,7 +125,7 @@ if (loading) {
             },
             {
               field: 'buttonDelete',
-              headerName: 'Delete',
+              headerName: 'Supprimer',
               sortable: false,
               width: 250,
               disableClickEventBubbling: true,

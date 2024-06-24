@@ -23,23 +23,25 @@ const CreerCours = () => {
         e.preventDefault();
         console.log('handleSubmit called');
 
+
         const formData = {
             image,
             title,
             type,
-            duration: parseInt(duration),
+            duration: duration !== '' ? parseInt(duration) : 0, // replace '' with default value
             startDate,
             startTime,
             location,
-            roomPrice,
-            maxParticipants: parseInt(maxParticipants),
+            roomPrice: roomPrice !== '' ? parseInt(roomPrice) : 0, // replace '' with default value
+            maxParticipants: maxParticipants !== '' ? parseInt(maxParticipants) : 0, // replace '' with default value
             paymentType,
-            isEvening: isEvening === 'true' || isEvening === true,
-            recurrence: parseInt(recurrence),
+            isEvening: 0,
+            recurrence: recurrence !== '' ? parseInt(recurrence) : 0, // replace '' with default value
             teachers: teachers.split(',').map(teacher => teacher.trim()),
             links: links ? links.split(',').map(link => link.trim()) : [],
             students: students ? students.split(',').map(student => student.trim()) : [],
-            tags
+            tags,
+            // attendance: []
         };
 
         console.log('FormData:', formData);
@@ -65,6 +67,10 @@ const CreerCours = () => {
 
                 const data = await response.json();
                 console.log('Response:', data);
+                if (response.ok) {
+                    alert('Cours créé avec succès')
+                    window.location.href = '/admin/cours';
+                }
 
             } catch (error) {
                 console.error('Erreur lors de la création du cours', error);
@@ -90,7 +96,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Title:
+                    Titre:
                 </label>
                 <input
                     type="text"
@@ -110,7 +116,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Duration:
+                    Durée:
                 </label>
                 <input
                     type="number"
@@ -120,7 +126,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Start Date:
+                    Date du cours:
                 </label>
                 <input
                     type="date"
@@ -130,7 +136,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Start Time:
+                    Heure du cours:
                 </label>
                 <input
                     type="time"
@@ -140,7 +146,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Location:
+                    Endroit:
                 </label>
                 <input
                     type="text"
@@ -149,7 +155,7 @@ const CreerCours = () => {
                     onChange={(e) => setLocation(e.target.value)}
                 />
                 <label>
-                    Room Price:
+                    Prix de la salle:
                 </label>
                 <input
                     type="number"
@@ -159,7 +165,7 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Max Participants:
+                    Nombre de participants maximum:
                 </label>
                 <input
                     type="number"
@@ -169,26 +175,19 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Payment Type:
+                    Type de paiement:
                 </label>
                 <input
                     type="text"
                     required
+                    placeholder='"ticket" et/ou "card"'
                     value={paymentType}
                     onChange={(e) => setPaymentType(e.target.value)}
                 />
                 <br />
-                <label>
-                    Is Evening:
-                </label>
-                <input
-                    type="checkbox"
-                    value={isEvening}
-                    onChange={(e) => setIsEvening(e.target.checked)}
-                />
                 <br />
                 <label>
-                    Recurrence:
+                    Combien d'occurences:
                 </label>
                 <input
                     type="number"
@@ -198,9 +197,10 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Teachers:
+                    Profs:
                 </label>
                 <input
+                    placeholder='prof@danceclub.com,prof2@danceclub.com'                   
                     type="text"
                     required
                     value={teachers}
@@ -208,9 +208,10 @@ const CreerCours = () => {
                 />
                 <br />
                 <label>
-                    Links:
+                    Liens:
                 </label>
                 <input
+                    placeholder='(séparés par des virgules)'
                     type="text"
                     value={links}
                     onChange={(e) => setLinks(e.target.value)}
@@ -220,6 +221,7 @@ const CreerCours = () => {
                     Students:
                 </label>
                 <input
+                    placeholder='eleve@danceclub.com,eleve@danceclub.com'                   
                     type="text"
                     value={students}
                     onChange={(e) => setStudents(e.target.value)}

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { URL_DB } from '../const/const';
+import { Button } from '@mui/material';
 
 const AjoutCredits = ({ userID }) => {
   const [creditAmount, setCreditAmount] = useState('');
+  const [creditType, setCreditType] = useState('ticket'); // Default to 'ticket'
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -14,7 +16,7 @@ const AjoutCredits = ({ userID }) => {
         return;
       }
 
-      const response = await fetch(URL_DB + 'student/buyPlace', {
+      const response = await fetch(URL_DB + 'teacher/addPlaceStudent', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -22,7 +24,7 @@ const AjoutCredits = ({ userID }) => {
         },
         body: JSON.stringify({
           studentID: userID,
-          type: "ticket",
+          type: creditType,
           number: parseInt(creditAmount, 10)
         })
       });
@@ -47,11 +49,16 @@ const AjoutCredits = ({ userID }) => {
     <div>
       <input
         type="number"
-        placeholder="Credit Amount"
+        placeholder="nombre de place"
         value={creditAmount}
         onChange={(e) => setCreditAmount(e.target.value)}
       />
-      <button onClick={addCredit}>Add Credit</button>
+      <select value={creditType} onChange={(e) => setCreditType(e.target.value)}>
+        <option value="ticket">Ticket</option>
+        <option value="card">Carte</option>
+        <option value="abonement">Abonnement</option>
+      </select>
+      <Button variant="contained" color="primary" onClick={addCredit}>Ajouter</Button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>

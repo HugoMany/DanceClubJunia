@@ -62,7 +62,7 @@ function CreerProf() {
         <div className='scrollerFormAdmin'>
             <form onSubmit={handleSubmit} className='formAdminCreate'>
                 <label>
-                    firstname:
+                    Prénom:
                     
                 </label>
                 <input
@@ -73,7 +73,7 @@ function CreerProf() {
                     />
                 <br />
                 <label>
-                    surname:
+                    Nom:
                     
                 </label>
                 <input
@@ -84,7 +84,7 @@ function CreerProf() {
                     />
                 <br />
                 <label>
-                    mail:
+                    E-Mail:
                    
                 </label>
                 <input
@@ -95,19 +95,19 @@ function CreerProf() {
                     />
                 <br />
                 <label>
-                    password:
+                    Mot de passe:
                    
                 </label>
                 <input
                         type="password"
-                        placeholder='(9 caractère minimum)'
+                        placeholder='(8 caractère minimum)'
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 <br />
                 <label>
-                    photo:
+                    Photo:
                     
                 </label>
                 <input
@@ -116,7 +116,7 @@ function CreerProf() {
                     />
                 <br />
                 <label>
-                    description:
+                    Description:
                    
                 </label>
                 <input

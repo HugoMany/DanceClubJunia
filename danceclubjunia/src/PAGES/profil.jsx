@@ -113,37 +113,45 @@ if (loading) {
       <Header title="Profil"></Header>
 
 
-      <div className='infoProfil'>
+      <div className='infoProfil' >
       <h2>Vos informations</h2>
 
-      <p>Firstname: {userData?.student.firstname}</p>
-      <p>Surname: {userData?.student.surname}</p>
-      <p>Email: {userData?.student.email}</p>
-      <p> Tickets unitaire:    {userData?.student.credit}</p>
-      <QRCode link={URL_FRONT+"/profil/student/"+idStudent}></QRCode>
+      <p><b>Prénom:</b> {userData?.student.firstname}</p>
+      <p><b>Nom:</b> {userData?.student.surname}</p>
+      <p><b>Email:</b> {userData?.student.email}</p>
+      <p><b>Tickets unitaire:</b>    {userData?.student.credit}</p>
+      <QRCode  link={URL_FRONT+"/profil/student/"+idStudent}></QRCode>
 
       </div>
 
 
+
     <div >
-      <h2>Vos anciens cours</h2>
+    <h2>Historique des paiements.</h2>
+
       <div className='studentPastCourses'>
       <div className='paiementList'>
-    {userPaymentHistory?.payments.map((payment, index) => (
+      {userPaymentHistory?.payments.length > 0 ? (
+    userPaymentHistory.payments.map((payment, index) => (
         <div key={index}>
-            <div>Payment ID: {payment.paymentID}</div>
-            <div>Price: {payment.price}</div>
+            {/* <div><b>ID Du paiem ID:</b> {payment.paymentID}</div> */}
+            <div>Debit: {payment.price}</div>
             <div>Type: {payment.type}</div>
-            <div>Quantity: {payment.quantity}</div>
+            <div>Quantité: {payment.quantity}</div>
             <br></br>
         </div>
-    ))}
+    ))
+) : (
+    <div>Aucun paiement trouvé.</div>
+)}
     
     
     </div>  
     </div>
-      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
+      <h2>Vos anciens cours</h2>
+      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
+
     </div>
   );
 };}

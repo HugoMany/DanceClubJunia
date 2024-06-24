@@ -22,7 +22,7 @@ const CoursesList = () => {
                     const filteredCourses = data.courses.filter(course => new Date(course.startDate) > currentDate);
                     // Trier les cours restants par date de début
                     const sortedCourses = filteredCourses.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-                    
+
                     // Récupérer les informations des enseignants pour chaque cours
                     const coursesWithTeachers = await Promise.all(sortedCourses.map(async (course) => {
                         const teacherIDs = JSON.parse(course.teachersID || '[]');
@@ -92,8 +92,8 @@ const CoursesList = () => {
                                 <div className='typeEtProfCoursSuivantHomePage'>
                                     <p>{course.type}</p>
                                     <p style={{ textAlign: 'end', fontSize: '12px' }}>{students.length} / {course.maxParticipants} <span id='peopleIconGoogle' class="material-symbols-outlined">
-group
-</span></p>
+                                        group
+                                    </span></p>
                                     <p>{course.teachers.map(teacher => teacher.surname).join(', ')}</p>
                                 </div>
                                 {/* <div className='studentCount'> */}
