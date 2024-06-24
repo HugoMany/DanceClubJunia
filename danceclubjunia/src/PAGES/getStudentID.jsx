@@ -3,11 +3,13 @@ import AjoutCredits from './ajoutCredits';
 import Button from '@mui/material/Button';
 import { URL_DB } from '../const/const';
 import { TextField } from '@mui/material';
+import Loading from '../elements/loading';
 const GetStudentID = () => {
   const [email, setEmail] = useState('');
   const [userID, setUserID] = useState(null);
   const [dataUserFound, setDataUserFound] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  // const [loading, setLoading] = useState(true);
 
   const searchStudent = async () => {
     try {
@@ -36,6 +38,7 @@ const GetStudentID = () => {
         setUserID(data.students[0].userID);
         setDataUserFound(data.students[0]);
         setErrorMessage('');
+        // setLoading(false)
       } else {
         setUserID(null);
         setDataUserFound(null);

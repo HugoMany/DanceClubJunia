@@ -135,9 +135,11 @@ function Connexion() {
                     <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
                     <button className='connexionLogin' type="submit">Se connecter</button>
                 </form>
-                <button className='inscriptionLogin'>
+                <a href="/inscription">
+                <button  className='inscriptionLogin'>
                     <span className="material-symbols-outlined">swipe_right</span> Inscription
                 </button>
+                </a>
                 <p><a className='mdpOublie' href='/connexion/forget'>Mot de passe oublié</a></p>
             </div>
         </div>
