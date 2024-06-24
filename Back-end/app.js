@@ -50,32 +50,3 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-
-// Supression des tokens invalide de la table ResetPassword toutes les heures
-cron.schedule('0 * * * *', async () => {
-  const sql = 'SELECT token FROM ResetPassword';
-  db.query(sql, async (err, results) => {
-    if (err) {
-      console.error('Error fetching tokens:', err);
-      return;
-    }
-
-    for (const row of results) {
-      const token = row.token;
-      try {
-        jwt.verify(token, config.jwtSecret);
-      } catch (err) {
-        if (err.name === 'TokenExpiredError') {
-          const deleteSql = 'DELETE FROM ResetPassword WHERE token = ?';
-          db.query(deleteSql, [token], (deleteErr, result) => {
-            if (deleteErr) {
-              console.error('Error deleting expired token:', deleteErr);
-            } else {
-              console.log('Expired token deleted:', token);
-            }
-          });
-        }
-      }
-    }
-  });
-});
