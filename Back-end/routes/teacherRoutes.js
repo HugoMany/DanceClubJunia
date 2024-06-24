@@ -670,7 +670,7 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                   type: object
  *                   description: Informations du cours modifie
  *                   properties:
- *                     courseId:
+ *                     courseID:
  *                       type: integer
  *                       example: 3
  *                     image:
@@ -688,10 +688,7 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                     startDate:
  *                       type: string
  *                       format: date
- *                       example: "2024-06-15"
- *                     startTime:
- *                       type: string
- *                       example: "18:00"
+ *                       example: "2024-06-15T18:00:00.000Z"
  *                     location:
  *                       type: string
  *                       example: "Salle de danse 1"
@@ -702,37 +699,23 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                       type: string
  *                       example: "ticket,card"
  *                     isEvening:
- *                       type: boolean
- *                       example: true
+ *                       type: integer
+ *                       example: 0
  *                     recurrence:
  *                       type: integer
  *                       example: 7
- *                     teachers:
- *                       type: array
- *                       items:
- *                         type: string
- *                       example: ["john.doe@example.com"]
+ *                     teachersID:
+ *                       type: string
+ *                       example: "[1]"
  *                     links:
- *                       type: array
- *                       items:
- *                         type: string
- *                       example: ["http://example.com"]
- *                     students:
- *                       type: array
- *                       items:
- *                         type: string
- *                       example: ["7"]
+ *                       type: string
+ *                       example: "[\"http://example.com\"]"
+ *                     studentsID:
+ *                       type: string
+ *                       example: "[7]"
  *                     tags:
  *                       type: string
- *                       example: "danse,salsa,debutant"
- *                     roomPrice:
- *                       type: integer
- *                       example: 100
- *                     attendance:
- *                       type: array
- *                       items:
- *                         type: string
- *                       example: ["7"]
+ *                       example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
  *         description: Les champs teacherID et courseID sont obligatoires.
  *       401:
@@ -740,7 +723,7 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *       402:
  *         description: La durée doit être positive.
  *       403:
- *         description: Les dates de début et de fin doident être au format YYYY-MM-DD.
+ *         description: Les dates de début et de fin doivent être au format YYYY-MM-DD.
  *       404:
  *         description: Le nombre maximal d'apprenants doit être positif.
  *       405:
@@ -790,6 +773,9 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 students:
  *                   type: array
  *                   items:
@@ -797,18 +783,25 @@ router.patch('/modifyCourse', teacherController.modifyCourse);
  *                     properties:
  *                       userID:
  *                         type: integer
+ *                         example: 10
  *                       firstname:
  *                         type: string
+ *                         example: "John"
  *                       surname:
  *                         type: string
+ *                         example: "Doe"
  *                       email:
  *                         type: string
+ *                         example: "john.doe@example.com"
  *                       connectionMethod:
  *                         type: string
+ *                         example: "email"
+ *                       tickets:
+ *                         type: integer
+ *                         example: 4
  *                       photo:
  *                         type: string
- *                       description:
- *                         type: string
+ *                         example: "photo.png"
  *       400:
  *         description: Les champs courseID et userID doivent être fournis.
  *       401:
@@ -1121,9 +1114,11 @@ router.patch('/removeTag', teacherController.removeTag);
  *             properties:
  *               studentID:
  *                 type: integer
+ *                 example: 6
  *                 description: ID de l'étudiant
  *               courseID:
  *                 type: integer
+ *                 example: 17
  *                 description: ID du cours
  *     responses:
  *       200:

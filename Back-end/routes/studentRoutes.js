@@ -107,7 +107,7 @@ router.get('/getCourses', studentController.getCourses);
  * @swagger
  * /api/student/buyPlace:
  *   post:
- *     summary: Acheter un ou plusieurs tickets, cartes ou mois d'abonnement pour un etudiant
+ *     summary: Acheter un ou plusieurs tickets ou une carte
  *     tags: [Students]
  *     security:
  *       - bearerAuth: []
@@ -124,11 +124,11 @@ router.get('/getCourses', studentController.getCourses);
  *                 example: 2
  *               type:
  *                 type: string
- *                 description: Type d'achat (ticket, carte, abonnement)
+ *                 description: Type d'achat (ticket, carte)
  *                 example: "ticket"
  *               number:
  *                 type: integer
- *                 description: Nombre d'elements a acheter
+ *                 description: Nombre de tickets ou de places de la carte
  *                 example: 5
  *     responses:
  *       200:

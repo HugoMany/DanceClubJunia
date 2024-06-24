@@ -1,8 +1,8 @@
+TRUNCATE TABLE Users;
 TRUNCATE TABLE Cards;
 TRUNCATE TABLE Courses;
 TRUNCATE TABLE Payments;
 TRUNCATE TABLE Places;
-TRUNCATE TABLE Users;
 TRUNCATE TABLE refreshToken;
 
 INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description) VALUES

@@ -541,7 +541,7 @@ exports.getStudentsInCourse = async (req, res) => {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
     }
 
-    const students = await teacherService.getStudentsInCourse(courseID, userID);
+    const students = await teacherService.getStudentsInCourse(userID, courseID);
 
     res.status(200).json({ success: true, students: students });
 
@@ -564,7 +564,7 @@ exports.getStudentsInCourse = async (req, res) => {
       case "Erreur lors de la récupération du cours.":
         res.status(505).json({ success: false, message: error.message });
         break;
-      case "Cours non trouvé":
+      case "Cours non trouvé.":
         res.status(506).json({ success: false, message: error.message });
         break;
       case "Erreur lors de la récupération de l'utilisateur.":

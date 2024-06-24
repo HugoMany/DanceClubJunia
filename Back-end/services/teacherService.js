@@ -334,7 +334,7 @@ class TeacherService {
               if (result.affectedRows == 0) {
                 return reject(new Error("Le cours n'existe pas."));
               }
-              const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
+              const selectSql = 'SELECT courseID, image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags FROM Courses WHERE courseID = ?';
               db.query(selectSql, [courseID], (err, rows) => {
                 if (err) {
                   return reject(new Error("La récupération du cours a échoué."));
@@ -372,10 +372,10 @@ class TeacherService {
     return new Promise((resolve, reject) => {
       // Vérification du rôle de l'utilisateur
       const checkUserTypeSql = `
-            SELECT userType
-            FROM Users
-            WHERE userID = ?
-        `;
+        SELECT userType
+        FROM Users
+        WHERE userID = ?
+      `;
 
       db.query(checkUserTypeSql, [userID], (err, rows) => {
         if (err) {
@@ -391,10 +391,10 @@ class TeacherService {
         // Si l'utilisateur est un enseignant, vérifier qu'il est dans teachersID du cours
         if (userType === 'teacher') {
           const checkTeacherSql = `
-                    SELECT COUNT(*) AS count
-                    FROM Courses
-                    WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))
-                `;
+            SELECT COUNT(*) AS count
+            FROM Courses
+            WHERE courseID = ? AND JSON_CONTAINS(teachersID, CAST(? AS JSON))
+          `;
 
           db.query(checkTeacherSql, [courseID, JSON.stringify(userID)], (err, result) => {
             if (err) {
@@ -447,7 +447,7 @@ class TeacherService {
         }
 
         const getStudentsSql = `
-                SELECT userID, firstname, surname, email, connectionMethod, photo, description
+                SELECT userID, firstname, surname, email, connectionMethod, tickets, photo
                 FROM Users
                 WHERE userID IN (?)
             `;

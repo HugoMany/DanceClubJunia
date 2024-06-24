@@ -1,15 +1,9 @@
-const fs = require('fs');
-const https = require('https');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { swaggerUi, swaggerSpec } = require('./config/swaggerConfig');
 const cors = require('cors'); 
 const authRoutes = require('./routes/authRoutes');
 const { authorize } = require('./middlewares/auth');
-const cron = require('node-cron'); 
-const jwt = require('jsonwebtoken');
-const config = require('./config/config');
-const db = require('./config/database'); 
 
 const port = 3000;
 const app = express();

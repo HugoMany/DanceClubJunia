@@ -1,0 +1,69 @@
+CREATE TABLE Users (
+  userID int NOT NULL AUTO_INCREMENT,
+  firstname varchar(255) NOT NULL,
+  surname varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  password varchar(255) NOT NULL,
+  connectionMethod varchar(50) NOT NULL,
+  userType varchar(255) DEFAULT NULL,
+  tickets int DEFAULT '0',
+  photo varchar(255) DEFAULT NULL,
+  description text,
+  PRIMARY KEY (userID),
+  UNIQUE KEY email (email)
+);
+
+CREATE TABLE Cards (
+  cardID int NOT NULL AUTO_INCREMENT,
+  userID int NOT NULL,
+  number int NOT NULL,
+  maxNumber int NOT NULL,
+  PRIMARY KEY (cardID),
+  KEY userID (userID)
+);
+
+CREATE TABLE Courses (
+  courseID int NOT NULL AUTO_INCREMENT,
+  image varchar(255) NOT NULL,
+  title varchar(255) NOT NULL,
+  type varchar(100) NOT NULL,
+  duration int NOT NULL,
+  startDate datetime NOT NULL,
+  location varchar(255) NOT NULL,
+  maxParticipants int NOT NULL,
+  paymentType varchar(100) NOT NULL,
+  isEvening tinyint(1) NOT NULL,
+  recurrence int DEFAULT '0',
+  teachersID json NOT NULL,
+  links json NOT NULL,
+  studentsID json NOT NULL,
+  tags json NOT NULL,
+  roomPrice decimal(10,2) DEFAULT '0.00',
+  attendance json DEFAULT NULL,
+  PRIMARY KEY (courseID)
+);
+
+CREATE TABLE Payments (
+  paymentID int NOT NULL AUTO_INCREMENT,
+  userID int NOT NULL,
+  price decimal(10,2) NOT NULL,
+  type varchar(50) NOT NULL,
+  quantity int NOT NULL,
+  date datetime DEFAULT NULL,
+  paymentType varchar(255) DEFAULT NULL,
+  sourceID int DEFAULT NULL,
+  itemID int DEFAULT NULL,
+  PRIMARY KEY (paymentID)
+);
+
+CREATE TABLE Places (
+  type varchar(255) NOT NULL,
+  price decimal(10,2) NOT NULL,
+  number int NOT NULL
+);
+
+CREATE TABLE refreshToken (
+  userID int NOT NULL,
+  token varchar(255) NOT NULL,
+  PRIMARY KEY (userID)
+);
