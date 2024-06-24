@@ -19,7 +19,7 @@ function Admin() {
             <Button variant="contained" color="primary"><a href='/admin/cours'>Gestion cours</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/eleve'>Gestion Eleve</a><br></br></Button>
             <Button variant="contained" color="primary"><a href='/admin/compta'>Comptabilité</a></Button>
-            <Button variant="contained" color="primary"><a href='/admin/abo'>Ticket et Cartes</a></Button>
+            <Button variant="contained" color="primary"><a href='/admin/abo'>Tickets et Cartes</a></Button>
 
 
         </div>

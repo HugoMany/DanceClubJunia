@@ -23,23 +23,25 @@ const CreerCours = () => {
         e.preventDefault();
         console.log('handleSubmit called');
 
+
         const formData = {
             image,
             title,
             type,
-            duration: parseInt(duration),
+            duration: duration !== '' ? parseInt(duration) : 0, // replace '' with default value
             startDate,
             startTime,
             location,
-            roomPrice,
-            maxParticipants: parseInt(maxParticipants),
+            roomPrice: roomPrice !== '' ? parseInt(roomPrice) : 0, // replace '' with default value
+            maxParticipants: maxParticipants !== '' ? parseInt(maxParticipants) : 0, // replace '' with default value
             paymentType,
-            isEvening: isEvening === 'true' || isEvening === true,
-            recurrence: parseInt(recurrence),
+            isEvening: 0,
+            recurrence: recurrence !== '' ? parseInt(recurrence) : 0, // replace '' with default value
             teachers: teachers.split(',').map(teacher => teacher.trim()),
             links: links ? links.split(',').map(link => link.trim()) : [],
             students: students ? students.split(',').map(student => student.trim()) : [],
-            tags
+            tags,
+            // attendance: []
         };
 
         console.log('FormData:', formData);
@@ -65,6 +67,10 @@ const CreerCours = () => {
 
                 const data = await response.json();
                 console.log('Response:', data);
+                if (response.ok) {
+                    alert('Cours créé avec succès')
+                    window.location.href = '/admin/cours';
+                }
 
             } catch (error) {
                 console.error('Erreur lors de la création du cours', error);
@@ -174,18 +180,11 @@ const CreerCours = () => {
                 <input
                     type="text"
                     required
+                    placeholder='"ticket" et/ou "card"'
                     value={paymentType}
                     onChange={(e) => setPaymentType(e.target.value)}
                 />
                 <br />
-                <label>
-                    Is Evening:
-                </label>
-                <input
-                    type="checkbox"
-                    value={isEvening}
-                    onChange={(e) => setIsEvening(e.target.checked)}
-                />
                 <br />
                 <label>
                     Recurrence:
