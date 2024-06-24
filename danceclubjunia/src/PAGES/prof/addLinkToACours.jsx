@@ -134,12 +134,12 @@ const AddlinkToACours = (idCoursSelected) => {
                     {links.map((link, index) => (
                         <React.Fragment key={index}>
                             {link}
-                            <Button variant="contained" value={link} onClick={() => handleRemovelink(link)}>Supprimer ce link</Button> <br />
+                            <Button variant="contained" value={link} onClick={() => handleRemovelink(link)}>Supprimer ce lien</Button> <br />
                         </React.Fragment>
                     ))}
     
                     <input type="text" placeholder="New link" value={newlink} onChange={handlelinkChange} />
-                    <Button variant="contained" onClick={handleAddlink}>Add link</Button>
+                    <Button variant="contained" onClick={handleAddlink}>Ajouter ce lien</Button>
                 </div>
             </div>
         );

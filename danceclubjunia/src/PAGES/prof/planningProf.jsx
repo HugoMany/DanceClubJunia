@@ -172,7 +172,7 @@ const PlanningProf = ({ teacherId }) => {
     if (error) return <div>Error loading courses: {error.message}</div>;
     return (
         <div>
-            <h2>Your Upcoming Courses</h2>
+            <h2>Vos prochains cours</h2>
             <ul>
                 {courses.map(course => (
                     <li key={course.courseId}>
@@ -180,13 +180,13 @@ const PlanningProf = ({ teacherId }) => {
                         {/* Autres détails du cours */}
                         <div>
                             <GetStudentID setUserID={setStudentId} /> {/* Utilisez setStudentId au lieu de StudentId */}
-                            <button onClick={() => handleAddStudent(course.courseId, studentId)}>Add Student</button> {/* Utilisez studentId au lieu de student */}
+                            <button onClick={() => handleAddStudent(course.courseId, studentId)}>Ajouter un étudiant</button> {/* Utilisez studentId au lieu de student */}
                         </div>
                         <ul>
                             {course.students.map(student => (
                                 <li key={student}>
                                     {student}
-                                    <button onClick={() => handleRemoveStudent(course.courseId, student)}>Remove</button>
+                                    <button onClick={() => handleRemoveStudent(course.courseId, student)}>Retirer</button>
                                 </li>
                             ))}
                         </ul>
@@ -197,10 +197,10 @@ const PlanningProf = ({ teacherId }) => {
                                 value={newTag}
                                 onChange={(e) => setNewTag(e.target.value)}
                             />
-                            <button onClick={() => handleAddTag(course.courseId)}>Add Tag</button>
+                            <button onClick={() => handleAddTag(course.courseId)}>ajouter un Tag</button>
                         </div>
                         <div>
-                            <button onClick={()=> handleDelete}>Delete Course</button>
+                            <button onClick={()=> handleDelete}>Supprimer le cours</button>
                         </div>
                     </li>
                 ))}

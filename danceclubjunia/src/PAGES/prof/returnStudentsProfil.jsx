@@ -43,7 +43,7 @@ const ReturnStudentsProfil = (idCoursSelected) => {
   return (
     <div>
         {/* <Header title={"Return Students Profile"}></Header> */}
-      <h1>Return Students Profile</h1>
+      <h1>Profil des étudiants</h1>
     <div>
         {/* Add your JSX content here */}
         {students === "Il n'y a pas d'élève dans le cours." ? (

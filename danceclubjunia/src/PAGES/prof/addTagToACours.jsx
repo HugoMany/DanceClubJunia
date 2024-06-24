@@ -139,7 +139,7 @@ const AddTagToACours = (idCoursSelected) => {
                     ))}
     
                     <input type="text" placeholder="New Tag" value={newTag} onChange={handleTagChange} />
-                    <Button variant="contained" onClick={handleAddTag}>Add Tag</Button>
+                    <Button variant="contained" onClick={handleAddTag}>Ajouter ce Tag</Button>
                 </div>
             </div>
         );

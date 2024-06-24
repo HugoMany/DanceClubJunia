@@ -56,8 +56,8 @@ const Appel = () => {
                         <Card key={course.id} sx={{ marginBottom: 2 }}>
                             <CardContent>
                                 <Typography variant="h5">{course.title}</Typography>
-                                <Typography color="textSecondary">Start Date: {new Date(course.startDate).toLocaleString()}</Typography>
-                                <Typography color="textSecondary">Location: {course.location}</Typography>
+                                <Typography color="textSecondary">Date: {new Date(course.startDate).toLocaleString()}</Typography>
+                                <Typography color="textSecondary">Lieu: {course.location}</Typography>
                                 <Button variant="contained" color="primary" href={'/prof/cours/'+course.courseID}>Selectionné</Button>
                             </CardContent>
                         </Card>
