@@ -4,91 +4,123 @@ class UserService {
   
   async addLink(userID, courseID, link) {
     return new Promise(async (resolve, reject) => {
-
+  
       const checkUserTypeSql = "SELECT userType FROM Users WHERE userID = ?";
-
+  
       db.query(checkUserTypeSql, [userID], (err, result) => {
         userID = userID.toString();
         if (err) {
           return reject(new Error("Erreur lors de la vérification du type de l'utilisateur."));
         }
         if (result.length == 0) return reject(new Error("L'utilisateur n'existe pas."));
-
+  
         if (result.length > 0 && result[0].userType == "student") {
           // SQL pour vérifier si l'étudiant est inscrit au cours
           const checkStudentSql = `
-          SELECT JSON_CONTAINS(studentsID, ?) AS isParticipant
-          FROM Courses
-          WHERE courseID = ?
+            SELECT JSON_CONTAINS(studentsID, ?) AS isParticipant, JSON_CONTAINS(links, ?) AS linkExists
+            FROM Courses
+            WHERE courseID = ?
           `;
-
-          db.query(checkStudentSql, [userID, courseID], (err, result) => {
+  
+          db.query(checkStudentSql, [userID, JSON.stringify(link), courseID], (err, result) => {
             if (err) {
               return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
             }
             if (result.length == 0) return reject(new Error("Le cours n'existe pas."));
-
-            // Si l'étudiant est inscrit au cours
+  
+            // Si l'étudiant est inscrit au cours et le lien n'existe pas
             if (result[0].isParticipant) {
+              if (result[0].linkExists) {
+                return reject(new Error("Le lien existe déjà dans le cours."));
+              }
               const updateLinkSql = `
                 UPDATE Courses
                 SET links = JSON_ARRAY_APPEND(links, '$', ?)
                 WHERE courseID = ?
               `;
-
+  
               db.query(updateLinkSql, [link, courseID], (err, result) => {
                 if (err || result.affectedRows == 0) {
                   return reject(new Error("Erreur lors de l'ajout du lien."));
                 }
                 resolve(result);
               });
-
-            }
-            else {
+  
+            } else {
               return reject(new Error("L'élève n'est pas dans le cours."));
             }
           });
-        } // on vérifie si c'est un professeur
-        else if (result.length > 0 && result[0].userType == "teacher") {
+        } else if (result.length > 0 && result[0].userType == "teacher") {
           // SQL pour vérifier si le professeur est inscrit au cours
           const checkTeacherSql = `
-          SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant
-          FROM Courses
-          WHERE courseID = ?
+            SELECT JSON_CONTAINS(teachersID, ?) AS isParticipant, JSON_CONTAINS(links, ?) AS linkExists
+            FROM Courses
+            WHERE courseID = ?
           `;
-
-          db.query(checkTeacherSql, [userID, courseID], (err, result) => {
+  
+          db.query(checkTeacherSql, [userID, JSON.stringify(link), courseID], (err, result) => {
             if (err) {
-              return reject(new Error("Erreur lors de la vérification de la présence de de l'élève dans le cours."));
+              return reject(new Error("Erreur lors de la vérification de la présence du professeur dans le cours."));
             }
             if (result.length == 0) return reject(new Error("Le cours n'existe pas."));
-
-
-            // Si le professeur est inscrit au cours
-            if (result.length > 0 && result[0].isParticipant) {
-              // SQL pour ajouter le lien à la colonne links
+  
+            // Si le professeur est inscrit au cours et le lien n'existe pas
+            if (result[0].isParticipant) {
+              if (result[0].linkExists) {
+                return reject(new Error("Le lien existe déjà dans le cours."));
+              }
               const updateLinkSql = `
                 UPDATE Courses
                 SET links = JSON_ARRAY_APPEND(links, '$', ?)
                 WHERE courseID = ?
               `;
-
+  
               db.query(updateLinkSql, [link, courseID], (err, result) => {
                 if (err || result.affectedRows == 0) {
                   return reject(new Error("Erreur lors de l'ajout du lien."));
                 }
                 resolve(result);
               });
-
-            }
-            else {
+  
+            } else {
               return reject(new Error("Le professeur n'est pas dans le cours."));
             }
           });
+        } else if (result.length > 0 && result[0].userType == "admin") {
+          // SQL pour ajouter le lien à la colonne links
+          const checkAdminLinkSql = `
+            SELECT JSON_CONTAINS(links, ?) AS linkExists
+            FROM Courses
+            WHERE courseID = ?
+          `;
+  
+          db.query(checkAdminLinkSql, [JSON.stringify(link), courseID], (err, result) => {
+            if (err) {
+              return reject(new Error("Erreur lors de la vérification du lien."));
+            }
+            if (result.length == 0) return reject(new Error("Le cours n'existe pas."));
+            if (result[0].linkExists) {
+              return reject(new Error("Le lien existe déjà dans le cours."));
+            }
+            const updateLinkSql = `
+              UPDATE Courses
+              SET links = JSON_ARRAY_APPEND(links, '$', ?)
+              WHERE courseID = ?
+            `;
+  
+            db.query(updateLinkSql, [link, courseID], (err, result) => {
+              if (err || result.affectedRows == 0) {
+                return reject(new Error("Erreur lors de l'ajout du lien."));
+              }
+              resolve(result);
+            });
+          });
+        } else {
+          return reject(new Error("Utilisateur invalide."));
         }
       });
     });
-  }
+  }  
 
   async searchCoursesStudent(userID, startDate, tags) {
     return new Promise((resolve, reject) => {

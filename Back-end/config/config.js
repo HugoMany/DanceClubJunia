@@ -12,5 +12,6 @@ module.exports = {
     resetUrl: `http://localhost:3001/reset-password/token/`, // URL de la page de réinitialisation du mot de passe
     saltRounds: 10,
     mail: 'danceclubjunia@gmail.com',
-    mailPass: 'jvdq ukat trfi uvdz'
+    mailPass: 'jvdq ukat trfi uvdz',
+    serverUrl: 'localhost:3000'
 };

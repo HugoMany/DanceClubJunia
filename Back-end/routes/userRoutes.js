@@ -65,6 +65,12 @@ const userController = require('../controllers/userController');
  *         description: L'élève n'est pas dans le cours.
  *       507:
  *         description: Le professeur n'est pas dans le cours.
+ *       508:
+ *         description: Erreur lors de la vérification de la présence du professeur dans le cours.
+ *       509:
+ *         description: Utilisateur invalide.
+ *       510:
+ *         description: Le lien existe déjà dans le cours.
  *       500:
  *         description: Erreur SQL
  */
@@ -115,19 +121,54 @@ router.patch('/addLink', userController.addLink);
  *                   type: array
  *                   items:
  *                     type: object
+ *                     description: Informations du cours modifie
  *                     properties:
- *                       courseID:
+ *                       courseId:
  *                         type: integer
- *                         description: ID du cours
- *                       courseName:
+ *                         example: 3
+ *                       image:
  *                         type: string
- *                         description: Nom du cours
- *                       instructor:
+ *                         example: "image.png"
+ *                       title:
  *                         type: string
- *                         description: Nom de l'instructeur
- *                       schedule:
+ *                         example: "Cours de danse"
+ *                       type:
  *                         type: string
- *                         description: Horaire du cours
+ *                         example: "Salsa"
+ *                       duration:
+ *                         type: integer
+ *                         example: 60
+ *                       startDate:
+ *                         type: string
+ *                         format: date
+ *                         example: "2024-10-15T18:00:00.000Z"
+ *                       location:
+ *                         type: string
+ *                         example: "Salle de danse 1"
+ *                       maxParticipants:
+ *                         type: integer
+ *                         example: 20
+ *                       paymentType:
+ *                         type: string
+ *                         example: "ticket,card"
+ *                       isEvening:
+ *                         type: integer
+ *                         example: 0
+ *                       recurrence:
+ *                         type: integer
+ *                         example: 7
+ *                       teachersID:
+ *                         type: string
+ *                         example: "[1]"
+ *                       links:
+ *                         type: string
+ *                         example:  "[\"http://example.com\"]"
+ *                       studentsID:
+ *                         type: string
+ *                         example: "[2, 3]"
+ *                       tags:
+ *                         type: string
+ *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
  *         description: Le champs tags, userID et startDate doivent être fourni.
  *       401:
@@ -136,6 +177,8 @@ router.patch('/addLink', userController.addLink);
  *         description: La date de début du cours doit être au format YYYY-MM-DD.
  *       501:
  *         description: Erreur lors de la recherche de cours.
+ *       502:
+ *         description: Le cours n'a pas été trouvé.
  *       500:
  *         description: Erreur SQL
  */
@@ -186,19 +229,54 @@ router.get('/searchCoursesStudent', userController.searchCoursesStudent);
  *                   type: array
  *                   items:
  *                     type: object
+ *                     description: Informations du cours modifie
  *                     properties:
- *                       courseID:
+ *                       courseId:
  *                         type: integer
- *                         description: ID du cours
- *                       courseName:
+ *                         example: 3
+ *                       image:
  *                         type: string
- *                         description: Nom du cours
- *                       instructor:
+ *                         example: "image.png"
+ *                       title:
  *                         type: string
- *                         description: Nom de l'instructeur
- *                       schedule:
+ *                         example: "Cours de danse"
+ *                       type:
  *                         type: string
- *                         description: Horaire du cours
+ *                         example: "Salsa"
+ *                       duration:
+ *                         type: integer
+ *                         example: 60
+ *                       startDate:
+ *                         type: string
+ *                         format: date
+ *                         example: "2024-10-15T18:00:00.000Z"
+ *                       location:
+ *                         type: string
+ *                         example: "Salle de danse 1"
+ *                       maxParticipants:
+ *                         type: integer
+ *                         example: 20
+ *                       paymentType:
+ *                         type: string
+ *                         example: "ticket,card"
+ *                       isEvening:
+ *                         type: integer
+ *                         example: 0
+ *                       recurrence:
+ *                         type: integer
+ *                         example: 7
+ *                       teachersID:
+ *                         type: string
+ *                         example: "[1]"
+ *                       links:
+ *                         type: string
+ *                         example:  "[\"http://example.com\"]"
+ *                       studentsID:
+ *                         type: string
+ *                         example: "[2, 3]"
+ *                       tags:
+ *                         type: string
+ *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
  *         description: Le champs tags, userID et startDate doivent être fourni.
  *       401:
@@ -208,7 +286,7 @@ router.get('/searchCoursesStudent', userController.searchCoursesStudent);
  *       501:
  *         description: Erreur lors de la recherche de cours.
  *       502:
- *         description: Le cours n'a pas été trouvé
+ *         description: Le cours n'a pas été trouvé.
  *       500:
  *         description: Erreur SQL
  */
@@ -244,19 +322,54 @@ router.get('/searchCoursesTeacher', userController.searchCoursesTeacher);
  *                   type: array
  *                   items:
  *                     type: object
+ *                     description: Informations du cours modifie
  *                     properties:
- *                       courseID:
+ *                       courseId:
  *                         type: integer
- *                         description: ID du cours
- *                       courseName:
+ *                         example: 3
+ *                       image:
  *                         type: string
- *                         description: Nom du cours
- *                       instructor:
+ *                         example: "image.png"
+ *                       title:
  *                         type: string
- *                         description: Nom de l'instructeur
- *                       schedule:
+ *                         example: "Cours de danse"
+ *                       type:
  *                         type: string
- *                         description: Horaire du cours
+ *                         example: "Salsa"
+ *                       duration:
+ *                         type: integer
+ *                         example: 60
+ *                       startDate:
+ *                         type: string
+ *                         format: date
+ *                         example: "2024-10-15T18:00:00.000Z"
+ *                       location:
+ *                         type: string
+ *                         example: "Salle de danse 1"
+ *                       maxParticipants:
+ *                         type: integer
+ *                         example: 20
+ *                       paymentType:
+ *                         type: string
+ *                         example: "ticket,card"
+ *                       isEvening:
+ *                         type: integer
+ *                         example: 0
+ *                       recurrence:
+ *                         type: integer
+ *                         example: 7
+ *                       teachersID:
+ *                         type: string
+ *                         example: "[1]"
+ *                       links:
+ *                         type: string
+ *                         example:  "[\"http://example.com\"]"
+ *                       studentsID:
+ *                         type: string
+ *                         example: "[2, 3]"
+ *                       tags:
+ *                         type: string
+ *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
  *         description: Le champ courseID doit être fourni.
  *       401:

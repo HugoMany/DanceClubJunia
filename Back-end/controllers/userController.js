@@ -46,6 +46,12 @@ exports.addLink = async (req, res) => {
       case "Le professeur n'est pas dans le cours.":
         res.status(507).json({ success: false, message: error.message });
         break;
+      case "Erreur lors de la vérification de la présence du professeur dans le cours.":
+        res.status(508).json({ success: false, message: error.message });
+      case "Utilisateur invalide.":
+        res.status(509).json({ success: false, message: error.message });
+      case "Le lien existe déjà dans le cours.":
+        res.status(510).json({ success: false, message: error.message });
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
     }
@@ -77,6 +83,9 @@ exports.searchCoursesStudent = async (req, res) => {
       case "Erreur lors de la recherche de cours.":
         res.status(501).json({ success: false, message: error.message });
         break;
+      case "Le cours n'a pas été trouvé.":
+        res.status(502).json({ success: false, message: error.message });
+        break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
     }
@@ -107,7 +116,7 @@ exports.searchCoursesTeacher = async (req, res) => {
       case "Erreur lors de la recherche de cours.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Le cours n'a pas été trouvé":
+      case "Le cours n'a pas été trouvé.":
         res.status(502).json({ success: false, message: error.message });
         break;
       default:
@@ -138,7 +147,7 @@ exports.searchCourse = async (req, res) => {
       case "Erreur lors de la recherche de cours.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Le cours n'a pas été trouvé":
+      case "Le cours n'a pas été trouvé.":
         res.status(502).json({ success: false, message: error.message });
         break;
       default:

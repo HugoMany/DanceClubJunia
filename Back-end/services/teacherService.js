@@ -681,6 +681,10 @@ class TeacherService {
               return reject(new Error("Erreur lors de la récupération des tags du cours."));
             }
 
+            if (result.length == 0) {
+              return reject(new Error("Le cours n'existe pas."));
+            }
+
             const tags = JSON.parse(result[0].tags);
             if (tags.includes(tag)) {
               return reject(new Error("Le cours a déjà ce tag."));
