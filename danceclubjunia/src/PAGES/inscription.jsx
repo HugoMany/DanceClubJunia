@@ -119,9 +119,9 @@ function Inscription() {
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="nom"></label>
+                    <label htmlFor="prenom"></label>
                     <input
-                        placeholder='Firstname'
+                        placeholder='Prénom'
                         type="text"
                         id="nom"
                         value={firstname}
@@ -129,9 +129,9 @@ function Inscription() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="prenom"></label>
+                    <label htmlFor="nom"></label>
                     <input
-                        placeholder='Surname'
+                        placeholder='Nom'
                         type="text"
                         id="prenom"
                         value={surname}
@@ -141,7 +141,7 @@ function Inscription() {
                 <div>
                     <label htmlFor="motDePasse"></label>
                     <input
-                        placeholder='Password'
+                        placeholder='mot de passe'
                         type="password"
                         id="motDePasse"
                         value={password}
@@ -152,7 +152,7 @@ function Inscription() {
                 <div>
                     <label htmlFor="confirmMotDePasse"></label>
                     <input
-                        placeholder='Confirmation Password'
+                        placeholder='Confirmation mot de passe'
                         type="password"
                         id="confirmMotDePasse"
                         value={confirmPassword}
@@ -162,20 +162,11 @@ function Inscription() {
                 <div>
                     <label htmlFor="email"></label>
                     <input
-                        placeholder='E-mail'
+                        placeholder='Email'
                         type="email"
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="photo"></label>
-                    <input
-                        placeholder='Photo'
-                        type="file"
-                        id="photo"
-                        onChange={(e) => setPhoto(e.target.files[0])}
                     />
                 </div>
                 <ReCAPTCHA sitekey="6LevBOUpAAAAAPNiDAGg0xCWMqBYRrivcvYIhCsX" onChange={handleRecaptcha} />
