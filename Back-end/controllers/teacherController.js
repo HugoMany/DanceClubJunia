@@ -62,14 +62,20 @@ exports.newStudent = async (req, res) => {
     console.error('newStudent | error:', error);
 
     switch (error.message) {
-      case "Erreur lors de la création de l'élève.":
+      case "Erreur lors de la vérification de l'email.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la récupération de l'élève.":
+      case "L'email est déjà utilisé.":
         res.status(502).json({ success: false, message: error.message });
         break;
-      case "L'utilisateur n'existe pas":
+      case "Erreur lors de la création de l'élève.":
         res.status(503).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la récupération de l'élève.":
+        res.status(504).json({ success: false, message: error.message });
+        break;
+      case "L'utilisateur n'existe pas":
+        res.status(505).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -162,7 +168,7 @@ exports.modifyStudent = async (req, res) => {
 
 exports.removeStudent = async (req, res) => {
   try {
-    const {courseID, studentID } = req.body;
+    const { courseID, studentID } = req.body;
     const userIDFromToken = req.userID;
     const userTypeFromToken = req.userType;
     console.log("removeStudent | courseID, studentID : " + courseID + ", " + studentID);
@@ -187,7 +193,7 @@ exports.removeStudent = async (req, res) => {
     console.error('removeStudent | error:', error);
 
     switch (error.message) {
-      case "Erreur lors de la récupération de l'élève.":
+      case "L'élève ne fait pas parti de ce cours.":
         res.status(501).json({ success: false, message: error.message });
         break;
       case "Le cours n'existe pas.":
@@ -211,12 +217,12 @@ exports.removeStudent = async (req, res) => {
 
 exports.affectStudent = async (req, res) => {
   try {
-    const {studentID, courseID } = req.body;
-    
+    const { studentID, courseID } = req.body;
+
     const userIDFromToken = req.userID;
     const userTypeFromToken = req.userType;
 
-    console.log("affectStudent | studentID, courseID : "+ studentID + ", " + courseID);
+    console.log("affectStudent | studentID, courseID : " + studentID + ", " + courseID);
 
     // Vérifier si les champs sont remplis
     if (!studentID || !courseID) {
@@ -226,7 +232,7 @@ exports.affectStudent = async (req, res) => {
     if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
       return res.status(401).json({ error: 'L\'ID de l\'étudiant n\'est pas un entier positif.' });
     }
-    if (!Number.isInteger(parseInt(courseID) )|| courseID <= 0) {
+    if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
       return res.status(402).json({ error: 'L\'ID du cours n\'est pas un entier positif.' });
     }
 
@@ -324,7 +330,7 @@ exports.cancelCourse = async (req, res) => {
       case "Erreur lors de la suppression.":
         res.status(501).json({ success: false, message: error.message });
         break;
-      case "Le cours n'existe pas ou le professeur n'est pas dans le cours.":
+      case "Le cours n'existe pas ou le professeur n'est pas dans le cours ou le cours est déjà passé.":
         res.status(502).json({ success: false, message: error.message });
         break;
       default:
@@ -337,13 +343,13 @@ exports.getTeacherPlaces = async (req, res) => {
   try {
     const { teacherID, startDate, endDate } = req.query;
 
-    
+
     const userIDFromToken = req.userID;
     const userTypeFromToken = req.userType;
 
     console.log("getTeacherPlaces | teacherID, startDate, endDate : " + teacherID + ", " + startDate + ", " + endDate);
 
-    if(userTypeFromToken == "teacher"){
+    if (userTypeFromToken == "teacher") {
       if (userIDFromToken != teacherID) {
         return res.status(404).json({ success: false, message: 'Le teacherID et le token ne correspondent pas' });
       }
@@ -691,7 +697,7 @@ exports.removeLink = async (req, res) => {
 };
 
 exports.addTag = async (req, res) => {
-  const {courseID, tag } = req.body;
+  const { courseID, tag } = req.body;
 
   const userID = req.userID;
 
@@ -753,7 +759,7 @@ exports.removeTag = async (req, res) => {
     const { courseID, tag } = req.body;
 
     const userID = req.userID;
-    
+
     console.log("removeTag | courseID, userID : " + courseID + ", " + userID);
 
     if (!courseID || !userID || !tag) {
@@ -816,7 +822,7 @@ exports.removeTag = async (req, res) => {
 exports.markAttendance = async (req, res) => {
   const { studentID, courseID } = req.body;
   const user = {
-    userID: req.userID, 
+    userID: req.userID,
     userType: req.userType
   };
 

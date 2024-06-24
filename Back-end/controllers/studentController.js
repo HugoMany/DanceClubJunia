@@ -161,7 +161,7 @@ exports.reserveCourse = async (req, res) => {
 
     try {
         const result = await studentService.reserveCourse(studentID, courseID);
-        res.status(200).json({ success: true, result });
+        res.status(200).json({ success: true, message : "L'élève a été ajouté au cours via un ticket." });
     } catch (error) {
         console.error('reserveCourse | error:', error);
 

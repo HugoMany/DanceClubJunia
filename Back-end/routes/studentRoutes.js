@@ -69,9 +69,6 @@ const studentController = require('../controllers/studentController');
  *                       paymentType:
  *                         type: string
  *                         example: "one-time"
- *                       paymentOptions:
- *                         type: string
- *                         example: "{\"single\": 20}"
  *                       isEvening:
  *                         type: integer
  *                         example: 1
@@ -87,9 +84,12 @@ const studentController = require('../controllers/studentController');
  *                       studentsID:
  *                         type: string
  *                         example: "[7]"
- *                       tags:
+ *                       roomPrice:
+ *                         type: integer
+ *                         example: 100
+ *                       attendance:
  *                         type: string
- *                         example: "[\"tag3\", \"tag4\"]"
+ *                         example: "[10, 7]"
  *       400:
  *         description: Champ studentID manquant.
  *       401:
@@ -279,7 +279,7 @@ router.get('/getPaymentHistory', studentController.getPaymentHistory);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "L'étudiant a été ajouté au cours via l'abonnement."
+ *                   example: "L'étudiant a été ajouté au cours via un ticket."
  *       400:
  *         description: ID de l'étudiant ou ID du cours manquant
  *       401:

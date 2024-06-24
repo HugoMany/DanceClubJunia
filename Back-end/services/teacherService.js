@@ -34,12 +34,13 @@ class TeacherService {
         }
         const sql = `
         INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo)
-        VALUES (?, ?, ?, ?, ?, 'student', ?, ?)
+        VALUES (?, ?, ?, ?, ?, 'student', ?)
       `;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         console.log("newStudent service | firstname, surname, email, password, connectionMethod : " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo);
         db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo], (err, result) => {
           if (err) {
+            console.log(err.message)
             return reject(new Error("Erreur lors de la création de l'élève."));
           }
 
@@ -115,7 +116,7 @@ class TeacherService {
         // Retirer l'étudiant de la liste
         const index = studentsID.indexOf(parseInt(studentID));
         if (index == -1) {
-          return reject(new Error("Erreur lors de la récupération de l'élève."));
+          return reject(new Error("L'élève ne fait pas parti de ce cours."));
         }
 
         studentsID.splice(index, 1);
@@ -240,7 +241,7 @@ class TeacherService {
           return reject(new Error('Erreur lors de la suppression.'));
         }
         if (result.affectedRows === 0) {
-          return reject(new Error("Le cours n'existe pas ou le professeur n'est pas dans le cours."));
+          return reject(new Error("Le cours n'existe pas ou le professeur n'est pas dans le cours ou le cours est déjà passé."));
         }
         resolve(result);
       });

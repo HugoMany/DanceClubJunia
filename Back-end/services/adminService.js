@@ -206,42 +206,42 @@ class AdminService {
             if (isEvening && teachers && teachers.length > 0) {
                 return reject(new Error("Impossible de spécifier des enseignants pour un cours en soirée."));
             }
-    
+
             // Conversion de la chaîne de tags en tableau
             const tagArray = tags ? tags.split(",").map(tag => tag.trim()) : [];
-    
+
             // Obtention des IDs des enseignants et des étudiants à partir de leurs adresses e-mail
             Promise.all([
                 this.getUserIDsByEmails(teachers),
                 this.getUserIDsByEmails(students)
             ])
-            .then(([teacherIDs, studentIDs]) => {
-                const sql = `
+                .then(([teacherIDs, studentIDs]) => {
+                    const sql = `
                     INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags, roomPrice, attendance)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
-    
-                // Pour `call`, une liste vide est insérée en tant que chaîne JSON
-                const callList = JSON.stringify([]);
-    
-                db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, JSON.stringify([])], (err, result) => {
-                    if (err) {
-                        return reject(new Error("Erreur lors de la création du cours."));
-                    }
-    
-                    const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
-                    db.query(selectSql, [result.insertId], (err, rows) => {
-                        if (err || !rows[0]) {
-                            return reject(new Error("Erreur lors de la récupération du cours."));
+
+                    // Pour `call`, une liste vide est insérée en tant que chaîne JSON
+                    const callList = JSON.stringify([]);
+
+                    db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, JSON.stringify([])], (err, result) => {
+                        if (err) {
+                            return reject(new Error("Erreur lors de la création du cours."));
                         }
-    
-                        resolve(rows[0]);
+
+                        const selectSql = 'SELECT * FROM Courses WHERE courseID = ?';
+                        db.query(selectSql, [result.insertId], (err, rows) => {
+                            if (err || !rows[0]) {
+                                return reject(new Error("Erreur lors de la récupération du cours."));
+                            }
+
+                            resolve(rows[0]);
+                        });
                     });
+                })
+                .catch(error => {
+                    reject(new Error(error.message));
                 });
-            })
-            .catch(error => {
-                reject(new Error(error.message));
-            });
         });
     }
 
@@ -257,7 +257,7 @@ class AdminService {
                     console.log(err.message)
                     return reject(new Error("Erreur lors de la récupération des ID."));
                 }
-                console.log("rows",rows)
+                console.log("rows", rows)
                 if (rows.length == 0) {
                     console.log("rows0")
                     return reject(new Error("Les emails n'appartiennent à aucun utilisateur."));
@@ -270,34 +270,43 @@ class AdminService {
             });
         });
     }
-    
+
 
     async createTeacher(firstname, surname, email, password, connectionMethod, photo, description) {
         return new Promise((resolve, reject) => {
-          const checkEmailSql = 'SELECT userID FROM Users WHERE email = ?';
-          db.query(checkEmailSql, [email], (err, results) => {
-            if (err) {
-              return reject(new Error("Erreur lors de la vérification de l'email."));
-            }
-            if (results.length > 0) {
-              return reject(new Error("L'email est déjà utilisé."));
-            }
-      
-            const hashedPassword = bcrypt.hashSync(password, saltRounds);
-            const sql = `
+            const checkEmailSql = 'SELECT userID FROM Users WHERE email = ?';
+            db.query(checkEmailSql, [email], (err, results) => {
+                if (err) {
+                    return reject(new Error("Erreur lors de la vérification de l'email."));
+                }
+                if (results.length > 0) {
+                    return reject(new Error("L'email est déjà utilisé."));
+                }
+
+                const hashedPassword = bcrypt.hashSync(password, saltRounds);
+                const sql = `
               INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
               VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
             `;
-      
-            db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo, description], (err, result) => {
-              if (err) {
-                return reject(new Error("Erreur lors de la création du compte enseignant."));
-              }
-              resolve(result.insertId);
+
+                db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo, description], (err, result) => {
+                    if (err) {
+                        return reject(new Error("Erreur lors de la création du compte enseignant."));
+                    }
+                    // Vérification de l'insertion réussie
+                    if (result.affectedRows > 0) {
+                        const selectSql = 'SELECT * FROM Users WHERE userID = ?';
+                        db.query(selectSql, [result.insertId], (err, rows) => {
+                            if (err) {
+                                return reject(new Error("Erreur lors de la récupération du professeur."));
+                            }
+                            resolve(rows[0]);
+                        });
+                    }
+                });
             });
-          });
         });
-      }
+    }
 
     async getPayments(startDate = null, endDate = null) {
         return new Promise((resolve, reject) => {
@@ -338,15 +347,15 @@ class AdminService {
                 if (rows[0].userType !== "teacher") {
                     return reject(new Error("Cet utilisateur n'est pas un professeur."));
                 }
-    
+
                 const selectSql = 'SELECT teachersID, courseID FROM Courses WHERE JSON_CONTAINS(teachersID, ?)';
                 db.query(selectSql, [JSON.stringify([teacherID])], (err, rows) => {
                     if (err) {
                         return reject(new Error("Erreur lors de la récupération du professeur dans le cours."));
                     }
-    
+
                     let updatePromises = [];
-    
+
                     rows.forEach(course => {
                         let teacherIDs = JSON.parse(course.teachersID);
                         const index = teacherIDs.indexOf(parseInt(teacherID));
@@ -354,7 +363,7 @@ class AdminService {
                             teacherIDs.splice(index, 1);
                             const updateSql = 'UPDATE Courses SET teachersID = ? WHERE courseID = ?';
                             const updatedTeacherIDs = JSON.stringify(teacherIDs);
-    
+
                             updatePromises.push(new Promise((resolveUpdate, rejectUpdate) => {
                                 db.query(updateSql, [updatedTeacherIDs, course.courseID], (err, result) => {
                                     if (err || result.affectedRows === 0) {
@@ -365,20 +374,20 @@ class AdminService {
                             }));
                         }
                     });
-    
+
                     Promise.all(updatePromises).then(() => {
                         const deleteCardsSql = 'DELETE FROM Cards WHERE userID = ?';
                         db.query(deleteCardsSql, [teacherID], (err, result) => {
                             if (err) {
                                 return reject(new Error("Erreur lors de la suppression du professeur dans les cartes."));
                             }
-    
+
                             const deletePaymentsSql = 'DELETE FROM Payments WHERE userID = ?';
                             db.query(deletePaymentsSql, [teacherID], (err, result) => {
                                 if (err) {
                                     return reject(new Error("Erreur lors de la suppression des paiements."));
                                 }
-    
+
                                 const deleteUserSql = 'DELETE FROM Users WHERE userID = ?';
                                 db.query(deleteUserSql, [teacherID], (err, result) => {
                                     if (err || result.affectedRows === 0) {
@@ -407,15 +416,15 @@ class AdminService {
                 if (rows[0].userType !== "student") {
                     return reject(new Error("Cet utilisateur n'est pas un étudiant."));
                 }
-    
+
                 const selectSql = 'SELECT studentsID, courseID FROM Courses WHERE JSON_CONTAINS(studentsID, ?)';
                 db.query(selectSql, [JSON.stringify([studentID])], (err, rows) => {
                     if (err) {
                         return reject(new Error("Erreur lors de la récupération de l'étudiant dans le cours."));
                     }
-    
+
                     let updatePromises = [];
-    
+
                     rows.forEach(course => {
                         let studentIDs = JSON.parse(course.studentsID);
                         const index = studentIDs.indexOf(parseInt(studentIDs));
@@ -423,7 +432,7 @@ class AdminService {
                             studentIDs.splice(index, 1);
                             const updateSql = 'UPDATE Courses SET studentsID = ? WHERE courseID = ?';
                             const updatedStudentIDs = JSON.stringify(studentIDs);
-    
+
                             updatePromises.push(new Promise((resolveUpdate, rejectUpdate) => {
                                 db.query(updateSql, [updatedStudentIDs, course.courseID], (err, result) => {
                                     if (err || result.affectedRows === 0) {
@@ -434,20 +443,20 @@ class AdminService {
                             }));
                         }
                     });
-    
+
                     Promise.all(updatePromises).then(() => {
                         const deleteCardsSql = 'DELETE FROM Cards WHERE userID = ?';
                         db.query(deleteCardsSql, [studentID], (err, result) => {
                             if (err) {
                                 return reject(new Error("Erreur lors de la suppression de l'étudiant dans les cartes."));
                             }
-    
+
                             const deletePaymentsSql = 'DELETE FROM Payments WHERE userID = ?';
                             db.query(deletePaymentsSql, [studentID], (err, result) => {
                                 if (err) {
                                     return reject(new Error("Erreur lors de la suppression des paiements."));
                                 }
-    
+
                                 const deleteUserSql = 'DELETE FROM Users WHERE userID = ?';
                                 db.query(deleteUserSql, [studentID], (err, result) => {
                                     if (err || result.affectedRows === 0) {
@@ -462,43 +471,43 @@ class AdminService {
             });
         });
     }
-    
+
     async modifyTeacher(teacherID, values, fieldsToUpdate) {
         return new Promise((resolve, reject) => {
-          const sql = `
+            const sql = `
             UPDATE Users
             SET ${fieldsToUpdate.join(', ')}
             WHERE userID = ? AND userType = 'teacher'
           `;
-    
-          db.query(sql, values, (err, result) => {
-            if (err) {
-              return reject(new Error("Erreur lors de la modification du professeur."));
-            }
-            if (result.affectedRows == 0) {
-              return reject(new Error("Il n'existe pas de professeur avec cet ID."));
-            }
-            const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, tickets, photo, description FROM Users WHERE userID = ?';
-            db.query(selectSql, [teacherID], (err, rows) => {
-              if (err) {
-                return reject(new Error("Erreur lors de la récupération du professeur."));
-              }
-    
-              resolve(rows);
-            });
-          });
-        });
-      }
 
-      async calculateRevenue(startDate = '1970-01-01', endDate = new Date().toISOString().slice(0, 10)) {
+            db.query(sql, values, (err, result) => {
+                if (err) {
+                    return reject(new Error("Erreur lors de la modification du professeur."));
+                }
+                if (result.affectedRows == 0) {
+                    return reject(new Error("Il n'existe pas de professeur avec cet ID."));
+                }
+                const selectSql = 'SELECT userID, firstname, surname, email, connectionMethod, tickets, photo, description FROM Users WHERE userID = ?';
+                db.query(selectSql, [teacherID], (err, rows) => {
+                    if (err) {
+                        return reject(new Error("Erreur lors de la récupération du professeur."));
+                    }
+
+                    resolve(rows);
+                });
+            });
+        });
+    }
+
+    async calculateRevenue(startDate = '1970-01-01', endDate = new Date().toISOString().slice(0, 10)) {
         return new Promise((resolve, reject) => {
             if (!startDate || startDate == "") {
-              startDate = '1970-01-01';
+                startDate = '1970-01-01';
             }
             if (!endDate || endDate == "") {
-              endDate = new Date().toISOString().slice(0, 10);
+                endDate = new Date().toISOString().slice(0, 10);
             }
-          const query = `
+            const query = `
             SELECT c.courseID, c.roomPrice, p.userID, p.price, p.date, c.teachersID
             FROM Payments p
             JOIN (
@@ -513,70 +522,70 @@ class AdminService {
             JOIN Courses c ON p.itemID = c.courseID
             WHERE p.price > 0
           `;
-      
-          db.query(query, [startDate, endDate], (err, results) => {
-            if (err) {
-              return reject(new Error("Erreur lors du calcul des revenus."));
-            }
-            if (results.length === 0) {
-              return reject(new Error("Aucun paiement trouvé."));
-            }
-      
-            const courses = {};
-            const assoPercentage = 0.30; // Pourcentage des revenus destinés à l'association
-            const teacherPercentage = 0.70; // Pourcentage des revenus destinés aux professeurs
-            let totalProfit = 0;
-            let assoPart = 0;
-            const teachersRevenue = {};
-            results.forEach(payment => {
-              const courseId = payment.courseID;
-      
-              if (!courses[courseId]) {
-                courses[courseId] = {
-                  courseID: courseId,
-                  roomPrice: payment.roomPrice
-                };
-              }
-      
-              // Calcul du profit net pour le cours en soustrayant le prix de la salle
-              const courseProfit = payment.price - payment.roomPrice;
-              courses[courseId].totalProfit += courseProfit;
-      
-              // Calcul des parts pour ce paiement
-              assoPart += courseProfit * assoPercentage;
-              const teachersPart = courseProfit * teacherPercentage;
-      
-              // Calcul de la part individuelle des professeurs
-              const teacherIDs = JSON.parse(payment.teachersID);
-              const individualTeacherPart = teachersPart / teacherIDs.length;
-      
-              teacherIDs.forEach(teacherID => {
-                if (!teachersRevenue[teacherID]) {
-                  teachersRevenue[teacherID] = 0;
-                }
-                if (courseProfit > 0){
-                    teachersRevenue[teacherID] += individualTeacherPart;
-                }
-              });
-      
-              // Ajouter le profit net du cours au revenu total
-              totalProfit += courseProfit;
-            });
 
-            const teachersRevenueList = Object.entries(teachersRevenue).map(([teacherID, revenue]) => ({
-              teacherID: parseInt(teacherID, 10),
-              revenue
-            }));
-      
-            resolve({
-              totalProfit: totalProfit,
-              assoPart: assoPart,
-              teachersRevenue: teachersRevenueList
+            db.query(query, [startDate, endDate], (err, results) => {
+                if (err) {
+                    return reject(new Error("Erreur lors du calcul des revenus."));
+                }
+                if (results.length === 0) {
+                    return reject(new Error("Aucun paiement trouvé."));
+                }
+
+                const courses = {};
+                const assoPercentage = 0.30; // Pourcentage des revenus destinés à l'association
+                const teacherPercentage = 0.70; // Pourcentage des revenus destinés aux professeurs
+                let totalProfit = 0;
+                let assoPart = 0;
+                const teachersRevenue = {};
+                results.forEach(payment => {
+                    const courseId = payment.courseID;
+
+                    if (!courses[courseId]) {
+                        courses[courseId] = {
+                            courseID: courseId,
+                            roomPrice: payment.roomPrice
+                        };
+                    }
+
+                    // Calcul du profit net pour le cours en soustrayant le prix de la salle
+                    const courseProfit = payment.price - payment.roomPrice;
+                    courses[courseId].totalProfit += courseProfit;
+
+                    // Calcul des parts pour ce paiement
+                    assoPart += courseProfit * assoPercentage;
+                    const teachersPart = courseProfit * teacherPercentage;
+
+                    // Calcul de la part individuelle des professeurs
+                    const teacherIDs = JSON.parse(payment.teachersID);
+                    const individualTeacherPart = teachersPart / teacherIDs.length;
+
+                    teacherIDs.forEach(teacherID => {
+                        if (!teachersRevenue[teacherID]) {
+                            teachersRevenue[teacherID] = 0;
+                        }
+                        if (courseProfit > 0) {
+                            teachersRevenue[teacherID] += individualTeacherPart;
+                        }
+                    });
+
+                    // Ajouter le profit net du cours au revenu total
+                    totalProfit += courseProfit;
+                });
+
+                const teachersRevenueList = Object.entries(teachersRevenue).map(([teacherID, revenue]) => ({
+                    teacherID: parseInt(teacherID, 10),
+                    revenue
+                }));
+
+                resolve({
+                    totalProfit: totalProfit,
+                    assoPart: assoPart,
+                    teachersRevenue: teachersRevenueList
+                });
             });
-          });
         });
-      }
-    
+    }
+
 }
 
 

@@ -246,7 +246,6 @@ router.post('/registerStudent', guestController.registerStudent);
  *         schema:
  *           type: string
  *           format: date
- *           required: true
  *           description: Date a partir de laquelle on recupere les cours au format "YYYY-MM-DD"
  *           example: 2024-01-01
  *       - in: query
@@ -254,7 +253,6 @@ router.post('/registerStudent', guestController.registerStudent);
  *         schema:
  *           type: string
  *           format: date
- *           required: true
  *           description: Date jusqu'a laquelle on recupere les cours au format "YYYY-MM-DD"
  *           example: 2025-01-01
  *     responses:
@@ -321,8 +319,6 @@ router.post('/registerStudent', guestController.registerStudent);
  *                         type: string
  *                         example: "[\"danse\", \"salsa\", \"debutant\"]"
  *       400:
- *         description: Les paramètres startDate et endDate sont requis.
- *       401:
  *         description: Les dates de début et de fin doident être au format YYYY-MM-DD.
  *       501:
  *         description: Erreur lors de la récupération des cours.
@@ -497,12 +493,10 @@ router.post('/getContactsTeachers', guestController.getContactsTeachers);
  *       401:
  *         description: Email invalide.
  *       501:
- *         description: Erreur lors de la vérification de l'existence du token.
- *       502:
  *         description: Erreur lors de l'insertion du token dans la base de données.
- *       503:
+ *       502:
  *         description: Erreur lors de la vérification de l'existence de l'utilisateur.
- *       504:
+ *       503:
  *         description: L'utilisateur n'existe pas.
  *       500:
  *         description: Erreur SQL
@@ -550,15 +544,11 @@ router.post('/generateResetToken', guestController.generateResetToken);
  *       401:
  *         description: Le mot de passe est trop court.
  *       501:
- *         description: Token expiré.
+ *         description: Token expiré ou invalide.
  *       502:
- *         description: Token introuvable.
- *       503:
  *         description: Erreur lors de la modification du mot de passe.
- *       504:
+ *       503:
  *         description: Le token n'existe pas.
- *       505:
- *         description: Token invalide.
  *       500:
  *         description: Erreur SQL
  */
