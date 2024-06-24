@@ -44,7 +44,9 @@ const MdpForget = () => {
             <h1>Page de Mot de Passe Oublié</h1>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
             {buttonEtat === "true" && (
-            <Button variant="contained" color="primary" onClick={generateResetToken}>Générer un Jeton de Réinitialisation</Button>
+            <Button variant="contained" color="primary" onClick={generateResetToken}>Envoi de l'email de récupération
+
+            </Button>
             )}
 
             {message && <p>{message}</p>}
