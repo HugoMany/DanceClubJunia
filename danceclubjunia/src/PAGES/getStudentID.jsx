@@ -70,8 +70,8 @@ search
       {dataUserFound && (
         <div>
           <p>User ID: {dataUserFound.userID}</p>
-          <p>Surname: {dataUserFound.surname}</p>
-          <p>Firstname: {dataUserFound.firstname}</p>
+          <p>Nom: {dataUserFound.surname}</p>
+          <p>Prénom: {dataUserFound.firstname}</p>
           <AjoutCredits id={userID} userID={userID} />
         </div>
       )}

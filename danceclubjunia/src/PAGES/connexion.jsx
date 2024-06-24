@@ -125,7 +125,7 @@ function Connexion() {
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <form onSubmit={handleSubmit}>
                     <label>
-                        <input placeholder="E-mail" type="email" value={email} onChange={handleEmailChange} />
+                        <input placeholder="Email" type="email" value={email} onChange={handleEmailChange} />
                     </label>
                     <br />
                     <label>

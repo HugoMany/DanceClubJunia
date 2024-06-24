@@ -49,16 +49,16 @@ const AjoutCredits = ({ userID }) => {
     <div>
       <input
         type="number"
-        placeholder="Credit Amount"
+        placeholder="nombre de place"
         value={creditAmount}
         onChange={(e) => setCreditAmount(e.target.value)}
       />
       <select value={creditType} onChange={(e) => setCreditType(e.target.value)}>
         <option value="ticket">Ticket</option>
-        <option value="card">Card</option>
+        <option value="card">Carte</option>
         <option value="abonement">Abonement</option>
       </select>
-      <Button variant="contained" color="primary" onClick={addCredit}>Add Credit</Button>
+      <Button variant="contained" color="primary" onClick={addCredit}>Ajouter</Button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>
