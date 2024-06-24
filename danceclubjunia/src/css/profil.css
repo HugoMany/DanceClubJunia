@@ -22,3 +22,9 @@
 .Profil {
     overflow-y: scroll;
 }   
+.rechercheCredit {
+    height: 5vh;
+}
+.rechercheCredit div,.rechercheCredit button{
+    height: 100%;
+}

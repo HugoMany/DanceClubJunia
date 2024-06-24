@@ -116,10 +116,10 @@ if (loading) {
       <div className='infoProfil' >
       <h2>Vos informations</h2>
 
-      <p>Firstname: {userData?.student.firstname}</p>
-      <p>Surname: {userData?.student.surname}</p>
-      <p>Email: {userData?.student.email}</p>
-      <p> Tickets unitaire:    {userData?.student.credit}</p>
+      <p><b>Prénom:</b> {userData?.student.firstname}</p>
+      <p><b>Surname:</b> {userData?.student.surname}</p>
+      <p><b>Email:</b> {userData?.student.email}</p>
+      <p><b>Tickets unitaire:</b>    {userData?.student.credit}</p>
       <QRCode  link={URL_FRONT+"/profil/student/"+idStudent}></QRCode>
 
       </div>
@@ -134,10 +134,10 @@ if (loading) {
       {userPaymentHistory?.payments.length > 0 ? (
     userPaymentHistory.payments.map((payment, index) => (
         <div key={index}>
-            <div>Payment ID: {payment.paymentID}</div>
-            <div>Price: {payment.price}</div>
+            {/* <div><b>ID Du paiem ID:</b> {payment.paymentID}</div> */}
+            <div>Debit: {payment.price}</div>
             <div>Type: {payment.type}</div>
-            <div>Quantity: {payment.quantity}</div>
+            <div>Quantité: {payment.quantity}</div>
             <br></br>
         </div>
     ))

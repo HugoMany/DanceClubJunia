@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AjoutCredits from './ajoutCredits';
 import Button from '@mui/material/Button';
 import { URL_DB } from '../const/const';
-
+import { TextField } from '@mui/material';
 const GetStudentID = () => {
   const [email, setEmail] = useState('');
   const [userID, setUserID] = useState(null);
@@ -48,15 +48,21 @@ const GetStudentID = () => {
   };
 
   return (
-    <div>
+    <div >
       <h2>Recherche d'utilisateur par email</h2>
-      <input
-        type="text"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={searchStudent}>Search</Button>
+      <div className='rechercheCredit'>
+        
+      <TextField
+                        label="Email de l'utilisateur"
+                        variant="outlined"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+      <Button variant="contained" color="primary" onClick={searchStudent}>
+      <span class="material-symbols-outlined">
+search
+</span>
+      </Button>
+      </div>
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       {dataUserFound && (
         <div>

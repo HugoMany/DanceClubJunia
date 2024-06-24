@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { URL_DB } from '../const/const';
+import { Button } from '@mui/material';
 
 const AjoutCredits = ({ userID }) => {
   const [creditAmount, setCreditAmount] = useState('');
@@ -57,7 +58,7 @@ const AjoutCredits = ({ userID }) => {
         <option value="card">Card</option>
         <option value="abonement">Abonement</option>
       </select>
-      <button onClick={addCredit}>Add Credit</button>
+      <Button variant="contained" color="primary" onClick={addCredit}>Add Credit</Button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
     </div>
