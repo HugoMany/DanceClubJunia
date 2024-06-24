@@ -207,11 +207,11 @@ const CoursDynamique = () => {
             <Header title={course.title} />
             <h1>{course.title}</h1>
             <p>Type: {course.type}</p>
-            <p>Start Date: {new Date(course.startDate).toDateString()}</p>
-            <p>Start Time: {startTime}</p>
-            <p>Location: {course.location}</p>
-            <p>Duration: {course.duration} minutes</p>
-            <p>Teachers: {teachers.map(teacher => teacher.surname).join(', ')}</p>
+            <p>Date: {new Date(course.startDate).toDateString()}</p>
+            <p>Heure: {startTime}</p>
+            <p>Lieu: {course.location}</p>
+            <p>Durée: {course.duration} minutes</p>
+            <p>Professeur: {teachers.map(teacher => teacher.surname).join(', ')}</p>
             {!courseIsPast && (
                 <Button 
                     variant="contained" 
