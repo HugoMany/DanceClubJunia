@@ -127,10 +127,10 @@ const AddlinkToACours = (idCoursSelected) => {
         const links = JSON.parse(cours.links); // Parse the JSON string to an array
         return (
             <div>
-                <h1>Add link to a Course</h1>
-                <p>Id cours selectionné: {cours.courseID}</p>
+                <h1>Ajouter un lien à un cours</h1>
+                {/* <p>Id cours selectionné: {cours.courseID}</p> */}
                 <div className='addAndDeleteTag'>
-                    linkS: <br />
+                    <h3>Liens</h3>
                     {links.map((link, index) => (
                         <React.Fragment key={index}>
                             {link}
