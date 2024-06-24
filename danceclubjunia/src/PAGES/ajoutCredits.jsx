@@ -3,6 +3,7 @@ import { URL_DB } from '../const/const';
 
 const AjoutCredits = ({ userID }) => {
   const [creditAmount, setCreditAmount] = useState('');
+  const [creditType, setCreditType] = useState('ticket'); // Default to 'ticket'
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -14,7 +15,7 @@ const AjoutCredits = ({ userID }) => {
         return;
       }
 
-      const response = await fetch(URL_DB + 'student/buyPlace', {
+      const response = await fetch(URL_DB + 'teacher/addPlaceStudent', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -22,7 +23,7 @@ const AjoutCredits = ({ userID }) => {
         },
         body: JSON.stringify({
           studentID: userID,
-          type: "ticket",
+          type: creditType,
           number: parseInt(creditAmount, 10)
         })
       });
@@ -51,6 +52,11 @@ const AjoutCredits = ({ userID }) => {
         value={creditAmount}
         onChange={(e) => setCreditAmount(e.target.value)}
       />
+      <select value={creditType} onChange={(e) => setCreditType(e.target.value)}>
+        <option value="ticket">Ticket</option>
+        <option value="card">Card</option>
+        <option value="abonement">Abonement</option>
+      </select>
       <button onClick={addCredit}>Add Credit</button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
