@@ -128,7 +128,7 @@ const MenuDeroulant = () => {
         {isConnectedVar ? (
           [
             <MenuItem key="profile" onClick={handleClose} component={Link} to="/profil">Profil</MenuItem>,
-            <MenuItem key="logout" onClick={handleClose} component={Link} to="/logout">Logout</MenuItem>
+            <MenuItem key="logout" onClick={handleClose} component={Link} to="/logout">Deconnexion</MenuItem>
           ]
         ) : (
           [
