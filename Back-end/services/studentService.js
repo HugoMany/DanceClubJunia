@@ -15,14 +15,8 @@ class StudentService {
     });
   }
 
-
-
   async buyPlace(studentID, type, number) {
     return new Promise((resolve, reject) => {
-
-    //
-    //  Il faut ajouter une vérification du droit pour le faire (hello asso)
-    //
 
       let priceQuery;
       if (type === "card") {
@@ -188,7 +182,6 @@ class StudentService {
     });
   }
 
-  // Fonction pour vérifier si l'étudiant est déjà inscrit au cours
   async checkIfStudentInCourse(studentID, courseID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT studentsID FROM Courses WHERE courseID = ?', [courseID], (err, rows) => {
@@ -201,7 +194,6 @@ class StudentService {
     });
   };
 
-  // Fonction pour obtenir les détails du cours
   async getCourseDetails(courseID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM Courses WHERE courseID = ?', [courseID], (err, rows) => {
@@ -216,7 +208,6 @@ class StudentService {
     });
   };
 
-  // Fonction pour obtenir les détails de l'étudiant
   async getStudentDetails(studentID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM Users WHERE userID = ?', [studentID], (err, rows) => {
@@ -234,7 +225,6 @@ class StudentService {
     });
   };
 
-  // Fonction pour ajouter un étudiant au cours
   async addStudentToCourse(studentID, courseID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT studentsID FROM Courses WHERE courseID = ?', [courseID], (err, rows) => {
@@ -255,7 +245,6 @@ class StudentService {
     });
   };
 
-  // Fonction pour obtenir une carte valide
   async getValidCard(studentID) {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM Cards WHERE userID = ? AND number < maxNumber ORDER BY number DESC LIMIT 1', [studentID], (err, rows) => {
@@ -270,7 +259,6 @@ class StudentService {
     });
   };
 
-  // Fonction pour utiliser une carte
   async useCard(card) {
     return new Promise((resolve, reject) => {
       const newNumber = card.number + 1;
@@ -291,14 +279,13 @@ class StudentService {
     });
   };
 
-  // Fonction pour obtenir le prix du ticket ou de la carte
   async getPrice(type, number) {
     return new Promise((resolve, reject) => {
       let query = 'SELECT price FROM Places WHERE type = ?';
       if (type === "card"){
         query = 'SELECT price FROM Places WHERE type = ? AND number = ?';
       }
-      console.log("getPrice",type,number,query);
+      
       db.query(query, [type, number], (err, results) => {
         if (err || results.length === 0) {
           return reject(new Error("Erreur lors de la récupération du prix."));
@@ -312,7 +299,6 @@ class StudentService {
     });
   }
 
-  // Fonction pour enregistrer le paiement
   async logPayment(userID, type, date, paymentType, sourceID, itemID, price) {
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID, itemID) VALUES (?, ?, ?, 0, ?, ?, ?, ?)';
@@ -362,7 +348,7 @@ class StudentService {
           await this.refundTicket(student);
           await this.logPayment(studentID, "course", currentDate, 'ticket', studentID, courseID, -lastPayment.price);
         } else if (lastPayment.paymentType.startsWith('card')) {
-          // Rembourse une carte
+          // Rembourse une carte de valeur équivalente avec une place restante
           const cardMaxNumber = parseInt(lastPayment.paymentType.replace('card', ''));
           await this.refundCard(studentID, cardMaxNumber);
           await this.logPayment(studentID, "course", currentDate, `card${cardMaxNumber}`, studentID, courseID, -lastPayment.price);
@@ -373,9 +359,8 @@ class StudentService {
         reject(error);
       }
     });
-    }
+  }
   
-  // Méthode pour récupérer le dernier paiement de l'étudiant pour le cours
   async getLastPayment(studentID, courseID) {
     return new Promise((resolve, reject) => {
       const query = `

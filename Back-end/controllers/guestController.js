@@ -241,7 +241,7 @@ exports.generateResetToken = async (req, res) => {
     try {
         const token = await guestService.generateResetToken(email);
 
-        const resetUrl = `http://localhost:3001/reset-password/token/${token}`;
+        const resetUrl = config.resetUrl + token;
         const message = `
               <h1>Vous avez demandé une réinitialisation de mot de passe</h1>
               <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>

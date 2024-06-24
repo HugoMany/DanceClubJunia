@@ -366,15 +366,21 @@ router.patch('/removeStudent', teacherController.removeStudent);
  *       402:
  *         description: L'ID du cours n'est pas un entier positif.
  *       501:
- *         description: Erreur lors de la récupération des élèves et des professeurs.
+ *         description: La récupération du nombre de cours du professeur a échoué.
  *       502:
- *         description: Le cours n'existe pas.
+ *         description: Le professeur n'est pas autorisé à modifier ce cours ou le cours n'existe pas.
  *       503:
- *         description: Le professeur n\'est pas autorisé à modifier ce cours. (token)
+ *         description: Erreur lors de la récupération des ID avec les emails fournis.
  *       504:
- *         description: L'élève est déjà dans le cours.
+ *         description: La modification du cours a échoué.
  *       505:
- *         description: Erreur lors de la modification du cours.
+ *         description: Le cours n'existe pas.
+ *       506:
+ *         description: La récupération du cours a échoué.
+ *       507:
+ *         description: Erreur lors de la vérification de l'existence de l'étudiant.
+ *       508:
+ *         description: L'étudiant n'existe pas.
  *       500:
  *         description: Erreur SQL
  */
@@ -543,7 +549,7 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *                   description: Nombre d'etudiants a qui le professeur a fait cours dans la periode specifiee.
  *                   example: 25
  *       400:
- *         description: Les champs teacherID, startDate et endDate doivent être fournis.
+ *         description: Le champ teacherID doit être fourni.
  *       401:
  *         description: L'ID du professeur n'est pas un entier positif.
  *       402:
@@ -1025,6 +1031,8 @@ router.patch('/removeLink', teacherController.removeLink);
  *         description: Le cours a déjà ce tag.
  *       509:
  *         description: Erreur lors de l'ajout du tag.
+ *       510:
+ *         description: L'utilisateur est invalide.
  *       500:
  *         description: Erreur SQL
  */
@@ -1083,7 +1091,7 @@ router.post('/addTag', teacherController.addTag);
  *       506:
  *         description: Le professeur n'est pas dans le cours.
  *       507:
- *         description: UserType invalide.
+ *         description: userType invalide.
  *       508:
  *         description: Erreur lors de la récupération des tags du cours.
  *       509:

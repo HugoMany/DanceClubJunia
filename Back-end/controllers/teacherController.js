@@ -356,7 +356,7 @@ exports.getTeacherPlaces = async (req, res) => {
     }
 
     if (!teacherID) {
-      return res.status(400).json({ error: 'Le champ teacherID doit être fournis.' });
+      return res.status(400).json({ error: 'Le champ teacherID doit être fourni.' });
     }
     if (!Number.isInteger(parseInt(teacherID)) || teacherID <= 0) {
       return res.status(401).json({ error: 'L\'ID du professeur n\'est pas un entier positif.' });
@@ -498,7 +498,7 @@ exports.modifyCourse = async (req, res) => {
       case "Le professeur n'est pas autorisé à modifier ce cours ou le cours n'existe pas.":
         res.status(502).json({ success: false, message: error.message });
         break;
-      case "Erreur lors de la récupération des ID avec les emails fournis":
+      case "Erreur lors de la récupération des ID avec les emails fournis.":
         res.status(503).json({ success: false, message: error.message });
         break;
       case "La modification du cours a échoué.":
@@ -509,6 +509,12 @@ exports.modifyCourse = async (req, res) => {
         break;
       case "La récupération du cours a échoué.":
         res.status(506).json({ success: false, message: error.message });
+        break;
+      case "Erreur lors de la vérification de l'existence de l'étudiant.":
+        res.status(507).json({ success: false, message: error.message });
+        break;
+      case "L'étudiant n'existe pas.":
+        res.status(508).json({ success: false, message: error.message });
         break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -712,9 +718,12 @@ exports.addTag = async (req, res) => {
   if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
     return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
+  if (tag.includes(',')) {
+    return res.status(403).json({ error: "Le tag ne doit pas contenir de virgule." });
+  }
 
   try {
-    const result = await teacherService.addTag(userID, courseID, tag);
+    await teacherService.addTag(userID, courseID, tag);
 
     res.status(200).json({ success: true, message: 'Tag added successfully' });
   } catch (error) {
@@ -748,6 +757,9 @@ exports.addTag = async (req, res) => {
       case "Erreur lors de l'ajout du tag.":
         res.status(509).json({ success: false, message: error.message });
         break;
+      case "L'utilisateur est invalide.":
+        res.status(510).json({ success: false, message: error.message });
+        break;
       default:
         res.status(500).json({ success: false, message: 'Erreur SQL' });
     }
@@ -770,6 +782,9 @@ exports.removeTag = async (req, res) => {
     }
     if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
       return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
+    }
+    if (tag.includes(',')) {
+      return res.status(403).json({ error: "Le tag ne doit pas contenir de virgule." });
     }
 
     await teacherService.removeTag(courseID, userID, tag);
@@ -798,7 +813,7 @@ exports.removeTag = async (req, res) => {
       case "Le professeur n'est pas dans le cours.":
         res.status(506).json({ success: false, message: error.message });
         break;
-      case "UserType invalide.":
+      case "userType invalide.":
         res.status(507).json({ success: false, message: error.message });
         break;
       case "Erreur lors de la récupération des tags du cours.":
@@ -827,7 +842,8 @@ exports.markAttendance = async (req, res) => {
   };
 
   try {
-    const result = await teacherService.markAttendance(user, studentID, courseID);
+    await teacherService.markAttendance(user, studentID, courseID);
+
     res.status(200).json({ success: true, message: "Présence marquée avec succès." });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

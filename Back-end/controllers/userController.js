@@ -149,7 +149,10 @@ exports.searchCourse = async (req, res) => {
 
 exports.getContactsStudents = async (req, res) => {
   try {
+    console.log("getContactsStudents");
+
     const contacts = await userService.getContactsStudents();
+
     res.status(200).json({ success: true, contacts: contacts });
   } catch (error) {
     console.error('getContactsStudents | error:', error);
@@ -172,14 +175,15 @@ exports.getProfile = async (req, res) => {
     const userTypeFromToken = req.userType;
 
     console.log("getProfile | userID : " + userID);
+
     if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken != userID) {
       return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
     }
 
-
     if (!userID) {
       return res.status(400).json({ error: "Champ userID manquant." });
     }
+
     if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
@@ -219,7 +223,6 @@ exports.modifyProfile = async (req, res) => {
     if((userTypeFromToken == "student" || userTypeFromToken == "teacher") && userIDFromToken == userID) {
       return res.status(402).json({ error: "Le userID et le token ne correspondent pas" });
     }
-
 
     if (!userID) {
       return res.status(400).json({ error: 'userID manquant' });

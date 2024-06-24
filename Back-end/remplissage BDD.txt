@@ -1,0 +1,39 @@
+TRUNCATE TABLE Cards;
+TRUNCATE TABLE Courses;
+TRUNCATE TABLE Payments;
+TRUNCATE TABLE Places;
+TRUNCATE TABLE Users;
+TRUNCATE TABLE refreshToken;
+
+INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description) VALUES
+('Admin', 'User', 'admin@example.com', 'hashedpassword1', 'email', 'admin', NULL, NULL),
+('John', 'Doe', 'teacher1@example.com', 'hashedpassword2', 'email', 'teacher', 'john_doe.png', 'Expert in Salsa and Ballroom dance.'),
+('Jane', 'Doe', 'teacher2@example.com', 'hashedpassword3', 'email', 'teacher', NULL, 'Specialist in Hip Hop and Modern dance.'),
+('Alice', 'Smith', 'student1@example.com', 'hashedpassword4', 'email', 'student', 'alice_smith.png', NULL),
+('Bob', 'Brown', 'student2@example.com', 'hashedpassword5', 'email', 'student', NULL, NULL),
+('Charlie', 'Davis', 'student3@example.com', 'hashedpassword6', 'email', 'student', 'charlie_davis.png', NULL);
+
+INSERT INTO Places (type, price, number) VALUES
+('ticket', 5.00, 1),
+('card', 15.00, 3),
+('card', 25.00, 5),
+('card', 50.00, 10);
+
+INSERT INTO Cards (userID, number, maxNumber) VALUES
+(4, 2, 3),  -- Utilise une carte de 3 places
+(5, 1, 5),  -- Utilise une carte de 5 places
+(6, 3, 10); -- Utilise une carte de 10 places
+
+INSERT INTO Courses (image, title, type, duration, startDate, location, maxParticipants, paymentType, isEvening, recurrence, teachersID, links, studentsID, tags, roomPrice) VALUES
+('image1.png', 'Cours de Salsa', 'Salsa', 60, '2024-06-01 18:00:00', 'Salle 1', 20, 'ticket', 1, 7, '[]', '["http://example.com"]', '[4]', '["danse", "salsa"]', 100.00),
+('image2.png', 'Cours de Hip Hop', 'Hip Hop', 90, '2024-06-02 19:00:00', 'Salle 2', 15, 'card', 0, 7, '[2]', '["http://example.com"]', '[5]', '["danse", "hiphop"]', 200.00),
+('image3.png', 'Cours de Yoga', 'Yoga', 45, '2024-06-03 08:00:00', 'Salle 3', 25, 'ticket,card', 0, 7, '[1,2]', '["http://example.com"]', '[6]', '["yoga", "bien-être"]', 300.00);
+
+INSERT INTO Payments (userID, price, type, quantity, date, paymentType, sourceID, itemID) VALUES
+(4, 5.00, 'course', 1, '2024-06-01 18:00:00', 'ticket', 4, 1),           -- Réservation de cours avec un ticket
+(4, 15.00, 'card', 3, '2024-06-01 10:00:00', 'cash', 2, NULL),           -- Achat de carte (3 places à 15€)
+(5, 25.00, 'card', 5, '2024-06-02 09:00:00', 'cash', 1, NULL),           -- Achat de carte (5 places à 25€)
+(5, 5.00, 'course', 1, '2024-06-02 19:00:00', 'card3', 5, 2),            -- Réservation de cours avec une carte (3 places, 5€/place)
+(6, 5.00, 'course', 1, '2024-06-03 08:00:00', 'ticket', 6, 3),           -- Réservation de cours avec un ticket
+(6, 50.00, 'card', 10, '2024-06-02 09:00:00', 'cash', 1, NULL),          -- Achat de carte (10 places à 50€)
+(6, 5.00, 'ticket', 1, '2024-06-04 12:00:00', 'cash', 2, NULL);          -- Achat d'un ticket

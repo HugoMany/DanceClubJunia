@@ -538,7 +538,7 @@ exports.calculateRevenue = async (req, res) => {
 
         console.log(`calculateRevenue | startDate, endDate : ${startDate}, ${endDate}`);
 
-        // Vérifie que startDate et endDate sont au format YYYY-MM-DD
+        // Vérifier que startDate et endDate sont au format YYYY-MM-DD
         if ((startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
             return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
         }

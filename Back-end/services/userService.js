@@ -149,10 +149,6 @@ class UserService {
         }
       }
 
-      // Afficher la requête SQL avec les valeurs substituées
-      const formattedSql = db.format(sql, params);
-      console.log('searchCoursesTeacher | Executing SQL query:', formattedSql);
-
       db.query(sql, params, (err, results) => {
         if (err) {
           return reject(new Error("Erreur lors de la recherche de cours."));
@@ -167,10 +163,11 @@ class UserService {
 
   async searchCourse(courseID) {
     return new Promise((resolve, reject) => {
-      let sql = `
+      const sql = `
         SELECT * FROM Courses
         WHERE courseID = ?
       `;
+
       db.query(sql, [courseID], (err, result) => {
         if (err) {
           return reject(new Error("Erreur lors de la recherche de cours."));
@@ -186,10 +183,10 @@ class UserService {
   async getContactsStudents() {
     return new Promise((resolve, reject) => {
       const sql = `
-            SELECT email
-            FROM Users
-            WHERE userType = 'student'
-        `;
+        SELECT email
+        FROM Users
+        WHERE userType = 'student'
+      `;
 
       db.query(sql, (err, rows) => {
         if (err) {
@@ -226,7 +223,7 @@ class UserService {
           WHERE userID = ?
         `;
   
-        // On récupère aussi la description si c'est un teacher ou un admin
+        // On récupère la description mais pas les tickets si c'est un teacher ou un admin
         if (userType === 'teacher' || userType === 'admin') {
           getProfileSql = `
             SELECT userID, firstname, surname, email, connectionMethod, photo, description 
@@ -243,6 +240,7 @@ class UserService {
             return reject(new Error("L'utilisateur n'existe pas."));
           }
   
+          // Si c'est un élève, on récupère aussi ses cartes
           if (userType === 'student') {
             const getCardsSql = `
               SELECT cardID, number, maxNumber 

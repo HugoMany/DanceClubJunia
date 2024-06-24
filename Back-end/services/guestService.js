@@ -2,7 +2,6 @@ const db = require('../config/database');
 const axios = require('axios');
 const bcrypt = require('bcrypt');
 const config = require('../config/config');
-const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
 class GuestService {
@@ -27,7 +26,7 @@ class GuestService {
 
   async verifyCaptcha(captchaToken) {
     const secretKey = config.secretKey;
-    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
+    const verificationUrl = config.verificationUrl + `?secret=${secretKey}&response=${captchaToken}`;
 
     return new Promise((resolve, reject) => {
       axios.post(verificationUrl)
@@ -96,7 +95,7 @@ class GuestService {
         }
 
         if (result.length > 0) {
-          // Update existing token
+          // Mise à jour du token existant
           const updateSql = "UPDATE refreshToken SET token = ? WHERE userID = ?";
           db.query(updateSql, [refreshToken, userId], (err, result) => {
             if (err) {
@@ -105,7 +104,7 @@ class GuestService {
             resolve(result);
           });
         } else {
-          // Insert new token
+          // Insertion d'un nouveau token
           const insertSql = "INSERT INTO refreshToken (userID, token) VALUES (?, ?)";
           db.query(insertSql, [userId, refreshToken], (err, result) => {
             if (err) {
@@ -144,12 +143,12 @@ class GuestService {
               return reject(new Error('Email déjà utilisé.'));
             }
             try {
-              const hashedPassword = await bcrypt.hash(password, saltRounds);
+              const hashedPassword = await bcrypt.hash(password, config.saltRounds);
 
               const sql = `
-              INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, tickets, photo)
-              VALUES (?, ?, ?, ?, ?, 'student', 0, ?)
-            `;
+                INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, tickets, photo)
+                VALUES (?, ?, ?, ?, ?, 'student', 0, ?)
+              `;
 
               db.query(sql, [firstname, surname, email, hashedPassword, connectionMethod, photo], (err, result) => {
                 if (err || result.affectedRows == 0) {
@@ -244,7 +243,7 @@ class GuestService {
             WHERE userType = 'teacher'
         `;
         
-        // Ajouter une condition si des IDs sont fournis
+        // Filtrer par des IDs s'ils sont fournis
         if (ids.length > 0) {
             const placeholders = ids.map(() => '?').join(',');
             sql += ` AND userID IN (${placeholders})`;
@@ -252,7 +251,6 @@ class GuestService {
 
         db.query(sql, ids, (err, rows) => {
             if (err) {
-              console.log(err.message);
                 return reject(new Error("Erreur lors de la récupération des contacts."));
             }
             if (rows.length === 0) {
@@ -273,16 +271,6 @@ class GuestService {
     return new Promise(async(resolve, reject) => {
       const token = jwt.sign({email: email }, config.jwtSecret, { expiresIn: '5m' });
 
-      const insertToken = (email, token) => {
-        const sql = 'INSERT INTO ResetPassword (token, email) VALUES (?, ?)';
-        return new Promise((resolve, reject) => {
-          db.query(sql, [token, email], (err, result) => {
-            if (err || result.affectedRows == 0) return reject(new Error("Erreur lors de l'insertion du token dans la base de données."));
-            resolve(result);
-          });
-        });
-      };
-
       const userExist = (email) => {
         const sql = 'SELECT * FROM Users WHERE email = ?';
         return new Promise((resolve, reject) => {
@@ -298,7 +286,6 @@ class GuestService {
 
       try {
         await userExist(email);
-        await insertToken(email, token);
         resolve(token);
       } catch (error) {
         reject(error);
@@ -320,7 +307,7 @@ class GuestService {
       };
 
       const updatePassword = async (email, newPassword) => {
-        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        const hashedPassword = await bcrypt.hash(newPassword, config.saltRounds);
         const sql = 'UPDATE Users SET password = ? WHERE email = ?';
         return new Promise((resolve, reject) => {
           db.query(sql, [hashedPassword, email], (err, result) => {
@@ -332,23 +319,10 @@ class GuestService {
         });
       };
 
-      const deleteToken = (email) => {
-        const sql = 'DELETE FROM ResetPassword WHERE email = ?';
-        return new Promise((resolve, reject) => {
-          db.query(sql, [email], (err, result) => {
-            if (err || result.affectedRows == 0) {
-              return reject(new Error("Le token n'existe pas."));
-            }
-            resolve(result);
-          });
-        });
-      };
-
       (async () => {
         try {
           const email = await getTokenInfo(token);
           await updatePassword(email, newPassword);
-          await deleteToken(email);
           resolve();
         } catch (error) {
           reject(error);

@@ -1,16 +1,17 @@
 const nodemailer = require('nodemailer');
+const config = require('../config/config');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-        user: 'danceclubjunia@gmail.com',
-        pass: 'jvdq ukat trfi uvdz'
+        user: config.mail,
+        pass: config.mailPass
     }
 });
 
 const sendMail = (to, subject, text, html) => {
     const mailOptions = {
-        from: 'danceclubjunia@gmail.com',
+        from: config.mail,
         to,
         subject,
         text,

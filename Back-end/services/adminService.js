@@ -1,6 +1,6 @@
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const config = require('../config/config');
 
 class AdminService {
     async getAllStudents() {
@@ -34,7 +34,7 @@ class AdminService {
                     return reject(err);
                 }
                 if (result.length === 0) {
-                    return reject(new Error('Aucun professeur trouvé'));
+                    return reject(new Error('Aucun professeur trouvé.'));
                 }
                 resolve(result);
             });
@@ -221,9 +221,6 @@ class AdminService {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
 
-                    // Pour `call`, une liste vide est insérée en tant que chaîne JSON
-                    const callList = JSON.stringify([]);
-
                     db.query(sql, [image, title, type, duration, startDateTime, location, maxParticipants, paymentType, isEvening, recurrence, JSON.stringify(teacherIDs), JSON.stringify(links), JSON.stringify(studentIDs), JSON.stringify(tagArray), roomPrice, JSON.stringify([])], (err, result) => {
                         if (err) {
                             return reject(new Error("Erreur lors de la création du cours."));
@@ -254,12 +251,9 @@ class AdminService {
             const selectSql = 'SELECT userID FROM Users WHERE email IN (?);';
             db.query(selectSql, [emails], (err, rows) => {
                 if (err) {
-                    console.log(err.message)
                     return reject(new Error("Erreur lors de la récupération des ID."));
                 }
-                console.log("rows", rows)
                 if (rows.length == 0) {
-                    console.log("rows0")
                     return reject(new Error("Les emails n'appartiennent à aucun utilisateur."));
                 }
 
@@ -283,7 +277,7 @@ class AdminService {
                     return reject(new Error("L'email est déjà utilisé."));
                 }
 
-                const hashedPassword = bcrypt.hashSync(password, saltRounds);
+                const hashedPassword = bcrypt.hashSync(password, config.saltRounds);
                 const sql = `
               INSERT INTO Users (firstname, surname, email, password, connectionMethod, userType, photo, description)
               VALUES (?, ?, ?, ?, ?, 'teacher', ?, ?)
@@ -508,20 +502,20 @@ class AdminService {
                 endDate = new Date().toISOString().slice(0, 10);
             }
             const query = `
-            SELECT c.courseID, c.roomPrice, p.userID, p.price, p.date, c.teachersID
-            FROM Payments p
-            JOIN (
-              SELECT userID, itemID, MAX(date) as latestDate 
-              FROM Payments 
-              WHERE date BETWEEN ? AND ? 
-              GROUP BY userID, itemID
-            ) as latestPayments
-            ON p.userID = latestPayments.userID 
-            AND p.itemID = latestPayments.itemID 
-            AND p.date = latestPayments.latestDate
-            JOIN Courses c ON p.itemID = c.courseID
-            WHERE p.price > 0
-          `;
+                SELECT c.courseID, c.roomPrice, p.userID, p.price, p.date, c.teachersID
+                FROM Payments p
+                JOIN (
+                SELECT userID, itemID, MAX(date) as latestDate 
+                FROM Payments 
+                WHERE date BETWEEN ? AND ? 
+                GROUP BY userID, itemID
+                ) as latestPayments
+                ON p.userID = latestPayments.userID 
+                AND p.itemID = latestPayments.itemID 
+                AND p.date = latestPayments.latestDate
+                JOIN Courses c ON p.itemID = c.courseID
+                WHERE p.price > 0
+            `;
 
             db.query(query, [startDate, endDate], (err, results) => {
                 if (err) {
@@ -559,6 +553,7 @@ class AdminService {
                     const teacherIDs = JSON.parse(payment.teachersID);
                     const individualTeacherPart = teachersPart / teacherIDs.length;
 
+                    // Distribution des revenus aux professeurs
                     teacherIDs.forEach(teacherID => {
                         if (!teachersRevenue[teacherID]) {
                             teachersRevenue[teacherID] = 0;
