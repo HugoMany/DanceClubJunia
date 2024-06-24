@@ -17,7 +17,7 @@ exports.getAllStudents = async (req, res) => {
 exports.getAllTeachers = async (req, res) => {
     try {
         console.log(`getAllTeachers`);
-        
+
         const teachers = await adminService.getAllTeachers();
         res.status(200).json({ success: true, teachers: teachers });
     } catch (error) {
@@ -59,7 +59,7 @@ exports.deleteCourse = async (req, res) => {
         if (!courseID) {
             return res.status(400).json({ error: 'ID du cours manquant.' });
         }
-        if (isNaN(courseID)) {
+        if (!Number.isInteger(parseInt(courseID))) {
             return res.status(401).json({ error: 'L\'ID du cours n\'est pas un entier.' });
         }
 
@@ -100,11 +100,11 @@ exports.createCard = async (req, res) => {
         if (!price) {
             return res.status(401).json({ error: 'Prix manquant.' });
         }
-        if (isNaN(place) || place <= 0) {
+        if (!Number.isInteger(parseInt(place)) || place <= 0) {
             return res.status(402).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
-        if (isNaN(price) || price <= 0) {
+        if (!Number.isInteger(parseInt(price)) || price <= 0) {
             return res.status(403).json({ error: 'Le champ price doit être un entier positif.' });
         }
 
@@ -139,7 +139,7 @@ exports.deleteCard = async (req, res) => {
         if (!place) {
             return res.status(400).json({ error: 'Nombre de places manquant.' });
         }
-        if (isNaN(place) || place <= 0) {
+        if (!Number.isInteger(parseInt(place)) || place <= 0) {
             return res.status(401).json({ error: 'Le champ place doit être un entier positif.' });
         }
 
@@ -180,7 +180,7 @@ exports.modifyPlacePrice = async (req, res) => {
         if (type.startsWith('card') && !/card\d+/.test(type)) {
             return res.status(402).json({ error: 'Format de carte invalide. Utilisez "cardN" où N est un entier.' });
         }
-        if (isNaN(price) || price <= 0) {
+        if (!Number.isInteger(parseInt(price)) || price <= 0) {
             return res.status(403).json({ error: 'Le prix doit être un entier positif.' });
         }
 
@@ -224,7 +224,7 @@ exports.createCourse = async (req, res) => {
         if (!image || !title || !type || !duration || duration <= 0 || !startDate || !startTime || !location || !maxParticipants || maxParticipants <= 0 || !paymentType || !teachers || !Array.isArray(teachers) || !roomPrice || roomPrice < 0) {
             return res.status(400).json({ error: 'Certains champs obligatoires sont manquants ou invalides.' });
         }
-        if (isNaN(duration) || isNaN(maxParticipants) || isNaN(isEvening) || (recurrence && isNaN(recurrence))) {
+        if (!Number.isInteger(parseInt(duration)) || !Number.isInteger(parseInt(maxParticipants)) || !Number.isInteger(parseInt(isEvening)) || (recurrence && !Number.isInteger(parseInt(recurrence)))) {
             return res.status(401).json({ error: 'Certains champs numériques sont invalides.' });
         }
         if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -234,7 +234,7 @@ exports.createCourse = async (req, res) => {
             return res.status(403).json({ error: "L'heure de début du cours doit être au format HH:MM." });
         }
         const startDateTime = new Date(`${startDate} ${startTime}`);
-        if (isNaN(startDateTime.getTime())) {
+        if (!Number.isInteger(parseInt(startDateTime.getTime()))) {
             return res.status(404).json({ error: 'La date ou l\'heure de début du cours est invalide.' });
         }
 
@@ -280,7 +280,7 @@ exports.createTeacher = async (req, res) => {
         if (!emailRegex.test(email)) {
             return res.status(401).json({ error: 'Email invalide.' });
         }
-        if (password.length <= 8) {
+        if (password.length < 8) {
             return res.status(402).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
         }
 
@@ -297,11 +297,17 @@ exports.createTeacher = async (req, res) => {
         console.error('createTeacher | error:', error);
 
         switch (error.message) {
-            case "Erreur lors de la création du professeur.":
+            case "Erreur lors de la vérification de l'email.":
                 res.status(501).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de la récupération du professeur.":
+            case "L'email est déjà utilisé.":
                 res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la création du compte enseignant.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du professeur.":
+                res.status(504).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -343,7 +349,7 @@ exports.deleteTeacher = async (req, res) => {
         if (!teacherID) {
             return res.status(400).json({ error: 'ID du professeur manquant.' });
         }
-        if (isNaN(teacherID)) {
+        if (!Number.isInteger(parseInt(teacherID))) {
             return res.status(401).json({ error: 'L\'ID du professeur n\'est pas un entier.' });
         }
 
@@ -395,7 +401,7 @@ exports.deleteStudent = async (req, res) => {
         if (!studentID) {
             return res.status(400).json({ error: 'ID de l\'étudiant manquant.' });
         }
-        if (isNaN(studentID)) {
+        if (!Number.isInteger(parseInt(studentID))) {
             return res.status(401).json({ error: 'L\'de l\'étudiant n\'est pas un entier.' });
         }
 
@@ -440,118 +446,118 @@ exports.deleteStudent = async (req, res) => {
 
 exports.modifyTeacher = async (req, res) => {
     try {
-      const { teacherID, firstname, surname, email, password, connectionMethod, photo, description} = req.body;
-  
-      console.log("modifyStudent | teacherID, firstname, surname, email, password, connectionMethod, description : " + teacherID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo + ", " + description);
-  
-      if (!teacherID) {
-        return res.status(400).json({ error: 'teacherID manquant.' });
-      }
-      if (isNaN(teacherID) || teacherID <= 0) {
-        return res.status(401).json({ error: 'Le champ teacherID doit être un entier positif.' });
-      }
-  
-      const fieldsToUpdate = [];
-      const values = [];
-  
-      if (firstname) {
-        fieldsToUpdate.push('firstname = ?');
-        values.push(firstname);
-      }
-  
-      if (surname) {
-        fieldsToUpdate.push('surname = ?');
-        values.push(surname);
-      }
-  
-      if (email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          return res.status(402).json({ error: 'Email invalide.' });
-        }
-        fieldsToUpdate.push('email = ?');
-        values.push(email);
-      }
-  
-      if (password) {
-        if (password.length <= 8) {
-          return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
-        }
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        fieldsToUpdate.push('password = ?');
-        values.push(hashedPassword);
-      }
-  
-      if (connectionMethod) {
-        fieldsToUpdate.push('connectionMethod = ?');
-        values.push(connectionMethod);
-      }
-  
-      if (photo) {
-        fieldsToUpdate.push('photo = ?');
-        values.push(photo);
-      }
+        const { teacherID, firstname, surname, email, password, connectionMethod, photo, description } = req.body;
 
-      if (description) {
-        fieldsToUpdate.push('description = ?');
-        values.push(description);
-      }
-  
-      if (fieldsToUpdate.length === 0) {
-        return res.status(404).json({ error: 'Aucun champ à mettre à jour.' });
-      }
-  
-      values.push(teacherID);
-  
-      const result = await adminService.modifyTeacher(teacherID, values, fieldsToUpdate);
-  
-      res.status(200).json({ success: true, teacher: result[0] });
-  
+        console.log("modifyStudent | teacherID, firstname, surname, email, password, connectionMethod, description : " + teacherID + ", " + firstname + ", " + surname + ", " + email + ", " + password + ", " + connectionMethod + ", " + photo + ", " + description);
+
+        if (!teacherID) {
+            return res.status(400).json({ error: 'teacherID manquant.' });
+        }
+        if (!Number.isInteger(parseInt(teacherID)) || teacherID <= 0) {
+            return res.status(401).json({ error: 'Le champ teacherID doit être un entier positif.' });
+        }
+
+        const fieldsToUpdate = [];
+        const values = [];
+
+        if (firstname) {
+            fieldsToUpdate.push('firstname = ?');
+            values.push(firstname);
+        }
+
+        if (surname) {
+            fieldsToUpdate.push('surname = ?');
+            values.push(surname);
+        }
+
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(402).json({ error: 'Email invalide.' });
+            }
+            fieldsToUpdate.push('email = ?');
+            values.push(email);
+        }
+
+        if (password) {
+            if (password.length <= 8) {
+                return res.status(403).json({ error: 'Mot de passe trop court (minimum 8 caractères).' });
+            }
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            fieldsToUpdate.push('password = ?');
+            values.push(hashedPassword);
+        }
+
+        if (connectionMethod) {
+            fieldsToUpdate.push('connectionMethod = ?');
+            values.push(connectionMethod);
+        }
+
+        if (photo) {
+            fieldsToUpdate.push('photo = ?');
+            values.push(photo);
+        }
+
+        if (description) {
+            fieldsToUpdate.push('description = ?');
+            values.push(description);
+        }
+
+        if (fieldsToUpdate.length === 0) {
+            return res.status(404).json({ error: 'Aucun champ à mettre à jour.' });
+        }
+
+        values.push(teacherID);
+
+        const result = await adminService.modifyTeacher(teacherID, values, fieldsToUpdate);
+
+        res.status(200).json({ success: true, teacher: result[0] });
+
     } catch (error) {
-      console.error('modifyTeacher | error:', error);
-  
-      switch (error.message) {
-        case "Erreur lors de la modification du professeur.":
-          res.status(501).json({ success: false, message: error.message });
-          break;
-        case "Il n'existe pas de professeur avec cet ID.":
-          res.status(502).json({ success: false, message: error.message });
-          break;
-        case "Erreur lors de la récupération du professeur.":
-          res.status(503).json({ success: false, message: error.message });
-          break;
-        default:
-          res.status(500).json({ success: false, message: 'Erreur SQL' });
-      }
+        console.error('modifyTeacher | error:', error);
+
+        switch (error.message) {
+            case "Erreur lors de la modification du professeur.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Il n'existe pas de professeur avec cet ID.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            case "Erreur lors de la récupération du professeur.":
+                res.status(503).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL' });
+        }
     }
-  };
+};
 
 exports.calculateRevenue = async (req, res) => {
-  try {
-      const { startDate, endDate } = req.query;
+    try {
+        const { startDate, endDate } = req.query;
 
-      console.log(`calculateRevenue | startDate, endDate : ${startDate}, ${endDate}`);
+        console.log(`calculateRevenue | startDate, endDate : ${startDate}, ${endDate}`);
 
-      // Vérifie que startDate et endDate sont au format YYYY-MM-DD
-      if ((startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
-        return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
-      }
+        // Vérifie que startDate et endDate sont au format YYYY-MM-DD
+        if ((startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
+            return res.status(400).json({ error: 'Les dates de début et de fin doivent être au format YYYY-MM-DD.' });
+        }
 
-      const revenueDetails = await adminService.calculateRevenue(startDate, endDate);
+        const revenueDetails = await adminService.calculateRevenue(startDate, endDate);
 
-      res.status(200).json({ success: true, revenueDetails });
-  } catch (error) {
-      console.error('calculateRevenue | error:', error);
+        res.status(200).json({ success: true, revenueDetails });
+    } catch (error) {
+        console.error('calculateRevenue | error:', error);
 
-      switch (error.message) {
-          case "Erreur lors du calcul des revenus.":
-              res.status(501).json({ success: false, message: error.message });
-              break;
-          case "Aucun paiement trouvé.":
-              res.status(502).json({ success: false, message: error.message });
-              break;
-          default:
-              res.status(500).json({ success: false, message: 'Erreur SQL.' });
-      }
-  }
+        switch (error.message) {
+            case "Erreur lors du calcul des revenus.":
+                res.status(501).json({ success: false, message: error.message });
+                break;
+            case "Aucun paiement trouvé.":
+                res.status(502).json({ success: false, message: error.message });
+                break;
+            default:
+                res.status(500).json({ success: false, message: 'Erreur SQL.' });
+        }
+    }
 };

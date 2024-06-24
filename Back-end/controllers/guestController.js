@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const guestService = require('../services/guestService');
-const { sendMail } = require('../utility/mailer');
+const { sendMail } = require('../utils/mailer');
 
 exports.getAllCourses = async (req, res) => {
     try {
@@ -138,11 +138,8 @@ exports.registerStudent = async (req, res) => {
 exports.getCoursesByPeriod = async (req, res) => {
     const { startDate, endDate } = req.query;
 
-    if (!startDate || !endDate) {
-        return res.status(400).json({ error: 'Les paramètres startDate et endDate sont requis.' });
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
-        return res.status(401).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
+    if ((startDate &&!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) || (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate))) {
+        return res.status(400).json({ error: 'Les dates de début et de fin doident être au format YYYY-MM-DD.' });
     }
 
     try {
@@ -244,7 +241,7 @@ exports.generateResetToken = async (req, res) => {
     try {
         const token = await guestService.generateResetToken(email);
 
-        const resetUrl = `http://yourfrontend.com/reset-password/token/${token}`;
+        const resetUrl = `http://localhost:3001/reset-password/token/${token}`;
         const message = `
               <h1>Vous avez demandé une réinitialisation de mot de passe</h1>
               <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>
@@ -259,17 +256,14 @@ exports.generateResetToken = async (req, res) => {
         console.error('generateResetToken | error:', error);
 
         switch (error.message) {
-            case "Erreur lors de la vérification de l'existence du token.":
+            case "Erreur lors de l'insertion du token dans la base de données.":
                 res.status(501).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de l'insertion du token dans la base de données.":
+            case "Erreur lors de la vérification de l'existence de l'utilisateur.":
                 res.status(502).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de la vérification de l'existence de l'utilisateur.":
-                res.status(503).json({ success: false, message: error.message });
-                break;
             case "L'utilisateur n'existe pas.":
-                res.status(504).json({ success: false, message: error.message });
+                res.status(503).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });
@@ -298,20 +292,14 @@ exports.resetPassword = async (req, res) => {
         console.error('resetPassword | error:', error);
 
         switch (error.message) {
-            case "Token expiré.":
+            case "Token expiré ou invalide.":
                 res.status(501).json({ success: false, message: error.message });
                 break;
-            case "Token introuvable.":
+            case "Erreur lors de la modification du mot de passe.":
                 res.status(502).json({ success: false, message: error.message });
                 break;
-            case "Erreur lors de la modification du mot de passe.":
-                res.status(503).json({ success: false, message: error.message });
-                break;
             case "Le token n'existe pas.":
-                res.status(504).json({ success: false, message: error.message });
-                break;
-            case "Token invalide.":
-                res.status(505).json({ success: false, message: error.message });
+                res.status(503).json({ success: false, message: error.message });
                 break;
             default:
                 res.status(500).json({ success: false, message: 'Erreur SQL' });

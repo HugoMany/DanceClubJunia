@@ -156,10 +156,14 @@ router.get('/getStudent', teacherController.getStudent);
  *       402:
  *         description: Email invalide.
  *       501:
- *         description: Erreur lors de la création de l'élève.
+ *         description: Erreur lors de la vérification de l'email.
  *       502:
- *         description: Erreur lors de la récupération de l'élève.
+ *         description: L'email est déjà utilisé.
  *       503:
+ *         description: Erreur lors de la création de l'élève.
+ *       504:
+ *         description: Erreur lors de la récupération de l'élève.
+ *       505:
  *         description: L'utilisateur n'existe pas
  *       500:
  *         description: Erreur SQL
@@ -307,7 +311,7 @@ router.patch('/modifyStudent', teacherController.modifyStudent);
  *       402:
  *         description: L'ID du cours n\'est pas un entier positif.
  *       501:
- *         description: Erreur lors de la récupération de l'élève.
+ *         description: L'élève ne fait pas parti de ce cours.
  *       502:
  *         description: Le cours n'existe pas.
  *       503:
@@ -437,6 +441,9 @@ router.patch('/affectStudent', teacherController.affectStudent);
  *                       tickets:
  *                         type: integer
  *                         example: 2
+ *                       photo:
+ *                         type: string
+ *                         example: "photo.png"
  *       400:
  *         description: Au moins un critère de recherche doit être fourni.
  *       401:
@@ -487,7 +494,7 @@ router.get('/searchStudent', teacherController.searchStudent);
  *       501:
  *         description: Erreur lors de la suppression.
  *       502:
- *         description: Le cours n'existe pas ou le professeur n'est pas dans le cours.
+ *         description: Le cours n'existe pas ou le professeur n'est pas dans le cours ou le cours est déjà passé.
  *       500:
  *         description: Erreur SQL
  */
@@ -511,7 +518,6 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *         example: 123
  *       - in: query
  *         name: startDate
- *         required: true
  *         schema:
  *           type: string
  *           format: date
@@ -519,7 +525,6 @@ router.delete('/cancelCourse', teacherController.cancelCourse);
  *         example: "2024-01-01"
  *       - in: query
  *         name: endDate
- *         required: true
  *         schema:
  *           type: string
  *           format: date
@@ -710,10 +715,18 @@ router.get('/getTeacherPlaces', teacherController.getTeacherPlaces);
  *                       type: array
  *                       items:
  *                         type: string
- *                       example: ["test@example.com"]
+ *                       example: ["7"]
  *                     tags:
  *                       type: string
  *                       example: "danse,salsa,debutant"
+ *                     roomPrice:
+ *                       type: integer
+ *                       example: 100
+ *                     attendance:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["7"]
  *       400:
  *         description: Les champs teacherID et courseID sont obligatoires.
  *       401:
@@ -1082,5 +1095,34 @@ router.post('/addTag', teacherController.addTag);
  */
 router.patch('/removeTag', teacherController.removeTag);
 
+
+/**
+ * @swagger
+ * /api/teacher/markAttendance:
+ *   post:
+ *     summary: Marquer la présence d'un étudiant à un cours
+ *     tags: [Teachers]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               studentID:
+ *                 type: integer
+ *                 description: ID de l'étudiant
+ *               courseID:
+ *                 type: integer
+ *                 description: ID du cours
+ *     responses:
+ *       200:
+ *         description: Présence marquée avec succès
+ *       400:
+ *         description: Erreur lors du marquage de la présence
+ */
+router.post('/markAttendance', teacherController.markAttendance);
 
 module.exports = router;

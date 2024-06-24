@@ -8,10 +8,10 @@ exports.addLink = async (req, res) => {
   if (!courseID || !userID || !link) {
     return res.status(400).json({ error: 'Le champs courseID, userID et link doivent être fourni.' });
   }
-  if (isNaN(userID) || userID <= 0) {
+  if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
-  if (isNaN(courseID) || courseID <= 0) {
+  if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
     return res.status(402).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -60,7 +60,7 @@ exports.searchCoursesStudent = async (req, res) => {
   if (!userID) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
-  if (isNaN(userID) || userID <= 0) {
+  if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
   if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -91,7 +91,7 @@ exports.searchCoursesTeacher = async (req, res) => {
   if (!userID) {
     return res.status(400).json({ error: 'Le champs tags, userID et startDate doivent être fourni.' });
   }
-  if (isNaN(userID) || userID <= 0) {
+  if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
     return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
   }
   if (startDate && !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
@@ -124,7 +124,7 @@ exports.searchCourse = async (req, res) => {
   if (!courseID) {
     return res.status(400).json({ error: 'Le champ courseID doit être fourni.' });
   }
-  if (isNaN(courseID) || courseID <= 0) {
+  if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
     return res.status(401).json({ error: "L'ID du cours n'est pas un entier positif." });
   }
 
@@ -180,7 +180,7 @@ exports.getProfile = async (req, res) => {
     if (!userID) {
       return res.status(400).json({ error: "Champ userID manquant." });
     }
-    if (isNaN(userID) || userID <= 0) {
+    if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
       return res.status(401).json({ error: "L'ID de l'utilisateur n'est pas un entier positif." });
     }
     
@@ -224,7 +224,7 @@ exports.modifyProfile = async (req, res) => {
     if (!userID) {
       return res.status(400).json({ error: 'userID manquant' });
     }
-    if (isNaN(userID) || userID <= 0) {
+    if (!Number.isInteger(parseInt(userID)) || userID <= 0) {
       return res.status(401).json({ error: 'Le champ userID doit être un entier positif.' });
     }
 

@@ -476,7 +476,7 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *               isEvening:
  *                 type: boolean
  *                 description: Statut de soiree du cours (true si c'est une soiree).
- *                 example: false
+ *                 example: 0
  *               recurrence:
  *                 type: integer
  *                 description: Nombre de jours d'intervalle entre deux cours (0 pour aucun).
@@ -568,12 +568,12 @@ router.post('/modifyPlacePrice', adminController.modifyPlacePrice);
  *                     tags:
  *                       type: string
  *                       example: "[\"danse\", \"salsa\", \"debutant\"]"
- *                     call:
- *                       type: string
- *                       example: "[]"
  *                     roomPrice:
  *                      type: number
  *                      example: 100
+ *                     attendance:
+ *                       type: string
+ *                       example: "[]"
  *       400:
  *         description: Certains champs obligatoires sont manquants ou invalides.
  *       401:
@@ -691,8 +691,12 @@ router.post('/createCourse', adminController.createCourse);
  *       402:
  *         description: Mot de passe trop court (minimum 8 caractères).
  *       501:
- *         description: Erreur lors de la création du professeur.
+ *         description: Erreur lors de la vérification de l'email.
  *       502:
+ *         description: L'email est déjà utilisé.
+ *       503:
+ *         description: Erreur lors de la création du compte enseignant.
+ *       504:
  *         description: Erreur lors de la récupération du professeur.
  *       500:
  *         description: Erreur SQL

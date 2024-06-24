@@ -17,7 +17,7 @@ exports.getCourses = async (req, res) => {
         if (!studentID) {
             return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
         }
-        if (isNaN(studentID) || studentID <= 0) {
+        if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
             console.log("getCourses :", typeof (studentID), Number.isInteger(studentID));
             return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
@@ -55,14 +55,14 @@ exports.buyPlace = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Tous les champs doivent être remplis.' });
     }
 
-    if (isNaN(studentID) || studentID <= 0) {
+    if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
     if (type !== 'ticket' && type !== 'card') {
         return res.status(402).json({ error: 'Type de place non valide. Utilisez "ticket" ou "card".' });
     }
 
-    if (isNaN(number) || number <= 0) {
+    if (!Number.isInteger(parseInt(number)) || number <= 0) {
         return res.status(403).json({ success: false, message: 'number n\'est pas un entier postif.' });
     }
 
@@ -111,7 +111,7 @@ exports.getPaymentHistory = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Champ studentID manquant.' });
     }
 
-    if (isNaN(studentID) || studentID <= 0) {
+    if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
 
@@ -151,17 +151,17 @@ exports.reserveCourse = async (req, res) => {
         return res.status(400).json({ error: "ID de l'étudiant ou ID du cours manquant." });
     }
 
-    if (isNaN(studentID) || studentID <= 0) {
+    if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
         return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
     }
 
-    if (isNaN(courseID) || courseID <= 0) {
+    if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
         return res.status(402).json({ success: false, message: 'Le champ courseID doit être un entier positif.' });
     }
 
     try {
         const result = await studentService.reserveCourse(studentID, courseID);
-        res.status(200).json({ success: true, result });
+        res.status(200).json({ success: true, message : "L'élève a été ajouté au cours via un ticket." });
     } catch (error) {
         console.error('reserveCourse | error:', error);
 
@@ -232,11 +232,11 @@ exports.unsubscribeCourse = async (req, res) => {
             return res.status(400).json({ error: "ID de l'étudiant ou ID du cours manquant." });
         }
 
-        if (isNaN(studentID) || studentID <= 0) {
+        if (!Number.isInteger(parseInt(studentID)) || studentID <= 0) {
             return res.status(401).json({ success: false, message: 'Le champ studentID doit être un entier positif.' });
         }
 
-        if (isNaN(courseID) || courseID <= 0) {
+        if (!Number.isInteger(parseInt(courseID)) || courseID <= 0) {
             return res.status(402).json({ success: false, message: 'Le champ courseID doit être un entier positif.' });
         }
 
