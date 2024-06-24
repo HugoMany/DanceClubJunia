@@ -60,3 +60,21 @@ Dans le dossier Back-end
 ```
 node app.js
 ```
+
+---------------------------------
+LANCEMENT DE L'APPLICATION FRONT
+---------------------------------
+
+- Installé nodesjs et npm sur votre machine
+- Cloner le projet sur votre machine
+- Ouvrir un terminal
+
+cd root/danceclubjunia
+
+npm install 
+
+---------------------------------
+ATTENDEZ LA FIN DE L'INSTALLATION
+---------------------------------
+
+npm start 
