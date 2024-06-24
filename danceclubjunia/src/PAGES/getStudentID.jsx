@@ -6,27 +6,44 @@ import { URL_DB } from '../const/const';
 const GetStudentID = () => {
   const [email, setEmail] = useState('');
   const [userID, setUserID] = useState(null);
-  const [dataUserFound,setDataUserFound] = useState(true);
+  const [dataUserFound, setDataUserFound] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const searchStudent = async () => {
     try {
-        const token = localStorage.getItem('token');
-        if (!token) return { valid: false };
-      const response = await fetch(URL_DB+`teacher/searchStudent?email=${email}`, {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setErrorMessage('No token found');
+        return;
+      }
+
+      const response = await fetch(URL_DB + `teacher/searchStudent?email=${email}`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
-        
-    });
+      });
+
+      if (response.status === 401) {
+        setErrorMessage('Email invalide.');
+        setUserID(null);
+        setDataUserFound(null);
+        return;
+      }
+
       const data = await response.json();
       if (data.success && data.students.length > 0) {
         setUserID(data.students[0].userID);
-        setDataUserFound(data.students[0])
+        setDataUserFound(data.students[0]);
+        setErrorMessage('');
       } else {
         setUserID(null);
+        setDataUserFound(null);
+        setErrorMessage('aucun utilisateur trouvé.');
       }
     } catch (error) {
       console.error('Error fetching student data:', error);
+      setErrorMessage('An error occurred while fetching student data.');
     }
   };
 
@@ -39,13 +56,16 @@ const GetStudentID = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Button Button variant="contained" color="primary" onClick={searchStudent}>Search</Button>
-      {userID && <div>
-      <p>User ID: {dataUserFound.userID}</p>
-      <p>Surname: {dataUserFound.surname}</p>
-      <p>Firstname: {dataUserFound.firstname}</p>
-      <AjoutCredits id={userID} userID={userID} />
-      </div>}
+      <Button variant="contained" color="primary" onClick={searchStudent}>Search</Button>
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+      {dataUserFound && (
+        <div>
+          <p>User ID: {dataUserFound.userID}</p>
+          <p>Surname: {dataUserFound.surname}</p>
+          <p>Firstname: {dataUserFound.firstname}</p>
+          <AjoutCredits id={userID} userID={userID} />
+        </div>
+      )}
     </div>
   );
 };
