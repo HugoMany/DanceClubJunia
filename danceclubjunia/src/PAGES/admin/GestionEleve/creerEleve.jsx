@@ -65,7 +65,7 @@ function CreerEleve() {
 
             <form onSubmit={handleSubmit}  className='formAdminCreate'>
                 <label>
-                    firstname:
+                    Prénom:
                     
                 </label>
                 <input
@@ -76,7 +76,7 @@ function CreerEleve() {
                     />
                 <br />
                 <label>
-                    surname:
+                    Nom:
                     
                 </label>
                 <input
@@ -87,7 +87,7 @@ function CreerEleve() {
                     />
                 <br />
                 <label>
-                    mail:
+                    E-Mail:
                    
                 </label>
                 <input
@@ -98,7 +98,7 @@ function CreerEleve() {
                     />
                 <br />
                 <label>
-                    password:
+                    Mot de passe:
                    
                 </label>
                 <input
@@ -109,7 +109,7 @@ function CreerEleve() {
                     />
                 <br />
                 <label>
-                    photo:
+                    Photo:
                     
                 </label>
                 <input

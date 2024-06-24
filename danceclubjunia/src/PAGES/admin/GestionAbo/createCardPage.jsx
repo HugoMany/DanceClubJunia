@@ -63,9 +63,9 @@ const CreateCardPage = () => {
         <div className=''>
             <Header></Header>
             <div className='aboAdmin'>
-                <h1>Create Card Page</h1>
+                <h1>Ticket et Cartes</h1>
                 <div style={{ marginBottom: '50px', padding: '20px', border: '1px solid #ccc' }}>
-                    <h2>Create Card</h2>
+                    <h2>Créer une carte</h2>
                     <h3>Nombre de place</h3>
                     <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
                     <h3>Prix</h3>
@@ -73,7 +73,7 @@ const CreateCardPage = () => {
                     <button onClick={createCard}>Create Card</button>
                 </div>
                 <div style={{ padding: '20px', border: '1px solid #ccc' }}>
-                    <h2>Delete Card</h2>
+                    <h2>Supprimer une carte</h2>
                     <p>Saisissez le nombre de place de la carte que vous voulez supprimer</p>
                     <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
                     <button onClick={deleteCard}>Delete Card</button>
