@@ -21,14 +21,14 @@ const CreateCardPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessage('Card created successfully');
+                setMessage('carte crée');
             } else {
                 const error = await response.json();
                 setMessage(error.message);
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessage('Error creating card');
+            setMessage('erreur');
         }
     };
 
@@ -48,14 +48,14 @@ const CreateCardPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setMessage('Card deleted successfully');
+                setMessage('carte supprimée');
             } else {
                 const error = await response.json();
                 setMessage(error.message);
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessage('Error deleting card');
+            setMessage('erreur');
         }
     };
     
@@ -70,13 +70,13 @@ const CreateCardPage = () => {
                     <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
                     <h3>Prix</h3>
                     <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" />
-                    <button onClick={createCard}>Create Card</button>
+                    <button onClick={createCard}>créer</button>
                 </div>
                 <div style={{ padding: '20px', border: '1px solid #ccc' }}>
                     <h2>Supprimer une carte</h2>
                     <p>Saisissez le nombre de place de la carte que vous voulez supprimer</p>
                     <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
-                    <button onClick={deleteCard}>Delete Card</button>
+                    <button onClick={deleteCard}>supprimer</button>
                 </div>
                 {message && <p>{message}</p>}
             </div>

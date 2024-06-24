@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loading from '../elements/loading';
 
 const ProfPastCourses = ({ teacherId }) => {
     const [courses, setCourses] = useState([]);
@@ -38,8 +39,8 @@ const ProfPastCourses = ({ teacherId }) => {
 
     // Filtrer les cours passés
     
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading courses: {error.message}</div>;
+    if (loading) return <Loading></Loading>;
+    if (error) return <div>Erreur lors du chargment des cours: {error.message}</div>;
     return (
         <div>
             <h2>Past Courses</h2>
