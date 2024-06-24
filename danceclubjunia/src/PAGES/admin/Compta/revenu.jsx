@@ -55,22 +55,24 @@ const Revenu = () => {
             <Header></Header>
             <form onSubmit={handleSubmit} className='revenuForm'>
                 <h1>Revenu total</h1>
-                <label>
+                <h4>
                     Date de début :
-                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required />
-                </label>
-                <label>
+                </h4>
+                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}  />
+
+                <h4>
                     Date de fin :
-                    <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required />
-                </label>
-                <Button variant="contained" type="submit">Calculer les revenus</Button>
+                </h4>
+                <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}  />
+
+                <Button variant="contained" type="submit" style={{ margin: '20px' }}>Calculer les revenus</Button>
             </form>
 
             {revenueDetails && (
                 <div className='resultatRevenu'>
                     <h2>Détails des revenus</h2>
-                    <p>Profit total : {revenueDetails.totalProfit}</p>
-                    <p>Part de l'association : {revenueDetails.assoPart}</p>
+                    <p>Profit total : <br></br>{revenueDetails.totalProfit}€</p>
+                    <p>Part de l'association : <br></br>{revenueDetails.assoPart}€</p>
                     <h3>Revenus des enseignants :</h3>
                     {revenueDetails.teachersRevenue.map((teacher, index) => (
                         <p key={index}>{teacherSurnames[index]} : {teacher.revenue}</p>

@@ -64,7 +64,7 @@ const PastCoursesStudent = ({ studentId }) => {
                         </div>
                         <div className='typeEtProfCoursSuivantHomePage'>
                             <p>{course.type}</p>
-                            <p>{course.teachersID}</p>
+                            {/* <p>{course.teachersID}</p> */}
                         </div>
 
                     </div>

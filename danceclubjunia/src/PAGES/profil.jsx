@@ -125,11 +125,14 @@ if (loading) {
       </div>
 
 
+
     <div >
-      <h2>Vos anciens cours</h2>
+    <h2>Historique des paiements.</h2>
+
       <div className='studentPastCourses'>
       <div className='paiementList'>
-    {userPaymentHistory?.payments.map((payment, index) => (
+      {userPaymentHistory?.payments.length > 0 ? (
+    userPaymentHistory.payments.map((payment, index) => (
         <div key={index}>
             <div>Payment ID: {payment.paymentID}</div>
             <div>Price: {payment.price}</div>
@@ -137,13 +140,18 @@ if (loading) {
             <div>Quantity: {payment.quantity}</div>
             <br></br>
         </div>
-    ))}
+    ))
+) : (
+    <div>Aucun paiement trouvé.</div>
+)}
     
     
     </div>  
     </div>
-      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
+      <h2>Vos anciens cours</h2>
+      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
+
     </div>
   );
 };}

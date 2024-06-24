@@ -15,15 +15,15 @@ import { Button } from '@mui/material';
 
 // Define your columns
 const columns = [
-  { field: 'paymentID', headerName: 'Payment ID', width: 130 },
-  { field: 'userID', headerName: 'User ID', width: 130 },
-  { field: 'price', headerName: 'Price', width: 130 },
+  { field: 'paymentID', headerName: 'ID Paiement', width: 150 },
+  { field: 'userID', headerName: 'ID Utilisateur', width: 150 },
+  { field: 'price', headerName: 'Prix', width: 130 },
   { field: 'type', headerName: 'Type', width: 130 },
-  { field: 'quantity', headerName: 'Quantity', width: 130 },
+  { field: 'quantity', headerName: 'Quantité', width: 130 },
   { field: 'date', headerName: 'Date', width: 130 },
-  { field: 'paymentType', headerName: 'Payment Type', width: 130 },
-  { field: 'sourceID', headerName: 'Source ID', width: 130 },
-  { field: 'itemID', headerName: 'Item ID', width: 130 },
+  { field: 'paymentType', headerName: 'Type de paiement', width: 130 },
+  // { field: 'sourceID', headerName: 'ID', width: 130 },
+  // { field: 'itemID', headerName: 'Item ID', width: 130 },
 ];
 
 export default function CustomExport() {
