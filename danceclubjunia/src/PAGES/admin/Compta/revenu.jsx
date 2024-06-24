@@ -75,7 +75,7 @@ const Revenu = () => {
                     <p>Part de l'association : <br></br>{revenueDetails.assoPart}€</p>
                     <h3>Revenus des enseignants :</h3>
                     {revenueDetails.teachersRevenue.map((teacher, index) => (
-                        <p key={index}>{teacherSurnames[index]} : {teacher.revenue}</p>
+                        <p key={index}>{teacherSurnames[index]} : {teacher.revenue}€</p>
                         
                     ))}
                 </div>
