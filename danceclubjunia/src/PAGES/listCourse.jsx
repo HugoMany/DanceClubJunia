@@ -92,7 +92,7 @@ const CoursesList = () => {
                                 <div className='typeEtProfCoursSuivantHomePage'>
                                     <p>{course.type}</p>
                                     <p style={{ textAlign: 'end', fontSize: '12px' }}>{students.length} / {course.maxParticipants} <span id='peopleIconGoogle' class="material-symbols-outlined">
-                                        groupe
+                                        group
                                     </span></p>
                                     <p>{course.teachers.map(teacher => teacher.surname).join(', ')}</p>
                                 </div>
