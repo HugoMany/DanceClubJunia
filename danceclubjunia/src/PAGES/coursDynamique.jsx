@@ -182,8 +182,17 @@ const CoursDynamique = () => {
             window.location.href = '/connexion';
         }, 2500);
         
-        return <div> <Header></Header><h1>Vous ne pouvez pas accéder à cette page sans être connecté.</h1></div>;
+        return (
+            <div>
+                <Header />
+                <h1>Vous ne pouvez pas accéder à cette page sans être connecté.</h1>
+            </div>
+        );
     }
+
+    const currentDate = new Date();
+    const courseStartDate = new Date(course.startDate);
+    const courseIsPast = currentDate > courseStartDate;
 
     const students = JSON.parse(course.studentsID || '[]');
     const maxParticipants = course.maxParticipants;
@@ -203,14 +212,16 @@ const CoursDynamique = () => {
             <p>Location: {course.location}</p>
             <p>Duration: {course.duration} minutes</p>
             <p>Teachers: {teachers.map(teacher => teacher.surname).join(', ')}</p>
-            <Button 
-                variant="contained" 
-                color={isEnrolled ? "secondary" : "primary"} 
-                onClick={isEnrolled ? handleUnsubscription : handleReservation} 
-                disabled={isFull && !isEnrolled}
-            >
-                {isEnrolled ? "Se désinscrire" : isFull ? "Cours plein" : "Réserver"}
-            </Button>
+            {!courseIsPast && (
+                <Button 
+                    variant="contained" 
+                    color={isEnrolled ? "secondary" : "primary"} 
+                    onClick={isEnrolled ? handleUnsubscription : handleReservation} 
+                    disabled={isFull && !isEnrolled}
+                >
+                    {isEnrolled ? "Se désinscrire" : isFull ? "Cours plein" : "Réserver"}
+                </Button>
+            )}
             {reservationMessage && <Alert severity="info">{reservationMessage}</Alert>}
         </div>
     );
