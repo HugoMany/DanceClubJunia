@@ -138,7 +138,7 @@ const AddTagToACours = (idCoursSelected) => {
                         </React.Fragment>
                     ))}
     
-                    <input type="text" placeholder="New Tag" value={newTag} onChange={handleTagChange} />
+                    <input type="text" placeholder="Nouveau Tag" value={newTag} onChange={handleTagChange} />
                     <Button variant="contained" onClick={handleAddTag}>Ajouter ce Tag</Button>
                 </div>
             </div>

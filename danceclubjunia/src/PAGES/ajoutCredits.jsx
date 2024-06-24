@@ -56,7 +56,7 @@ const AjoutCredits = ({ userID }) => {
       <select value={creditType} onChange={(e) => setCreditType(e.target.value)}>
         <option value="ticket">Ticket</option>
         <option value="card">Carte</option>
-        <option value="abonement">Abonement</option>
+        <option value="abonement">Abonnement</option>
       </select>
       <Button variant="contained" color="primary" onClick={addCredit}>Ajouter</Button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}

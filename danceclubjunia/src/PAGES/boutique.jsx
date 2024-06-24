@@ -62,7 +62,7 @@ const Boutique = () => {
                 <SwiperSlide>                    
                 <div className="boutique">
 
-                <h3>Numobre de place : {card.number}</h3>
+                <h3>Nombre de place : {card.number}</h3>
                 <p>Prix {card.price}€ et prix unitaire {Math.round((card.price/card.number) * 100) / 100}€ / scéance</p>
                   
                   <Button variant="contained" color="primary" disabled style={{ margin: '10px' }}> Achat via Hello Asso</Button>

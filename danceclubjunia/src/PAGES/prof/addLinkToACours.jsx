@@ -138,7 +138,7 @@ const AddlinkToACours = (idCoursSelected) => {
                         </React.Fragment>
                     ))}
     
-                    <input type="text" placeholder="New link" value={newlink} onChange={handlelinkChange} />
+                    <input type="text" placeholder="Nouveau lien" value={newlink} onChange={handlelinkChange} />
                     <Button variant="contained" onClick={handleAddlink}>Ajouter ce lien</Button>
                 </div>
             </div>
