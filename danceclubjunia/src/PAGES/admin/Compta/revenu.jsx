@@ -7,6 +7,7 @@ const Revenu = () => {
     const [endDate, setEndDate] = useState('');
     const [revenueDetails, setRevenueDetails] = useState(null);
     const [error, setError] = useState(null);
+    const [teacherSurnames, setTeacherSurnames] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,9 +24,24 @@ const Revenu = () => {
                 },
             });
             const data = await response.json();
+            const teacherIDs = data.revenueDetails.teachersRevenue.map(item => item.teacherID);
+            console.log("ID : " + teacherIDs);
 
             if (data.success) {
                 setRevenueDetails(data.revenueDetails);
+                const infoProf = await fetch(URL_DB+'guest/getContactsTeachers',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userIDs: teacherIDs }),
+                });
+                const  info = await infoProf.json();
+                console.log("oooooo");
+                console.log(info);
+                const surnames = info.contacts.map(contact => contact.surname);
+                setTeacherSurnames(surnames);
+                console.log(teacherSurnames);
             } else {
                 setError('Une erreur est survenue lors de la récupération des détails des revenus.');
             }
@@ -57,7 +73,8 @@ const Revenu = () => {
                     <p>Part de l'association : {revenueDetails.assoPart}</p>
                     <h3>Revenus des enseignants :</h3>
                     {revenueDetails.teachersRevenue.map((teacher, index) => (
-                        <p key={index}>Enseignant ID {teacher.teacherID} : {teacher.revenue}</p>
+                        <p key={index}>{teacherSurnames[index]} : {teacher.revenue}</p>
+                        
                     ))}
                 </div>
             )}
