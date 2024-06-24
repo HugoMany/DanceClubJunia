@@ -9,7 +9,7 @@ import 'swiper/css/pagination';
 // import required modules
 import { Pagination } from 'swiper/modules';
 import Header from '../elements/header';
-import { Button } from '@mui/material';
+import { Button , Alert} from '@mui/material';
 
 
 const Boutique = () => {
@@ -40,17 +40,17 @@ const Boutique = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Erreur: {error.message}</div>;
   }
 
   return (
     <div>
       <Header title="Boutique"></Header>
-      <h1>Card Prices</h1>
+      <h1>Boutique de tickets et abonnements </h1>
       <Swiper
                 pagination={{
                     dynamicBullets: true,
@@ -64,7 +64,9 @@ const Boutique = () => {
 
                 <h3>Numobre de place : {card.number}</h3>
                 <p>Prix {card.price}€ et prix unitaire {Math.round((card.price/card.number) * 100) / 100}€ / scéance</p>
-                
+                  
+                  <Button variant="contained" color="primary" disabled style={{ margin: '10px' }}> Achat via Hello Asso</Button>
+                  <Alert severity="info">Service Indisponible</Alert>
                 </div>
                 
                 </SwiperSlide>
