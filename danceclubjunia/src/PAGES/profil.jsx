@@ -125,8 +125,10 @@ if (loading) {
       </div>
 
 
+
     <div >
-      <h2>Vos anciens cours</h2>
+    <h2>Historique des paiements.</h2>
+
       <div className='studentPastCourses'>
       <div className='paiementList'>
     {userPaymentHistory?.payments.map((payment, index) => (
@@ -142,8 +144,10 @@ if (loading) {
     
     </div>  
     </div>
-      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
       </div>
+      <h2>Vos anciens cours</h2>
+      <PastCoursesStudent studentId={idStudent}></PastCoursesStudent>
+
     </div>
   );
 };}
