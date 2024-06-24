@@ -175,7 +175,7 @@ function InscriptionPage() {
             </form>
             <a href="/connexion">
             <button className='inscriptionLogin' >
-                <span className="material-symbols-outlined">swipe_gauche</span> Connexion
+                <span className="material-symbols-outlined">swipe_left</span> Connexion
             </button>
             </a>
         </div>
