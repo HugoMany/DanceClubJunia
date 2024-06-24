@@ -33,7 +33,7 @@ const MdpForget = () => {
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessage('Error generating reset token');
+            setMessage('Erreur');
         }
     };
 

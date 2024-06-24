@@ -30,13 +30,13 @@ const MdpRecovery = () => {
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
-                setMessage("Password reset successfully");
+                setMessage("mot de passe réinitialisé");
                 window.location.href = '/connexion';
                 
             } else {
                 const error = await response.json();
                 setMessage(error.message);
-                alert("Error resetting password");
+                alert("Erreur");
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);
@@ -44,7 +44,7 @@ const MdpRecovery = () => {
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessage('Error resetting password');
+            setMessage('Erreur');
         }
     };
 

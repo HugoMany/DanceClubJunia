@@ -12,7 +12,7 @@ function Results() {
     return (
         <div className="coursesList">
             <Header></Header>
-            <h3>Search Results</h3>
+            <h3>Résultats</h3>
             {searchResults.length > 0 ? (
                 <div>
                     {searchResults.map((course, index) => (
@@ -22,9 +22,9 @@ function Results() {
                                     <CardContent>
                                         <Typography variant="h5">{course.title}</Typography>
                                         <Typography color="textSecondary">
-                                            Start Date: {new Date(course.startDate).toLocaleDateString()}
+                                            Date: {new Date(course.startDate).toLocaleDateString()}
                                         </Typography>
-                                        <Typography color="textSecondary">Location: {course.location}</Typography>
+                                        <Typography color="textSecondary">lieu: {course.location}</Typography>
                                         <Typography color="textSecondary">Tags: {course.tags.join(', ')}</Typography>
                                     </CardContent>
                                 </Card>
@@ -33,7 +33,7 @@ function Results() {
                     ))}
                 </div>
             ) : (
-                <p>No courses found with the given tags.</p>
+                <p>Aucun cours n'a été trouvé avec ce tag.</p>
             )}
         </div>
     );
