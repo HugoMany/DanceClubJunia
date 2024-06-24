@@ -61,19 +61,25 @@ const CreateCardPage = () => {
     
     return (
         <div className=''>
-            <div className='aboAdmin'>
             <Header></Header>
-            <h1>Create Card Page</h1>
-            <h2>Nombre de place</h2>
-            <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
-            <h2>Prix</h2>
-            <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" />
-            <button onClick={createCard}>Create Card</button>
-            <p>Saisissez le nombre de place de la carte que vous voulez supprimer</p>
-            <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
-            <button onClick={deleteCard}>Delete Card</button>
-            {message && <p>{message}</p>}
-        </div>
+            <div className='aboAdmin'>
+                <h1>Create Card Page</h1>
+                <div style={{ marginBottom: '50px', padding: '20px', border: '1px solid #ccc' }}>
+                    <h2>Create Card</h2>
+                    <h3>Nombre de place</h3>
+                    <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
+                    <h3>Prix</h3>
+                    <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" />
+                    <button onClick={createCard}>Create Card</button>
+                </div>
+                <div style={{ padding: '20px', border: '1px solid #ccc' }}>
+                    <h2>Delete Card</h2>
+                    <p>Saisissez le nombre de place de la carte que vous voulez supprimer</p>
+                    <input type="number" value={place} onChange={e => setPlace(e.target.value)} placeholder="Number of places" />
+                    <button onClick={deleteCard}>Delete Card</button>
+                </div>
+                {message && <p>{message}</p>}
+            </div>
         </div>
     );
 };

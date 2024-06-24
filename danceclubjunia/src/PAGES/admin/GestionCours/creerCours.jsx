@@ -17,6 +17,7 @@ const CreerCours = () => {
     const [links, setLinks] = useState('');
     const [students, setStudents] = useState('');
     const [tags, setTags] = useState('');
+    const [roomPrice, setRoomPrice] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,6 +31,7 @@ const CreerCours = () => {
             startDate,
             startTime,
             location,
+            roomPrice,
             maxParticipants: parseInt(maxParticipants),
             paymentType,
             isEvening: isEvening === 'true' || isEvening === true,
@@ -82,7 +84,7 @@ const CreerCours = () => {
                 </label>
                 <input
                     type="file"
-                    required
+                    
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
                 />
@@ -145,6 +147,15 @@ const CreerCours = () => {
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
+                />
+                <label>
+                    Room Price:
+                </label>
+                <input
+                    type="number"
+                    required
+                    value={roomPrice}
+                    onChange={(e) => setRoomPrice(e.target.value)}
                 />
                 <br />
                 <label>

@@ -81,8 +81,8 @@ const AdminEleve = () => {
             { field: 'surname', headerName: 'Nom', width: 150 },
             { field: 'email', headerName: 'Email', width: 150 },
             { field: 'connectionMethod', headerName: 'Méthode de connexion', width: 150 },
-            { field: 'credit', headerName: 'Credit', width: 150 },
-            { field: 'ticket', headerName: 'Ticket', width: 150 },
+            // { field: 'credit', headerName: 'Credit', width: 150 },
+            // { field: 'ticket', headerName: 'Ticket', width: 150 },
             { field: 'photo', headerName: 'Photo', width: 150 },
             {
               field: 'buttonModifier',

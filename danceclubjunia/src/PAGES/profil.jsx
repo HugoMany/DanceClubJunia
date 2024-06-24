@@ -119,8 +119,8 @@ if (loading) {
       <p>Firstname: {userData?.student.firstname}</p>
       <p>Surname: {userData?.student.surname}</p>
       <p>Email: {userData?.student.email}</p>
-      <p>Credit: {userData?.student.credit}</p>
-      <QRCode link={URL_FRONT+"profil/student/"+idStudent}></QRCode>
+      <p> Tickets unitaire:    {userData?.student.credit}</p>
+      <QRCode link={URL_FRONT+"/profil/student/"+idStudent}></QRCode>
 
       </div>
 

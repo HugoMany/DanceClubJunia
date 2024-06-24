@@ -12,7 +12,7 @@ const QRCodeComponent = ({ link }) => {
     <div>
       {/* <h1>Votre QR Code</h1> */}
       <div onClick={handleClick} style={{ cursor: 'pointer' }}>
-        <QRCode size={isFullScreen ? window.innerWidth : '200px'} value={link} />
+      <QRCode size={isFullScreen ? window.innerWidth - 20 : '200px'} value={link} />
       </div>
     </div>
   );

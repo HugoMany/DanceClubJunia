@@ -147,6 +147,7 @@ function Inscription() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <h5>Minimum 8 caractères</h5>
                 </div>
                 <div>
                     <label htmlFor="confirmMotDePasse"></label>

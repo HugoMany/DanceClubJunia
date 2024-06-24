@@ -6,6 +6,7 @@ const InfoRockDance = () => {
         content: (
             <div>
                 <h2>Qu'est-ce que la Danse Rock ?</h2>
+                <hr></hr>
                 <p>La danse rock est un style de danse énergique et dynamique qui trouve ses racines dans les années 1950 avec l'essor du rock 'n' roll. Elle se caractérise par des mouvements rapides, des figures acrobatiques et une grande expressivité. La danse rock inclut plusieurs styles, tels que le rock à six temps, le rock à quatre temps et le boogie-woogie.</p>
 
                 <h3>Nos Cours et Ateliers</h3>

@@ -7,6 +7,7 @@ const InfoModerneDance = () => {
         content: (
             <div>
                 <h2>Qu'est-ce que la Danse Moderne ?</h2>
+                <hr></hr>
                 <p>La danse moderne est un style de danse qui s'est développé au début du XXe siècle comme une réaction contre les formes classiques et rigides du ballet traditionnel. Elle se caractérise par une grande liberté de mouvement, l'expression personnelle et l'innovation. Ce genre de danse fusionne divers styles et techniques, intégrant souvent des éléments de jazz, de danse contemporaine et même de danse urbaine.</p>
 
                 <h3>Nos Cours et Ateliers</h3>
