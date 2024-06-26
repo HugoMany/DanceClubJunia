@@ -12,7 +12,7 @@ html body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   color: black;
   background-color: #F1F1F1;
   }
@@ -20,7 +20,7 @@ html body {
   
   
 html{
-  overflow: hidden;
+  /* overflow: hidden; */
   height: 100vh;
 }
 .header h1{
@@ -74,7 +74,7 @@ button:hover {
   flex-direction: column;
   align-content: center;
   flex-wrap: nowrap;
-  margin: 8vh 3vw 10vh 3vw;
+  margin: 12vh 3vw 10vh 3vw;
   justify-content: space-evenly;
 }
 html .footer h1{
@@ -164,10 +164,10 @@ a.linkButNoLinkWHite{
   color: white;
 }
 .App{
-  position: absolute;
+  position: absolute; 
   height: 100vh;
   width: 100vw;
 }
-
-
-
+html .swiper{
+  margin-top: 10px;
+}
